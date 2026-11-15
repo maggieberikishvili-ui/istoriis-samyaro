@@ -6,6 +6,11 @@
    - 0 სიცოცხლე → „სიცოცხლეები ამოიწურა“ → dashboard.html
    - დასრულება: პირველად → სრული XP, განმეორებით → +5 XP;
      თუ სიცოცხლე 5-ზე ნაკლებია → +1 ❤️
+   - სიცოცხლის აღდგენის სავარჯიშო (lesson.html?mode=practice):
+     3 შემთხვევითი კითხვა გავლილი/საბაზისო თემებიდან, შეცდომაზე
+     სიცოცხლე არ აკლდება (არასწორი კითხვა ბოლოს მეორდება);
+     3-ვე სწორად → +1 ❤️, +5 XP → dashboard.html
+   - Pro (isPro: true): ∞ სიცოცხლე, შეცდომაზე არ აკლდება
    - საცავი და სინქრონიზაცია — js/storage.js (window.IMS_STORE)
    - ტექსტი DOM-ში მხოლოდ textContent-ით
    ========================================================== */
@@ -19,6 +24,12 @@
   const HEART_REWARD = 1;
   const GAME_OVER_REDIRECT_MS = 4000;
 
+  const PRACTICE_SIZE = 3;
+  const PRACTICE_XP = 5;
+  const PRACTICE_REDIRECT_MS = 3500;
+  const PRACTICE_TYPES = ["choice", "truefalse", "fill"];
+  const PRACTICE_BASIC_COURSE = "grade-7"; // საბაზისო თემები
+
   /* ==========================================================
      გაკვეთილის ჩატვირთვა და შემოწმება
      ========================================================== */
@@ -29,43 +40,97 @@
   const daily = store.checkDaily();
   if (!daily) return;
   const initialProfile = daily.profile;
+  const unlimited = store.hasUnlimitedHearts(initialProfile);
 
   const DASHBOARD_URL = store.URLS.dashboard;
 
   const params = new URLSearchParams(window.location.search);
-  const course = window.IMS_DATA.getCourse(params.get("course"));
-  const lesson = course ? window.IMS_DATA.getLesson(course.id, params.get("lesson")) : null;
+  const isPractice = params.get("mode") === "practice";
 
-  if (!lesson || !Array.isArray(lesson.steps) || lesson.steps.length === 0) {
-    store.redirect(DASHBOARD_URL);
-    return;
+  let lesson = null;
+  let steps;
+
+  if (isPractice) {
+    // სავარჯიშო საჭიროა მხოლოდ მაშინ, როცა სიცოცხლე 5-ზე ნაკლებია (და არა Pro)
+    if (unlimited || initialProfile.hearts >= store.MAX_HEARTS) {
+      store.redirect(DASHBOARD_URL);
+      return;
+    }
+    steps = buildPracticeSteps(initialProfile);
+    if (steps.length === 0) {
+      store.redirect(DASHBOARD_URL);
+      return;
+    }
+    document.title = "სიცოცხლის აღდგენა — ისტორიის სამყარო";
+  } else {
+    const course = window.IMS_DATA.getCourse(params.get("course"));
+    lesson = course ? window.IMS_DATA.getLesson(course.id, params.get("lesson")) : null;
+
+    if (!lesson || !Array.isArray(lesson.steps) || lesson.steps.length === 0) {
+      store.redirect(DASHBOARD_URL);
+      return;
+    }
+
+    // დაბლოკილ გაკვეთილზე პირდაპირი ბმულით შესვლის აკრძალვა
+    const doneSet = new Set(initialProfile.completedLessons);
+    const lessonIndex = course.lessons.indexOf(lesson);
+    const firstOpenIndex = course.lessons.findIndex((l) => !doneSet.has(l.id));
+    if (firstOpenIndex !== -1 && lessonIndex > firstOpenIndex) {
+      store.redirect(DASHBOARD_URL);
+      return;
+    }
+
+    steps = lesson.steps.slice();
+    document.title = lesson.title + " — ისტორიის სამყარო";
   }
 
-  // დაბლოკილ გაკვეთილზე პირდაპირი ბმულით შესვლის აკრძალვა
-  const doneSet = new Set(initialProfile.completedLessons);
-  const lessonIndex = course.lessons.indexOf(lesson);
-  const firstOpenIndex = course.lessons.findIndex((l) => !doneSet.has(l.id));
-  if (firstOpenIndex !== -1 && lessonIndex > firstOpenIndex) {
-    store.redirect(DASHBOARD_URL);
-    return;
-  }
+  /**
+   * სავარჯიშოს კითხვები: ჯერ გავლილი გაკვეთილებიდან,
+   * საკმარისი თუ არ არის — საბაზისო (მე-7 კლასის) თემებიდან.
+   */
+  function buildPracticeSteps(profile) {
+    const done = new Set(profile.completedLessons);
 
-  document.title = lesson.title + " — ისტორიის სამყარო";
+    function collect(filter) {
+      const out = [];
+      window.IMS_DATA.courses.forEach((c) => {
+        c.lessons.forEach((l) => {
+          if (!filter(c, l)) return;
+          (l.steps || []).forEach((s) => {
+            if (PRACTICE_TYPES.includes(s.type)) out.push(s);
+          });
+        });
+      });
+      return out;
+    }
+
+    let pool = shuffle(collect((c, l) => done.has(l.id)));
+    if (pool.length < PRACTICE_SIZE) {
+      const basics = collect((c) => c.id === PRACTICE_BASIC_COURSE).filter((s) => !pool.includes(s));
+      pool = pool.concat(shuffle(basics));
+    }
+    return pool.slice(0, PRACTICE_SIZE);
+  }
 
   /* ==========================================================
      მდგომარეობა და DOM
      ========================================================== */
 
-  const steps = lesson.steps;
   const questionTotal = steps.filter((s) => s.type !== "theory").length;
 
   const state = {
     index: 0,
     hearts: initialProfile.hearts,
     correct: 0,
+    attempts: 0,
     onPrimary: null,
     finished: false,
   };
+
+  /** სიცოცხლეები ამოიწურა? (Pro-სა და სავარჯიშოში — არასდროს) */
+  function isOutOfHearts() {
+    return !unlimited && !isPractice && state.hearts <= 0;
+  }
 
   const el = {
     stage: document.getElementById("stage"),
@@ -80,6 +145,8 @@
     heartsBox: document.getElementById("heartsBox"),
     heartsCount: document.getElementById("heartsCount"),
     victory: document.getElementById("victoryScreen"),
+    victoryEmblem: document.getElementById("victoryEmblem"),
+    victoryTitle: document.getElementById("victoryTitle"),
     victorySubtitle: document.getElementById("victorySubtitle"),
     victoryXp: document.getElementById("victoryXp"),
     victoryAccuracy: document.getElementById("victoryAccuracy"),
@@ -109,13 +176,15 @@
      ========================================================== */
 
   function renderProgress() {
-    const pct = Math.round((state.index / steps.length) * 100);
+    const ratio = isPractice ? state.correct / PRACTICE_SIZE : state.index / steps.length;
+    const pct = Math.min(100, Math.round(ratio * 100));
     el.progressFill.style.width = pct + "%";
     el.progressBar.setAttribute("aria-valuenow", String(pct));
   }
 
   function renderHearts(animate) {
-    el.heartsCount.textContent = String(state.hearts);
+    el.heartsCount.textContent = unlimited ? "∞" : String(state.hearts);
+    el.heartsBox.title = unlimited ? "Pro — ულიმიტო სიცოცხლე" : "დარჩენილი სიცოცხლეები";
     if (animate) {
       el.heartsBox.classList.remove("is-hit");
       void el.heartsBox.offsetWidth; // ანიმაციის თავიდან გაშვება
@@ -124,6 +193,7 @@
   }
 
   function loseHeart() {
+    if (unlimited || isPractice) return; // Pro და სავარჯიშო — სიცოცხლე არ აკლდება
     const profile = store.updateProfile((p) => {
       p.hearts = Math.max(0, p.hearts - 1);
     });
@@ -160,24 +230,31 @@
    * heartAlreadyLost — წყვილების სავარჯიშოში სიცოცხლე შეცდომისთანავე აკლდება.
    */
   function showResult(isCorrect, explanation, heartAlreadyLost) {
+    state.attempts += 1;
+    let text = explanation || "";
+
     if (isCorrect) {
       state.correct += 1;
-    } else if (!heartAlreadyLost) {
-      loseHeart();
+      renderProgress();
+    } else {
+      if (!heartAlreadyLost) loseHeart();
+      if (isPractice) {
+        // სავარჯიშოში არასწორი კითხვა ბოლოს კიდევ ერთხელ შეგხვდება
+        steps.push(steps[state.index]);
+        text += " სიცოცხლე არ დაგაკლდა — ეს კითხვა ბოლოს კიდევ ერთხელ შეგხვდება.";
+      }
     }
-
-    const outOfHearts = state.hearts <= 0;
 
     setFooter({
       state: isCorrect ? "correct" : "wrong",
       label: "გაგრძელება",
       enabled: true,
-      onPrimary: outOfHearts ? showGameOver : nextStep,
+      onPrimary: isOutOfHearts() ? showGameOver : nextStep,
     });
 
     el.feedbackIcon.textContent = isCorrect ? "✓" : "✕";
     el.feedbackTitle.textContent = isCorrect ? pickPraise() : "არასწორია";
-    el.feedbackText.textContent = explanation || "";
+    el.feedbackText.textContent = text.trim();
     el.feedback.hidden = false;
     el.primaryBtn.focus();
   }
@@ -309,7 +386,7 @@
   }
 
   function exerciseHeader(label, question) {
-    el.stage.append(createEl("p", "exercise__label", label));
+    el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " : "") + label));
     if (question) el.stage.append(createEl("h1", "exercise__question", question));
   }
 
@@ -457,7 +534,7 @@
       setTimeout(() => {
         [a, b].forEach((t) => t.classList.remove("is-wrong", "is-shake"));
         locked = false;
-        if (state.hearts <= 0) {
+        if (isOutOfHearts()) {
           showResult(false, "წყვილის დაკავშირებისას დაშვებულია შეცდომა.", true);
         }
       }, 600);
@@ -478,6 +555,10 @@
   function finishLesson() {
     if (state.finished) return;
     state.finished = true;
+    if (isPractice) {
+      finishPractice();
+      return;
+    }
 
     let xpGain = 0;
     let heartGain = 0;
@@ -489,8 +570,8 @@
       if (firstTime) p.completedLessons.push(lesson.id);
       p.xp += xpGain;
 
-      // წარმატებით დასრულება → +1 ❤️ (მაქსიმუმ 5-მდე)
-      if (p.hearts < store.MAX_HEARTS) {
+      // წარმატებით დასრულება → +1 ❤️ (მაქსიმუმ 5-მდე; Pro-ს არ სჭირდება)
+      if (!unlimited && p.hearts < store.MAX_HEARTS) {
         heartGain = Math.min(HEART_REWARD, store.MAX_HEARTS - p.hearts);
         p.hearts += heartGain;
       }
@@ -512,6 +593,38 @@
       : "განმეორებითი გავლა — სიმბოლური +" + REPEAT_XP + " XP.";
     el.victory.hidden = false;
     el.victory.querySelector(".result__btn").focus();
+  }
+
+  /** სავარჯიშოს დასრულება: +1 ❤️ (მაქს. 5) და +5 XP, შემდეგ დაფაზე დაბრუნება. */
+  function finishPractice() {
+    let heartGain = 0;
+
+    const profile = store.updateProfile((p) => {
+      heartGain = Math.min(HEART_REWARD, Math.max(0, store.MAX_HEARTS - p.hearts));
+      p.hearts += heartGain;
+      p.xp += PRACTICE_XP;
+    });
+    if (!profile) return;
+
+    state.hearts = profile.hearts;
+    renderHearts(heartGain > 0);
+    renderProgress();
+
+    const accuracy = state.attempts ? Math.round((PRACTICE_SIZE / state.attempts) * 100) : 100;
+
+    hideLesson();
+    el.victoryEmblem.textContent = "❤️";
+    el.victoryTitle.textContent = "სიცოცხლე აღდგა!";
+    el.victorySubtitle.textContent =
+      "3-ვე კითხვას სწორად უპასუხე. ახლა გაქვს " + profile.hearts + " ❤️ — ბრუნდები დაფაზე…";
+    el.victoryXp.textContent = "+" + PRACTICE_XP;
+    el.victoryAccuracy.textContent = accuracy + "%";
+    el.victoryHeartsStat.hidden = heartGain === 0;
+    el.victoryHearts.textContent = "+" + heartGain + " ❤️";
+    el.victory.hidden = false;
+    el.victory.querySelector(".result__btn").focus();
+
+    setTimeout(() => store.redirect(DASHBOARD_URL), PRACTICE_REDIRECT_MS);
   }
 
   function showGameOver() {
@@ -551,7 +664,7 @@
   renderHearts(false);
   renderProgress();
 
-  if (state.hearts <= 0) {
+  if (isOutOfHearts()) {
     showGameOver();
   } else {
     renderStep();

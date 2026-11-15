@@ -118,6 +118,7 @@
       name: name,
       email: email,
       isGuest: isGuest,
+      isPro: false,
       xp: 0,
       streak: 1,
       hearts: MAX_HEARTS,
@@ -133,6 +134,7 @@
       name: typeof raw.name === "string" && raw.name.trim() ? raw.name : "მოსწავლე",
       email: typeof raw.email === "string" ? raw.email : null,
       isGuest: raw.isGuest === true || !raw.email,
+      isPro: raw.isPro === true,
       xp: toCount(raw.xp, 0),
       streak: toCount(raw.streak, 1),
       hearts: Math.min(toCount(raw.hearts, MAX_HEARTS), MAX_HEARTS),
@@ -145,6 +147,14 @@
 
   function loadProfile() {
     return normalizeProfile(readJSON(KEYS.currentUser, null));
+  }
+
+  /**
+   * Pro მომხმარებელს აქვს ∞ სიცოცხლე: შეცდომაზე არ აკლდება.
+   * (ამჟამად ყველას isPro: false — Pro ვერსიის მომზადება.)
+   */
+  function hasUnlimitedHearts(profile) {
+    return Boolean(profile && profile.isPro === true);
   }
 
   /**
@@ -349,6 +359,7 @@
     saveProfile: saveProfile,
     updateProfile: updateProfile,
     checkDaily: checkDaily,
+    hasUnlimitedHearts: hasUnlimitedHearts,
 
     // ანგარიშები / სესია
     getUsers: getUsers,

@@ -29,6 +29,9 @@
     statStreak: document.getElementById("statStreak"),
     statXp: document.getElementById("statXp"),
     statHearts: document.getElementById("statHearts"),
+    heartsStat: document.getElementById("heartsStat"),
+    refillItem: document.getElementById("refillItem"),
+    refillBtn: document.getElementById("refillBtn"),
     logoutBtn: document.getElementById("logoutBtn"),
     courseList: document.getElementById("courseList"),
     pathSection: document.getElementById("pathSection"),
@@ -47,15 +50,6 @@
     if (className) node.className = className;
     if (text !== undefined) node.textContent = text;
     return node;
-  }
-
-  /** პროფილის განახლება საცავის მეშვეობით + ეკრანის განახლება. */
-  function update(mutator) {
-    const profile = store.updateProfile(mutator);
-    if (!profile) return null;
-    state.profile = profile;
-    renderStats();
-    return profile;
   }
 
   /* ---------- Toast ---------- */
@@ -79,28 +73,36 @@
     el.greetingTitle.textContent = "გამარჯობა, " + p.name + "!";
     el.statStreak.textContent = String(p.streak);
     el.statXp.textContent = String(p.xp);
-    el.statHearts.textContent = String(p.hearts);
+
+    // Pro → ∞ სიცოცხლე; სხვებს — „+ ❤️ აღდგენა“, როცა სიცოცხლე < 5
+    const unlimited = store.hasUnlimitedHearts(p);
+    el.statHearts.textContent = unlimited ? "∞" : String(p.hearts);
+    el.heartsStat.title = unlimited ? "Pro — ულიმიტო სიცოცხლე" : "სიცოცხლეები";
+    el.refillItem.hidden = unlimited || p.hearts >= store.MAX_HEARTS;
+  }
+
+  /** 0 ❤️ (და არა Pro) — ახალ გაკვეთილს ვერ დაიწყებს. */
+  function isOutOfHearts() {
+    return !store.hasUnlimitedHearts(state.profile) && state.profile.hearts <= 0;
+  }
+
+  function nudgeRefill() {
+    el.refillBtn.classList.remove("is-attention");
+    void el.refillBtn.offsetWidth; // ანიმაციის თავიდან გაშვება
+    el.refillBtn.classList.add("is-attention");
   }
 
   /* ---------- დღიური შემოწმება და სიცოცხლეები ---------- */
 
   function runDailyCheck() {
-    // ახალ დღეს: streak განახლდება და სიცოცხლეები 5-მდე შეივსება
+    // ავტომატური შევსება მხოლოდ ახალ კალენდარულ დღეს (streak-თან ერთად).
+    // იმავე დღეს 0 ❤️ → მხოლოდ „+ ❤️ აღდგენის“ სავარჯიშოთი.
     const result = store.checkDaily();
     if (!result) return;
     state.profile = result.profile;
 
     if (result.heartsRefilled) {
       showToast("☀️ ახალი დღე — სიცოცხლეები 5-მდე შეივსო!");
-      return;
-    }
-
-    // იმავე დღეს სიცოცხლეები ამოიწურა → დაფაზე დაბრუნებისას აღდგება
-    if (state.profile.hearts <= 0) {
-      update((p) => {
-        p.hearts = store.MAX_HEARTS;
-      });
-      showToast("❤️ სიცოცხლეები აღდგა — სცადე თავიდან!");
     }
   }
 
@@ -225,6 +227,11 @@
       node.addEventListener("click", () => {
         if (status === "locked") {
           showToast("🔒 ჯერ დაასრულე წინა გაკვეთილი");
+          return;
+        }
+        if (isOutOfHearts()) {
+          showToast("💔 სიცოცხლეები ამოიწურა! გაიარე სავარჯიშო სიცოცხლის აღსადგენად.");
+          nudgeRefill();
           return;
         }
         window.location.href = lessonUrl(course.id, lesson.id);
