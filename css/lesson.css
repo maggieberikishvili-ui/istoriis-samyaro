@@ -482,7 +482,7 @@
 
 .result__stats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: var(--space-3);
   width: 100%;
   margin: var(--space-4) 0 var(--space-6);
@@ -499,6 +499,7 @@
 
 .result-stat--xp       { --rs-color: var(--color-accent); }
 .result-stat--accuracy { --rs-color: var(--color-primary); }
+.result-stat--hearts   { --rs-color: var(--color-danger); }
 
 .result-stat__label {
   padding: var(--space-1) var(--space-2);

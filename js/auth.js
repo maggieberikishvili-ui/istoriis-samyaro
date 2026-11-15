@@ -1,10 +1,9 @@
 /* ==========================================================
    ისტორიის სამყარო — ავტორიზაციის ლოგიკა
    ----------------------------------------------------------
-   localStorage გასაღებები:
-     ims_users       → რეგისტრირებული ანგარიშები { [email]: account }
-     ims_currentUser → აქტიური მომხმარებლის პროფილი (dashboard ამას წაიკითხავს)
-     ims_theme       → "light" | "dark"
+   საცავი, სესია და თემა — js/storage.js (window.IMS_STORE).
+   უკვე შესული მომხმარებლის გადამისამართებას აკეთებს
+   storage.js (data-auth="guest-only").
 
    შენიშვნა: ეს მხოლოდ ბრაუზერის (client-side) ავტორიზაციაა.
    პაროლი არ ინახება ღია სახით — ინახება SHA-256 ჰეში მარილით,
@@ -14,74 +13,14 @@
 (function () {
   "use strict";
 
-  const STORAGE_KEYS = {
-    users: "ims_users",
-    currentUser: "ims_currentUser",
-    theme: "ims_theme",
-  };
+  const store = window.IMS_STORE;
+  if (store.isLoggedIn()) return; // გადამისამართება უკვე მიმდინარეობს
 
-  const DASHBOARD_URL = "dashboard.html";
   const REDIRECT_DELAY_MS = 900;
-
   const NAME_MIN = 2;
   const NAME_MAX = 30;
   const PASSWORD_MIN = 6;
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-  /* ---------- localStorage დამხმარეები ---------- */
-
-  function readJSON(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : fallback;
-    } catch (e) {
-      return fallback;
-    }
-  }
-
-  function writeJSON(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function getUsers() {
-    const users = readJSON(STORAGE_KEYS.users, {});
-    return users && typeof users === "object" ? users : {};
-  }
-
-  /* ---------- თუ უკვე შესულია → dashboard ---------- */
-
-  if (readJSON(STORAGE_KEYS.currentUser, null)) {
-    window.location.replace(DASHBOARD_URL);
-    return;
-  }
-
-  /* ---------- საწყისი პროფილი ---------- */
-
-  // YYYY-MM-DD ლოკალური დროით (dashboard.js-ის streak ლოგიკასთან თავსებადი)
-  function localDateKey() {
-    const d = new Date();
-    return d.getFullYear() + "-" +
-      String(d.getMonth() + 1).padStart(2, "0") + "-" +
-      String(d.getDate()).padStart(2, "0");
-  }
-
-  function createProfile(name, email, isGuest) {
-    return {
-      name: name,
-      email: email,
-      isGuest: isGuest,
-      xp: 0,
-      streak: 1,
-      hearts: 5,
-      completedLessons: [],
-      lastActive: localDateKey(),
-    };
-  }
 
   /* ---------- პაროლის ჰეშირება (Web Crypto) ---------- */
 
@@ -120,11 +59,10 @@
   const submitBtn = document.getElementById("submitBtn");
   const guestBtn = document.getElementById("guestBtn");
   const tabs = document.querySelectorAll(".tab");
-  const themeToggle = document.getElementById("themeToggle");
-  const themeIcon = document.getElementById("themeIcon");
 
   let mode = "login"; // "login" | "register"
   let busy = false;
+  let sessionStarted = false;
 
   /* ---------- შეტყობინებები (მხოლოდ textContent — XSS დაცვა) ---------- */
 
@@ -194,21 +132,21 @@
 
   /* ---------- სესიის დაწყება და გადამისამართება ---------- */
 
-  function startSession(profile) {
-    if (!writeJSON(STORAGE_KEYS.currentUser, profile)) {
-      showMessage("მონაცემების შენახვა ვერ მოხერხდა. შეამოწმე ბრაუზერის პარამეტრები.", "error");
-      setBusy(false);
-      return;
-    }
-    // სახელი გამოდის მხოლოდ textContent-ით
-    showMessage("მოგესალმებით, " + profile.name + "!", "success");
-    setTimeout(() => window.location.replace(DASHBOARD_URL), REDIRECT_DELAY_MS);
-  }
-
   function setBusy(state) {
     busy = state;
     submitBtn.disabled = state;
     guestBtn.disabled = state;
+  }
+
+  function beginSession(profile) {
+    if (!store.startSession(profile)) {
+      showMessage("მონაცემების შენახვა ვერ მოხერხდა. შეამოწმე ბრაუზერის პარამეტრები.", "error");
+      return;
+    }
+    sessionStarted = true;
+    // სახელი გამოდის მხოლოდ textContent-ით
+    showMessage("მოგესალმებით, " + profile.name + "!", "success");
+    setTimeout(() => store.redirect(store.URLS.dashboard), REDIRECT_DELAY_MS);
   }
 
   /* ---------- ვალიდაცია ---------- */
@@ -218,11 +156,9 @@
     const email = emailInput.value.trim().toLowerCase();
     const password = passwordInput.value;
 
-    if (mode === "register") {
-      if (name.length < NAME_MIN || name.length > NAME_MAX) {
-        markInvalid(nameInput, "სახელი უნდა შეიცავდეს " + NAME_MIN + "–" + NAME_MAX + " სიმბოლოს.");
-        return null;
-      }
+    if (mode === "register" && (name.length < NAME_MIN || name.length > NAME_MAX)) {
+      markInvalid(nameInput, "სახელი უნდა შეიცავდეს " + NAME_MIN + "–" + NAME_MAX + " სიმბოლოს.");
+      return null;
     }
     if (!EMAIL_PATTERN.test(email)) {
       markInvalid(emailInput, "შეიყვანე სწორი ელ-ფოსტა.");
@@ -238,16 +174,16 @@
   /* ---------- რეგისტრაცია / შესვლა ---------- */
 
   async function register({ name, email, password }) {
-    const users = getUsers();
-    if (Object.prototype.hasOwnProperty.call(users, email)) {
+    if (store.findAccount(email)) {
       markInvalid(emailInput, "ეს ელ-ფოსტა უკვე დარეგისტრირებულია. სცადე შესვლა.");
       return;
     }
 
     const salt = generateSalt();
     const passwordHash = await hashPassword(password, salt);
-    const profile = createProfile(name, email, false);
+    const profile = store.createProfile(name, email, false);
 
+    const users = store.getUsers();
     users[email] = {
       salt: salt,
       passwordHash: passwordHash,
@@ -255,17 +191,15 @@
       profile: profile,
     };
 
-    if (!writeJSON(STORAGE_KEYS.users, users)) {
+    if (!store.saveUsers(users)) {
       showMessage("ანგარიშის შენახვა ვერ მოხერხდა.", "error");
       return;
     }
-    startSession(profile);
+    beginSession(profile);
   }
 
   async function login({ email, password }) {
-    const users = getUsers();
-    const account = Object.prototype.hasOwnProperty.call(users, email) ? users[email] : null;
-
+    const account = store.findAccount(email);
     // ერთნაირი შეტყობინება — არ ვამჟღავნებთ, არსებობს თუ არა ელ-ფოსტა
     const failText = "ელ-ფოსტა ან პაროლი არასწორია.";
 
@@ -281,8 +215,8 @@
       return;
     }
 
-    const profile = Object.assign(createProfile("", email, false), account.profile);
-    startSession(profile);
+    const profile = Object.assign(store.createProfile("", email, false), account.profile);
+    beginSession(profile);
   }
 
   form.addEventListener("submit", async (e) => {
@@ -309,7 +243,7 @@
       );
     } finally {
       // წარმატების შემთხვევაში ღილაკები გათიშული რჩება გადამისამართებამდე
-      if (!window.localStorage.getItem(STORAGE_KEYS.currentUser)) setBusy(false);
+      if (!sessionStarted) setBusy(false);
     }
   });
 
@@ -319,38 +253,15 @@
     if (busy) return;
     clearMessage();
     setBusy(true);
-    startSession(createProfile("სტუმარი", null, true));
+    beginSession(store.createProfile("სტუმარი", null, true));
+    if (!sessionStarted) setBusy(false);
   });
-
-  /* ---------- თემა (Light / Dark) ---------- */
-
-  const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-  function currentTheme() {
-    const attr = document.documentElement.getAttribute("data-theme");
-    if (attr === "dark" || attr === "light") return attr;
-    return darkQuery.matches ? "dark" : "light";
-  }
-
-  function renderThemeIcon() {
-    const dark = currentTheme() === "dark";
-    themeIcon.textContent = dark ? "☀️" : "🌙";
-    themeToggle.setAttribute("aria-label", dark ? "ნათელ თემაზე გადართვა" : "მუქ თემაზე გადართვა");
-  }
-
-  themeToggle.addEventListener("click", () => {
-    const next = currentTheme() === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", next);
-    try {
-      localStorage.setItem(STORAGE_KEYS.theme, next);
-    } catch (e) { /* იგნორი */ }
-    renderThemeIcon();
-  });
-
-  darkQuery.addEventListener("change", renderThemeIcon);
 
   /* ---------- ინიციალიზაცია ---------- */
 
+  store.bindThemeToggle(
+    document.getElementById("themeToggle"),
+    document.getElementById("themeIcon")
+  );
   setMode("login");
-  renderThemeIcon();
 })();

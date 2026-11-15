@@ -5,20 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ისტორიის სამყარო — სასწავლო დაფა</title>
 
-  <!-- ავტორიზაციის შემოწმება და თემის ადრეული ჩატვირთვა -->
-  <script>
-    try {
-      if (!localStorage.getItem("ims_currentUser")) {
-        window.location.replace("index.html");
-      }
-      var savedTheme = localStorage.getItem("ims_theme");
-      if (savedTheme === "dark" || savedTheme === "light") {
-        document.documentElement.setAttribute("data-theme", savedTheme);
-      }
-    } catch (e) {
-      window.location.replace("index.html");
-    }
-  </script>
+  <!-- საერთო საცავი: ავტორიზაციის შემოწმება + თემის ადრეული ჩატვირთვა -->
+  <script src="js/storage.js" data-auth="required"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

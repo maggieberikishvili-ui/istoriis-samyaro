@@ -4,112 +4,40 @@
    - სავარჯიშოები: theory, choice, truefalse, fill, match
    - არასწორი პასუხი = −1 სიცოცხლე (მაშინვე ინახება პროფილში)
    - 0 სიცოცხლე → „სიცოცხლეები ამოიწურა“ → dashboard.html
-   - დასრულება: პირველად → სრული XP, განმეორებით → +5 XP
-   - პროფილი ინახება ორივეგან: ims_currentUser და
-     ims_users[email].profile (თუ სტუმარი არ არის)
+   - დასრულება: პირველად → სრული XP, განმეორებით → +5 XP;
+     თუ სიცოცხლე 5-ზე ნაკლებია → +1 ❤️
+   - საცავი და სინქრონიზაცია — js/storage.js (window.IMS_STORE)
    - ტექსტი DOM-ში მხოლოდ textContent-ით
    ========================================================== */
 
 (function () {
   "use strict";
 
-  const STORAGE_KEYS = {
-    users: "ims_users",
-    currentUser: "ims_currentUser",
-  };
+  const store = window.IMS_STORE;
 
-  const LOGIN_URL = "index.html";
-  const DASHBOARD_URL = "dashboard.html";
   const REPEAT_XP = 5;
-  const MAX_HEARTS = 5;
+  const HEART_REWARD = 1;
   const GAME_OVER_REDIRECT_MS = 4000;
-
-  /* ==========================================================
-     პროფილის საცავი (იგივე წესები, რაც dashboard.js-ში)
-     ========================================================== */
-
-  function readJSON(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : fallback;
-    } catch (e) {
-      return fallback;
-    }
-  }
-
-  function writeJSON(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function toCount(value, fallback) {
-    const n = Number(value);
-    return Number.isFinite(n) && n >= 0 ? Math.floor(n) : fallback;
-  }
-
-  function normalizeProfile(raw) {
-    if (!raw || typeof raw !== "object") return null;
-    return {
-      name: typeof raw.name === "string" && raw.name.trim() ? raw.name : "მოსწავლე",
-      email: typeof raw.email === "string" ? raw.email : null,
-      isGuest: raw.isGuest === true || !raw.email,
-      xp: toCount(raw.xp, 0),
-      streak: toCount(raw.streak, 1),
-      hearts: Math.min(toCount(raw.hearts, MAX_HEARTS), MAX_HEARTS),
-      completedLessons: Array.isArray(raw.completedLessons)
-        ? raw.completedLessons.filter((id) => typeof id === "string")
-        : [],
-      lastActive: typeof raw.lastActive === "string" ? raw.lastActive : "",
-    };
-  }
-
-  function loadProfile() {
-    return normalizeProfile(readJSON(STORAGE_KEYS.currentUser, null));
-  }
-
-  function saveProfile(profile) {
-    writeJSON(STORAGE_KEYS.currentUser, profile);
-    if (!profile.isGuest && profile.email) {
-      const users = readJSON(STORAGE_KEYS.users, {});
-      if (users && Object.prototype.hasOwnProperty.call(users, profile.email)) {
-        users[profile.email].profile = profile;
-        writeJSON(STORAGE_KEYS.users, users);
-      }
-    }
-  }
-
-  /** ყოველთვის ახლად კითხულობს პროფილს, ცვლის და ინახავს ორივეგან. */
-  function updateProfile(mutator) {
-    const profile = loadProfile();
-    if (!profile) {
-      window.location.replace(LOGIN_URL);
-      return null;
-    }
-    mutator(profile);
-    saveProfile(profile);
-    return profile;
-  }
 
   /* ==========================================================
      გაკვეთილის ჩატვირთვა და შემოწმება
      ========================================================== */
 
-  const initialProfile = loadProfile();
-  if (!initialProfile) {
-    window.location.replace(LOGIN_URL);
-    return;
-  }
+  if (!store.requireAuth()) return;
+
+  // ახალი დღე → streak განახლება და სიცოცხლეების შევსება
+  const daily = store.checkDaily();
+  if (!daily) return;
+  const initialProfile = daily.profile;
+
+  const DASHBOARD_URL = store.URLS.dashboard;
 
   const params = new URLSearchParams(window.location.search);
   const course = window.IMS_DATA.getCourse(params.get("course"));
   const lesson = course ? window.IMS_DATA.getLesson(course.id, params.get("lesson")) : null;
 
   if (!lesson || !Array.isArray(lesson.steps) || lesson.steps.length === 0) {
-    window.location.replace(DASHBOARD_URL);
+    store.redirect(DASHBOARD_URL);
     return;
   }
 
@@ -118,7 +46,7 @@
   const lessonIndex = course.lessons.indexOf(lesson);
   const firstOpenIndex = course.lessons.findIndex((l) => !doneSet.has(l.id));
   if (firstOpenIndex !== -1 && lessonIndex > firstOpenIndex) {
-    window.location.replace(DASHBOARD_URL);
+    store.redirect(DASHBOARD_URL);
     return;
   }
 
@@ -155,6 +83,8 @@
     victorySubtitle: document.getElementById("victorySubtitle"),
     victoryXp: document.getElementById("victoryXp"),
     victoryAccuracy: document.getElementById("victoryAccuracy"),
+    victoryHeartsStat: document.getElementById("victoryHeartsStat"),
+    victoryHearts: document.getElementById("victoryHearts"),
     gameOver: document.getElementById("gameOverScreen"),
   };
 
@@ -194,10 +124,11 @@
   }
 
   function loseHeart() {
-    state.hearts = Math.max(0, state.hearts - 1);
-    updateProfile((p) => {
-      p.hearts = state.hearts;
+    const profile = store.updateProfile((p) => {
+      p.hearts = Math.max(0, p.hearts - 1);
     });
+    if (!profile) return;
+    state.hearts = profile.hearts;
     renderHearts(true);
   }
 
@@ -549,20 +480,33 @@
     state.finished = true;
 
     let xpGain = 0;
+    let heartGain = 0;
     let firstTime = false;
 
-    updateProfile((p) => {
+    const profile = store.updateProfile((p) => {
       firstTime = !p.completedLessons.includes(lesson.id);
-      xpGain = firstTime ? toCount(lesson.xp, 10) : REPEAT_XP;
+      xpGain = firstTime ? store.toCount(lesson.xp, 10) : REPEAT_XP;
       if (firstTime) p.completedLessons.push(lesson.id);
       p.xp += xpGain;
+
+      // წარმატებით დასრულება → +1 ❤️ (მაქსიმუმ 5-მდე)
+      if (p.hearts < store.MAX_HEARTS) {
+        heartGain = Math.min(HEART_REWARD, store.MAX_HEARTS - p.hearts);
+        p.hearts += heartGain;
+      }
     });
+    if (!profile) return;
+
+    state.hearts = profile.hearts;
+    renderHearts(heartGain > 0);
 
     const accuracy = questionTotal ? Math.round((state.correct / questionTotal) * 100) : 100;
 
     hideLesson();
     el.victoryXp.textContent = "+" + xpGain;
     el.victoryAccuracy.textContent = accuracy + "%";
+    el.victoryHeartsStat.hidden = heartGain === 0;
+    el.victoryHearts.textContent = "+" + heartGain + " ❤️";
     el.victorySubtitle.textContent = firstTime
       ? "„" + lesson.title + "“ — გავლილია!"
       : "განმეორებითი გავლა — სიმბოლური +" + REPEAT_XP + " XP.";
@@ -576,7 +520,7 @@
     hideLesson();
     el.gameOver.hidden = false;
     el.gameOver.querySelector(".result__btn").focus();
-    setTimeout(() => window.location.replace(DASHBOARD_URL), GAME_OVER_REDIRECT_MS);
+    setTimeout(() => store.redirect(DASHBOARD_URL), GAME_OVER_REDIRECT_MS);
   }
 
   /* ==========================================================

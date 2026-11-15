@@ -6,15 +6,8 @@
   <meta name="description" content="ისტორიის სამყარო — ისწავლე ისტორია თამაშით, ყოველდღე რამდენიმე წუთში.">
   <title>ისტორიის სამყარო — შესვლა</title>
 
-  <!-- თემის ადრეული ჩატვირთვა (ციმციმის თავიდან ასაცილებლად) -->
-  <script>
-    try {
-      var savedTheme = localStorage.getItem("ims_theme");
-      if (savedTheme === "dark" || savedTheme === "light") {
-        document.documentElement.setAttribute("data-theme", savedTheme);
-      }
-    } catch (e) { /* localStorage მიუწვდომელია */ }
-  </script>
+  <!-- საერთო საცავი: თემის ადრეული ჩატვირთვა + შესული მომხმარებლის გადამისამართება -->
+  <script src="js/storage.js" data-auth="guest-only"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
