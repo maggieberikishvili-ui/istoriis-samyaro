@@ -79,11 +79,13 @@
       return;
     }
 
-    // დაბლოკილ გაკვეთილზე პირდაპირი ბმულით შესვლის აკრძალვა
+    // დაბლოკილ გაკვეთილზე პირდაპირი ბმულით შესვლის აკრძალვა.
+    // უკვე გავლილი გაკვეთილი ყოველთვის იხსნება — მაშინაც, თუ მის წინ
+    // მოგვიანებით ახალი გაკვეთილი ჩაემატა (მაგ. g7-l3 → g7-l2-მდე).
     const doneSet = new Set(initialProfile.completedLessons);
     const lessonIndex = course.lessons.indexOf(lesson);
     const firstOpenIndex = course.lessons.findIndex((l) => !doneSet.has(l.id));
-    if (firstOpenIndex !== -1 && lessonIndex > firstOpenIndex) {
+    if (!doneSet.has(lesson.id) && firstOpenIndex !== -1 && lessonIndex > firstOpenIndex) {
       store.redirect(DASHBOARD_URL);
       return;
     }
