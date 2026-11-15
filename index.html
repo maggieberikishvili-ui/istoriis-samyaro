@@ -9,6 +9,16 @@
   <!-- საერთო საცავი: თემის ადრეული ჩატვირთვა + შესული მომხმარებლის გადამისამართება -->
   <script src="js/storage.js" data-auth="guest-only"></script>
 
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#58cc02">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ისტორიის სამყარო">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&display=swap" rel="stylesheet">
@@ -22,6 +32,7 @@
 <body>
   <div class="auth-page">
     <header class="auth-header">
+      <button type="button" class="btn btn--outline" id="installBtn" hidden>📲 დაყენება</button>
       <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
         <span aria-hidden="true" id="themeIcon">🌙</span>
       </button>

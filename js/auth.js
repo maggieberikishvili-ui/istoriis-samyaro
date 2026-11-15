@@ -263,5 +263,13 @@
     document.getElementById("themeToggle"),
     document.getElementById("themeIcon")
   );
+
+  // „📲 დაყენება“ — ჩანს მხოლოდ მაშინ, როცა ბრაუზერი დაყენებას გვთავაზობს
+  const installBtn = document.getElementById("installBtn");
+  store.onInstallStateChange((state) => {
+    installBtn.hidden = state !== "available";
+  });
+  installBtn.addEventListener("click", () => store.promptInstall());
+
   setMode("login");
 })();

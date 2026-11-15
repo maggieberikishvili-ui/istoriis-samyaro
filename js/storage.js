@@ -8,6 +8,7 @@
      • ავტორიზაციის შემოწმება და გადამისამართება
      • თემის (ims_theme) მართვა
      • დღიური შემოწმება: streak + სიცოცხლეების შევსება
+     • PWA: Service Worker-ის რეგისტრაცია (./sw.js) და დაყენების მინიშნება
 
    ჩატვირთვა <head>-ში, defer-ის გარეშე (თემა და გადამისამართება
    გვერდის დახატვამდე უნდა მოხდეს):
@@ -27,6 +28,7 @@
     currentUser: "ims_currentUser",
     theme: "ims_theme",
     selectedCourse: "ims_selectedCourse",
+    installDismissed: "ims_installDismissed",
   });
 
   const URLS = Object.freeze({
@@ -324,8 +326,86 @@
   }
 
   /* ==========================================================
-     გვერდის ჩატვირთვისას: თემა + ავტორიზაციის დაცვა
+     PWA: Service Worker + აპლიკაციის დაყენება
      ========================================================== */
+
+  function registerServiceWorker() {
+    // SW მუშაობს მხოლოდ უსაფრთხო კონტექსტში (HTTPS ან localhost), file://-ზე — არა
+    if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch(() => {
+        /* რეგისტრაცია ვერ მოხერხდა — საიტი ჩვეულებრივად მუშაობს ქეშის გარეშე */
+      });
+    });
+  }
+
+  // beforeinstallprompt შეიძლება ადრე მოვიდეს, ვიდრე გვერდის სკრიპტები ჩაიტვირთება —
+  // ამიტომ ვიჭერთ აქ (storage.js <head>-ში იტვირთება) და ვინახავთ.
+  let deferredInstallPrompt = null;
+  const installListeners = [];
+
+  function isStandalone() {
+    return (
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      window.navigator.standalone === true
+    );
+  }
+
+  function isIos() {
+    const ua = navigator.userAgent || "";
+    return /iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+
+  /**
+   * "installed"   — უკვე აპლიკაციად არის გახსნილი
+   * "available"   — ბრაუზერი გვთავაზობს დაყენებას (Chrome / Edge / Android)
+   * "ios"         — iOS Safari: მხოლოდ „გაზიარება → მთავარ ეკრანზე დამატება“
+   * "unavailable" — დაყენება ახლა შეუძლებელია
+   */
+  function getInstallState() {
+    if (isStandalone()) return "installed";
+    if (deferredInstallPrompt) return "available";
+    if (isIos()) return "ios";
+    return "unavailable";
+  }
+
+  function notifyInstall() {
+    const state = getInstallState();
+    installListeners.forEach((cb) => cb(state));
+  }
+
+  /** cb(state) გამოიძახება მაშინვე და ყოველი ცვლილებისას. */
+  function onInstallStateChange(cb) {
+    installListeners.push(cb);
+    cb(getInstallState());
+  }
+
+  async function promptInstall() {
+    if (!deferredInstallPrompt) return false;
+    const promptEvent = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    promptEvent.prompt();
+    const choice = await promptEvent.userChoice;
+    notifyInstall();
+    return choice && choice.outcome === "accepted";
+  }
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault(); // ჩვენს ღილაკს ვაჩვენებთ ბრაუზერის ზოლის ნაცვლად
+    deferredInstallPrompt = e;
+    notifyInstall();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    notifyInstall();
+  });
+
+  /* ==========================================================
+     გვერდის ჩატვირთვისას: თემა + ავტორიზაციის დაცვა + SW
+     ========================================================== */
+
+  registerServiceWorker();
 
   applySavedTheme();
 
@@ -373,5 +453,9 @@
 
     // თემა
     bindThemeToggle: bindThemeToggle,
+
+    // PWA
+    onInstallStateChange: onInstallStateChange,
+    promptInstall: promptInstall,
   });
 })();

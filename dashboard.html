@@ -8,6 +8,16 @@
   <!-- საერთო საცავი: ავტორიზაციის შემოწმება + თემის ადრეული ჩატვირთვა -->
   <script src="js/storage.js" data-auth="required"></script>
 
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#58cc02">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ისტორიის სამყარო">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&display=swap" rel="stylesheet">
@@ -65,6 +75,19 @@
     <section class="greeting" aria-labelledby="greetingTitle">
       <h1 class="greeting__title" id="greetingTitle">გამარჯობა!</h1>
       <p class="greeting__text">აირჩიე კურსი და გააგრძელე სწავლა.</p>
+    </section>
+
+    <!-- აპლიკაციის დაყენების მინიშნება (PWA) -->
+    <section class="install-banner" id="installBanner" aria-labelledby="installTitle" hidden>
+      <span class="install-banner__icon" aria-hidden="true">📲</span>
+      <div class="install-banner__body">
+        <p class="install-banner__title" id="installTitle">დააყენე აპლიკაცია</p>
+        <p class="install-banner__text" id="installText"></p>
+      </div>
+      <div class="install-banner__actions">
+        <button type="button" class="btn btn--secondary" id="installBtn" hidden>დაყენება</button>
+        <button type="button" class="btn btn--ghost btn--icon" id="installDismiss" aria-label="მინიშნების დახურვა">✕</button>
+      </div>
     </section>
 
     <!-- კურსის არჩევა -->

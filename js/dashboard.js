@@ -252,6 +252,35 @@
     });
   }
 
+  /* ---------- აპლიკაციის დაყენება (PWA) ---------- */
+
+  function setupInstallBanner() {
+    const banner = document.getElementById("installBanner");
+    const text = document.getElementById("installText");
+    const installBtn = document.getElementById("installBtn");
+    const dismissBtn = document.getElementById("installDismiss");
+
+    const dismissed = () => store.readString(store.KEYS.installDismissed) === "1";
+
+    store.onInstallStateChange((installState) => {
+      const show = !dismissed() && (installState === "available" || installState === "ios");
+      banner.hidden = !show;
+      if (!show) return;
+
+      installBtn.hidden = installState !== "available";
+      text.textContent =
+        installState === "ios"
+          ? "Safari-ში დააჭირე „გაზიარებას“ (⬆️) და აირჩიე „მთავარ ეკრანზე დამატება“."
+          : "გახსენი ერთი შეხებით, მთელ ეკრანზე — ინტერნეტის გარეშეც.";
+    });
+
+    installBtn.addEventListener("click", () => store.promptInstall());
+    dismissBtn.addEventListener("click", () => {
+      store.writeString(store.KEYS.installDismissed, "1");
+      banner.hidden = true;
+    });
+  }
+
   /* ---------- გასვლა ---------- */
 
   el.logoutBtn.addEventListener("click", store.logout);
@@ -280,4 +309,5 @@
     document.getElementById("themeIcon")
   );
   selectCourse(store.readString(store.KEYS.selectedCourse));
+  setupInstallBanner();
 })();

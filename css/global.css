@@ -11,6 +11,23 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* მობილური: შეხებისას ლურჯი/ნაცრისფერი მონიშვნა არ გამოჩნდეს
+   (კლავიატურის ფოკუსი კვლავ ჩანს — იხ. :focus-visible) */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ორმაგი შეხებით ზუმის გარეშე — ღილაკები მაშინვე რეაგირებს */
+a,
+button,
+input,
+label,
+[role="button"],
+[role="tab"] {
+  touch-action: manipulation;
 }
 
 body {
