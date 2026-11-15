@@ -1,60 +1,56 @@
 /* ==========================================================
    ისტორიის სამყარო — დიზაინის ცვლადები
-   ნათელი (Duolingo-ს სტილის) პალიტრა + Dark Mode
+   აკადემიურ-ისტორიული (მუზეუმი / ძველი რუკა) მქრქალი პალიტრა
+   — მეტალის გრადიენტებისა და ბზინვარების გარეშე.
+   ნათელი რეჟიმი მთავარია; Dark Mode — მქრქალი ფიქალი.
    ========================================================== */
 
 :root {
-  /* --- ძირითადი ფერები --- */
-  --color-primary: #58cc02;          /* მწვანე */
-  --color-primary-dark: #46a302;     /* 3D ჩრდილი */
-  --color-primary-light: #d7ffb8;
+  /* --- აქცენტები --- */
+  --color-primary: #2e6f5e;          /* ზურმუხტი: მთავარი ღილაკები, სწორი, გავლილი */
+  --color-primary-dark: #22564a;
+  --color-primary-light: #dcebe4;
 
-  --color-secondary: #1cb0f6;        /* ცისფერი */
-  --color-secondary-dark: #1899d6;
-  --color-secondary-light: #ddf4ff;
+  --color-secondary: #b85d3b;        /* ტერაკოტა: მონიშვნა, მიმდინარე, ბმულები */
+  --color-secondary-dark: #93472c;
+  --color-secondary-light: #f4e3da;
 
-  --color-accent: #ffc800;           /* ოქროსფერი (XP) */
-  --color-accent-dark: #e5a500;
+  --color-accent: #c39a4e;           /* მქრქალი ოხრა (XP) */
+  --color-accent-dark: #97763a;
 
-  --color-danger: #ff4b4b;           /* წითელი (გულები / შეცდომა) */
-  --color-danger-dark: #ea2b2b;
-  --color-danger-light: #ffdfe0;
+  --color-danger: #a8382f;           /* აგურისფერი წითელი (გულები / შეცდომა) */
+  --color-danger-dark: #85291f;
+  --color-danger-light: #f6e0dc;
 
-  --color-streak: #ff9600;           /* ნარინჯისფერი (streak) */
-  --color-streak-dark: #cc7800;
+  --color-streak: #c46a2d;           /* მქრქალი ნარინჯი (streak) */
+  --color-streak-dark: #9a5021;
 
-  --color-purple: #ce82ff;
-  --color-purple-dark: #a568cc;
+  --color-purple: #7b5e83;           /* მქრქალი ქლიავისფერი */
+  --color-purple-dark: #5f4766;
+
+  --color-slate: #3f6b87;            /* ძველი რუკის მელანი */
+  --color-slate-dark: #2f536a;
+
+  --color-teal: #3c7c78;
+  --color-teal-dark: #2d605d;
 
   /* --- ზედაპირები და ტექსტი --- */
-  --color-bg: #ffffff;
-  --color-bg-soft: #f7f7f7;
-  --color-surface: #ffffff;
-  --color-border: #e5e5e5;
-  --color-border-strong: #d0d0d0;
+  --color-bg: #f7f3ea;               /* თბილი ქაღალდი */
+  --color-bg-soft: #efe8da;
+  --color-surface: #fffdf9;          /* კრემისფერი ბარათი */
+  --color-border: #d8cfc0;           /* მქრქალი კანტი */
+  --color-border-strong: #c4b8a4;
 
-  --color-text: #3c3c3c;
-  --color-text-muted: #777777;
-  --color-text-inverse: #ffffff;
+  --color-text: #2b2623;             /* მელანი */
+  --color-text-muted: #6e655b;
+  --color-text-inverse: #fffdf9;
 
-  /* --- ისტორიული პალიტრა: პერგამენტი, ბრინჯაო, ოქრო, ქვა, რუკა --- */
-  --parchment: #f7e9c4;
-  --parchment-deep: #ecd49c;
-  --parchment-ink: #4a3517;
-  --parchment-muted: #7a5f35;
-  --bronze: #a8792b;
-  --bronze-dark: #7a5518;
-  --bronze-light: #d9b56a;
-  --gold-hi: #fff3b0;
-  --gold: #ffd23f;
-  --gold-mid: #e0a800;
-  --gold-low: #9c7200;
-  --stone-hi: #ebe8e1;
-  --stone: #c4bfb4;
-  --stone-low: #948e82;
-  --stone-ink: #6f6a60;
-  --route: #a8792b;
-  --route-muted: #cdbf9f;
+  /* --- ისტორიული ელემენტები (თავები, ბილიკი) --- */
+  --parchment: #f3ebdc;              /* თავის ბანერის ფონი */
+  --stone: #e5ded0;                  /* დაბლოკილი ნიშანი */
+  --stone-ink: #8c8273;
+  --route-done: #b85d3b;             /* გავლილი მარშრუტი */
+  --route-ahead: #c9bda6;            /* წინ მდებარე მარშრუტი */
 
   /* --- ტიპოგრაფია --- */
   --font-main: "Noto Sans Georgian", "FiraGO", "BPG Arial", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -70,13 +66,13 @@
   --fw-heavy: 800;
 
   /* --- ზომები / ფორმები --- */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 22px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-pill: 999px;
 
   --border-width: 2px;
-  --shadow-depth: 4px;               /* 3D ღილაკის სიღრმე */
+  --shadow-depth: 4px;               /* ღილაკის დაჭერის სიღრმე */
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -95,33 +91,37 @@
 /* --- Dark Mode: სისტემური პარამეტრი (თუ მომხმარებელმა ხელით არ აირჩია ნათელი) --- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-bg: #131f24;
-    --color-bg-soft: #1a2a31;
-    --color-surface: #131f24;
-    --color-border: #37464f;
-    --color-border-strong: #4b5b64;
+    --color-primary: #4a8f7b;
+    --color-primary-dark: #2e6f5e;
+    --color-primary-light: #233630;
 
-    --color-text: #f1f7fb;
-    --color-text-muted: #a5b4bc;
+    --color-secondary: #cf7a55;
+    --color-secondary-dark: #a85e3e;
+    --color-secondary-light: #3a2a22;
 
-    --color-primary-light: #1f3a12;
-    --color-secondary-light: #10334a;
-    --color-danger-light: #3d1d1f;
+    --color-accent: #d1ab66;
+    --color-accent-dark: #a5844a;
 
-    /* ისტორიული პალიტრა — მუქი პერგამენტი */
-    --parchment: #3a2e1b;
-    --parchment-deep: #2c2213;
-    --parchment-ink: #f3e3b8;
-    --parchment-muted: #cdb27a;
-    --bronze: #c49a4a;
-    --bronze-dark: #6e4f1c;
-    --bronze-light: #8a6a30;
-    --stone-hi: #59605f;
-    --stone: #454b4c;
-    --stone-low: #2f3536;
-    --stone-ink: #a7aeae;
-    --route: #c49a4a;
-    --route-muted: #4f5a5c;
+    --color-danger: #cc5f52;
+    --color-danger-dark: #a3443a;
+    --color-danger-light: #3a2522;
+
+    --color-streak: #d68a52;
+
+    --color-bg: #1c1b19;
+    --color-bg-soft: #262420;
+    --color-surface: #23211e;
+    --color-border: #3b3732;
+    --color-border-strong: #4d4740;
+
+    --color-text: #ede6d9;
+    --color-text-muted: #a99f90;
+
+    --parchment: #2a2723;
+    --stone: #3a3630;
+    --stone-ink: #9c9284;
+    --route-done: #cf7a55;
+    --route-ahead: #4c463e;
 
     color-scheme: dark;
   }
@@ -129,33 +129,37 @@
 
 /* --- Dark Mode: ხელით არჩეული --- */
 :root[data-theme="dark"] {
-  --color-bg: #131f24;
-  --color-bg-soft: #1a2a31;
-  --color-surface: #131f24;
-  --color-border: #37464f;
-  --color-border-strong: #4b5b64;
+  --color-primary: #4a8f7b;
+  --color-primary-dark: #2e6f5e;
+  --color-primary-light: #233630;
 
-  --color-text: #f1f7fb;
-  --color-text-muted: #a5b4bc;
+  --color-secondary: #cf7a55;
+  --color-secondary-dark: #a85e3e;
+  --color-secondary-light: #3a2a22;
 
-  --color-primary-light: #1f3a12;
-  --color-secondary-light: #10334a;
-  --color-danger-light: #3d1d1f;
+  --color-accent: #d1ab66;
+  --color-accent-dark: #a5844a;
 
-  /* ისტორიული პალიტრა — მუქი პერგამენტი */
-  --parchment: #3a2e1b;
-  --parchment-deep: #2c2213;
-  --parchment-ink: #f3e3b8;
-  --parchment-muted: #cdb27a;
-  --bronze: #c49a4a;
-  --bronze-dark: #6e4f1c;
-  --bronze-light: #8a6a30;
-  --stone-hi: #59605f;
-  --stone: #454b4c;
-  --stone-low: #2f3536;
-  --stone-ink: #a7aeae;
-  --route: #c49a4a;
-  --route-muted: #4f5a5c;
+  --color-danger: #cc5f52;
+  --color-danger-dark: #a3443a;
+  --color-danger-light: #3a2522;
+
+  --color-streak: #d68a52;
+
+  --color-bg: #1c1b19;
+  --color-bg-soft: #262420;
+  --color-surface: #23211e;
+  --color-border: #3b3732;
+  --color-border-strong: #4d4740;
+
+  --color-text: #ede6d9;
+  --color-text-muted: #a99f90;
+
+  --parchment: #2a2723;
+  --stone: #3a3630;
+  --stone-ink: #9c9284;
+  --route-done: #cf7a55;
+  --route-ahead: #4c463e;
 
   color-scheme: dark;
 }

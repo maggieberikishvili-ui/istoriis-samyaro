@@ -226,11 +226,8 @@
     // --- პერგამენტის ბანერი ---
     const banner = createEl("header", "chapter-banner");
 
-    const seal = createEl("span", "chapter-banner__seal", course.badge);
-    seal.setAttribute("aria-hidden", "true");
-
     const body = createEl("div", "chapter-banner__body");
-    body.append(createEl("p", "chapter-banner__eyebrow", "✦ თავი " + toRoman(chapter.number) + " ✦"));
+    body.append(createEl("p", "chapter-banner__eyebrow", "თავი " + toRoman(chapter.number) + " · " + course.title));
     const title = createEl("h2", "chapter-banner__title", chapter.title);
     title.id = titleId;
     body.append(title);
@@ -251,7 +248,7 @@
     bar.append(fill);
     progressBox.append(bar);
 
-    banner.append(seal, body, progressBox);
+    banner.append(body, progressBox);
     section.append(banner);
 
     // --- მედალიონების ბილიკი + რუკის მარშრუტი ---
@@ -282,17 +279,14 @@
     }
 
     const wrap = createEl("div", "medallion-wrap");
-    if (status === "current") {
-      const halo = createEl("span", "medallion-halo");
-      halo.setAttribute("aria-hidden", "true");
-      wrap.append(halo);
-    }
 
     const node = createEl("button", "medallion medallion--" + status);
     node.type = "button";
 
-    const symbol = createEl("span", "medallion__symbol", { completed: "✓", current: "★", locked: "🔒" }[status]);
+    const symbol = createEl("span", "medallion__symbol");
     symbol.setAttribute("aria-hidden", "true");
+    if (status === "locked") symbol.append(lockIcon());
+    else symbol.textContent = status === "completed" ? "✓" : "★";
     node.append(symbol);
 
     const statusText = { completed: "დასრულებული", current: "მიმდინარე", locked: "დაბლოკილი" }[status];
@@ -326,6 +320,28 @@
     return item;
   }
 
+  /** ბრტყელი ბოქლომის ხატულა (SVG) დაბლოკილი ნიშნისთვის. */
+  function lockIcon() {
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("focusable", "false");
+    const shackle = document.createElementNS(SVG_NS, "path");
+    shackle.setAttribute("d", "M8 11V8a4 4 0 0 1 8 0v3");
+    shackle.setAttribute("fill", "none");
+    shackle.setAttribute("stroke", "currentColor");
+    shackle.setAttribute("stroke-width", "2.2");
+    shackle.setAttribute("stroke-linecap", "round");
+    const body = document.createElementNS(SVG_NS, "rect");
+    body.setAttribute("x", "5.5");
+    body.setAttribute("y", "11");
+    body.setAttribute("width", "13");
+    body.setAttribute("height", "9.5");
+    body.setAttribute("rx", "2");
+    body.setAttribute("fill", "currentColor");
+    svg.append(shackle, body);
+    return svg;
+  }
+
   /* ---------- რუკის მარშრუტი (SVG) ---------- */
 
   /** მედალიონების ცენტრებს აერთებს დაკლაკნილი წყვეტილი ხაზით. */
@@ -354,8 +370,8 @@
       const a = points[i];
       const b = points[i + 1];
       const dy = b.y - a.y;
-      // მონაცვლე „ღუზა“ — ძველი რუკის კლაკნილი გზა
-      const bend = (i % 2 === 0 ? -1 : 1) * Math.min(36, box.width / 10);
+      // მონაცვლე მოხვევა — ძველი რუკის კლაკნილი გზა
+      const bend = (i % 2 === 0 ? -1 : 1) * Math.min(48, box.width / 8);
       const d =
         "M " + a.x + " " + a.y +
         " C " + (a.x + bend) + " " + (a.y + dy * 0.45) +

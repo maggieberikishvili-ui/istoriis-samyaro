@@ -1,33 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" width="512" height="512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <title>ისტორიის სამყარო</title>
-  <defs>
-    <!-- ფონი: მწვანე, ოდნავ მუქდება ქვემოთ (full-bleed — maskable-თვის) -->
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#5fd404"/>
-      <stop offset="1" stop-color="#46a302"/>
-    </linearGradient>
 
-    <!-- სტილიზებული ტაძარი (ფერის გარეშე — ფერს <use> აძლევს) -->
-    <g id="temple">
-      <path d="M256 128 L398 200 Q402 206 396 210 L116 210 Q110 206 114 200 Z"/>
-      <rect x="132" y="220" width="248" height="24" rx="7"/>
-      <rect x="148" y="254" width="36" height="94" rx="8"/>
-      <rect x="208" y="254" width="36" height="94" rx="8"/>
-      <rect x="268" y="254" width="36" height="94" rx="8"/>
-      <rect x="328" y="254" width="36" height="94" rx="8"/>
-      <rect x="126" y="356" width="260" height="22" rx="7"/>
-      <rect x="106" y="384" width="300" height="24" rx="9"/>
-    </g>
-  </defs>
+  <!-- ფონი: მქრქალი ზურმუხტი (full-bleed — maskable-თვის) -->
+  <rect width="512" height="512" fill="#2e6f5e"/>
 
-  <rect width="512" height="512" fill="url(#bg)"/>
-
-  <!-- 3D ეფექტი: მუქი ოქროსფერი „ჩრდილი“ + ოქროსფერი ზედაპირი -->
-  <!-- 0.9 მასშტაბი: ტაძარი maskable-ის უსაფრთხო ზონაში (რადიუსი 40%) ეტევა -->
+  <!-- სტილიზებული ტაძარი — ბრტყელი, ქაღალდისფერი; 0.9 მასშტაბით უსაფრთხო ზონაში -->
+  <g transform="translate(256 256) scale(0.9) translate(-256 -268)" fill="#f7f3ea">
+    <path d="M256 128 L398 200 Q402 206 396 210 L116 210 Q110 206 114 200 Z"/>
+    <rect x="132" y="220" width="248" height="24" rx="5"/>
+    <rect x="148" y="254" width="36" height="94" rx="5"/>
+    <rect x="208" y="254" width="36" height="94" rx="5"/>
+    <rect x="268" y="254" width="36" height="94" rx="5"/>
+    <rect x="328" y="254" width="36" height="94" rx="5"/>
+    <rect x="126" y="356" width="260" height="22" rx="5"/>
+    <rect x="106" y="384" width="300" height="24" rx="6"/>
+  </g>
+  <!-- ტერაკოტას აქცენტი ფრონტონზე -->
   <g transform="translate(256 256) scale(0.9) translate(-256 -268)">
-    <use xlink:href="#temple" href="#temple" fill="#c98a00" transform="translate(0 10)"/>
-    <use xlink:href="#temple" href="#temple" fill="#ffc800"/>
-    <!-- სინათლის ანარეკლი ფრონტონზე -->
-    <path d="M256 150 L340 192 L172 192 Z" fill="#ffe066" opacity="0.55"/>
+    <circle cx="256" cy="180" r="11" fill="#b85d3b"/>
   </g>
 </svg>

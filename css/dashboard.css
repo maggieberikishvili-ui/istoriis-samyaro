@@ -4,11 +4,11 @@
 
 /* --- კურსების ფერები (data-color ატრიბუტით) --- */
 [data-color="green"]  { --c: var(--color-primary);   --c-dark: var(--color-primary-dark); }
-[data-color="blue"]   { --c: var(--color-secondary); --c-dark: var(--color-secondary-dark); }
+[data-color="blue"]   { --c: var(--color-slate);     --c-dark: var(--color-slate-dark); }
 [data-color="purple"] { --c: var(--color-purple);    --c-dark: var(--color-purple-dark); }
 [data-color="orange"] { --c: var(--color-streak);    --c-dark: var(--color-streak-dark); }
 [data-color="red"]    { --c: var(--color-danger);    --c-dark: var(--color-danger-dark); }
-[data-color="teal"]   { --c: #00c2a8;                --c-dark: #009e88; }
+[data-color="teal"]   { --c: var(--color-teal);      --c-dark: var(--color-teal-dark); }
 [data-color="gold"]   { --c: var(--color-accent);    --c-dark: var(--color-accent-dark); }
 
 /* ----------------------------------------------------------
@@ -334,7 +334,7 @@
 }
 
 /* ----------------------------------------------------------
-   თავები (Chapters) — პერგამენტის ბანერები
+   თავები (Chapters) — აკადემიური ბარათი
    ---------------------------------------------------------- */
 .path-section {
   margin-top: var(--space-6);
@@ -346,112 +346,52 @@
 }
 
 .chapter-banner {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-5) calc(var(--space-5) + 4px);
-  color: var(--parchment-ink);
-  background:
-    /* გაცვეთილი კიდეები */
-    radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(122, 85, 24, 0.2) 100%),
-    /* სინათლის ლაქა */
-    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.35), transparent 42%),
-    /* ძველი ქაღალდის ბოჭკოები */
-    repeating-linear-gradient(115deg, rgba(122, 85, 24, 0.035) 0 2px, transparent 2px 7px),
-    linear-gradient(180deg, var(--parchment), var(--parchment-deep));
-  border: 3px solid var(--bronze);
-  border-radius: 18px;
-  box-shadow:
-    0 5px 0 var(--bronze-dark),
-    inset 0 0 28px rgba(122, 85, 24, 0.16);
-}
-
-/* შიდა კლასიკური ჩარჩო */
-.chapter-banner::before {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  border: 1.5px solid var(--bronze-light);
-  border-radius: 12px;
-  pointer-events: none;
-}
-
-/* ბრინჯაოს მოქლონები ჩარჩოს კუთხეებში */
-.chapter-banner::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  pointer-events: none;
-  --rivet: radial-gradient(circle, var(--bronze-light) 0 2px, var(--bronze) 2.5px 4px, transparent 4.5px);
-  background:
-    var(--rivet) top left / 12px 12px no-repeat,
-    var(--rivet) top right / 12px 12px no-repeat,
-    var(--rivet) bottom left / 12px 12px no-repeat,
-    var(--rivet) bottom right / 12px 12px no-repeat;
-}
-
-/* ცვილის ბეჭედი — კურსის ფერით */
-.chapter-banner__seal {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 58px;
-  height: 58px;
-  font-family: var(--font-serif);
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-heavy);
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
-  background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--c) 70%, #fff), var(--c) 55%, var(--c-dark));
-  border-radius: 46% 54% 50% 50% / 52% 48% 54% 46%;
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--c-dark) 85%, #000),
-    inset 0 0 0 5px rgba(255, 255, 255, 0.18),
-    0 3px 0 3px rgba(0, 0, 0, 0.18);
+  align-items: flex-end;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-5);
+  color: var(--color-text);
+  background-color: var(--parchment);
+  border: 1px solid var(--color-border);
+  border-left: 6px solid var(--c);
+  border-radius: var(--radius-md);
 }
 
 .chapter-banner__body {
-  position: relative;
-  z-index: 1;
-  flex: 1 1 220px;
+  flex: 1 1 260px;
   min-width: 0;
 }
 
 .chapter-banner__eyebrow {
   margin: 0 0 var(--space-1);
-  font-family: var(--font-serif);
   font-size: var(--fs-xs);
-  font-weight: var(--fw-heavy);
-  letter-spacing: 0.12em;
-  color: var(--bronze);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
 }
 
 .chapter-banner__title {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: clamp(1.25rem, 4.5vw, 1.65rem);
+  font-size: clamp(1.3rem, 4.5vw, 1.6rem);
+  font-weight: var(--fw-bold);
   line-height: 1.25;
   overflow-wrap: anywhere;
 }
 
 .chapter-banner__desc {
-  margin: var(--space-1) 0 0;
+  margin: var(--space-2) 0 0;
   font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
-  color: var(--parchment-muted);
+  color: var(--color-text-muted);
 }
 
 .chapter-banner__progress {
-  position: relative;
-  z-index: 1;
-  flex: 1 1 160px;
-  max-width: 240px;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-heavy);
+  flex: 0 1 200px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
 }
 
 .chapter-banner__status {
@@ -459,77 +399,72 @@
   margin-bottom: var(--space-1);
   padding: 1px var(--space-2);
   font-size: var(--fs-xs);
-  border-radius: var(--radius-pill);
+  font-weight: var(--fw-bold);
+  border-radius: var(--radius-sm);
 }
 
 .chapter--completed .chapter-banner__status {
-  color: #5a3d00;
-  background: linear-gradient(180deg, var(--gold), var(--gold-mid));
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
 }
 
 .chapter--locked .chapter-banner__status {
   color: var(--stone-ink);
-  background-color: var(--stone-hi);
+  background-color: var(--stone);
 }
 
-/* პროგრესი: ბრინჯაოს ღარი + ოქროს შევსება */
+/* პროგრესი: თხელი, ბრტყელი ზოლი */
 .chapter-progress {
-  height: 12px;
-  margin-top: var(--space-1);
-  background-color: color-mix(in srgb, var(--parchment-deep) 70%, var(--bronze-dark));
-  border: 1.5px solid var(--bronze);
+  height: 6px;
+  margin-top: var(--space-2);
+  background-color: var(--stone);
   border-radius: var(--radius-pill);
-  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.25);
   overflow: hidden;
 }
 
 .chapter-progress__fill {
   width: 0;
   height: 100%;
-  background: linear-gradient(180deg, var(--gold-hi), var(--gold) 45%, var(--gold-mid));
+  background-color: var(--color-primary);
   border-radius: inherit;
   transition: width 400ms ease;
 }
 
-/* დაბლოკილი თავი — „ჩაქრალი“ პერგამენტი */
+/* დაბლოკილი თავი — ნეიტრალური აქცენტი და ჩამქრალი ტექსტი */
 .chapter--locked .chapter-banner {
-  filter: grayscale(0.85);
-  opacity: 0.75;
+  border-left-color: var(--color-border-strong);
+}
+
+.chapter--locked .chapter-banner__title,
+.chapter--locked .chapter-banner__eyebrow {
+  color: var(--color-text-muted);
 }
 
 @media (max-width: 420px) {
   .chapter-banner {
-    gap: var(--space-3);
-    padding: var(--space-4) calc(var(--space-4) + 4px);
-  }
-
-  .chapter-banner__seal {
-    width: 48px;
-    height: 48px;
-    font-size: var(--fs-md);
+    padding: var(--space-4);
   }
 
   .chapter-banner__progress {
-    max-width: none;
     flex-basis: 100%;
   }
 }
 
 /* ----------------------------------------------------------
-   გაკვეთილების ბილიკი — რუკის მარშრუტი + მედალიონები
+   გაკვეთილების ბილიკი — ბრტყელი ნიშნები + ძველი რუკის მარშრუტი
    ---------------------------------------------------------- */
 .path {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-6);
+  gap: 4.5rem;                       /* დიდი მანძილი — მარშრუტი მკაფიოდ ჩანს */
   margin: 0;
-  padding: var(--space-7) 0 var(--space-5);
+  padding: var(--space-6) 0 var(--space-5);
   list-style: none;
 }
 
-/* ძველი რუკის დაკლაკნილი წყვეტილი გზა (SVG, JS ხატავს) */
+/* დაკლაკნილი წყვეტილი მარშრუტი (SVG, JS ხატავს) */
 .path__route {
   position: absolute;
   inset: 0;
@@ -542,20 +477,19 @@
 
 .path__route-line {
   fill: none;
-  stroke: var(--route-muted);
-  stroke-width: 4;
+  stroke: var(--route-ahead);
+  stroke-width: 2.5;
   stroke-linecap: round;
-  stroke-dasharray: 1 11;
+  stroke-dasharray: 7 7;
 }
 
 .path__route-line--done {
-  stroke: var(--route);
-  stroke-width: 4.5;
+  stroke: var(--route-done);
 }
 
 .path__item {
   /* ზიგზაგი: --offset JS-იდან (-1.6 … 1.6) */
-  --step: 52px;
+  --step: 56px;
   position: relative;
   z-index: 1;
   display: flex;
@@ -568,7 +502,7 @@
 
 @media (max-width: 420px) {
   .path__item {
-    --step: 30px;
+    --step: 32px;
   }
 }
 
@@ -578,173 +512,82 @@
   place-items: center;
 }
 
-/* --- მედალიონი (საერთო) --- */
+/* --- ნიშანი (საერთო): ბრტყელი, მქრქალი წრე --- */
 .medallion {
-  --size: 78px;
-  --depth: 6px;
-  --face: var(--stone);
-  --rim: var(--stone-low);
-  --edge: var(--stone-low);
+  --size: 64px;
+  --fill: var(--stone);
   --ink: var(--stone-ink);
 
-  position: relative;
   display: grid;
   place-items: center;
   width: var(--size);
   height: var(--size);
   padding: 0;
-  font-family: var(--font-serif);
-  font-size: 1.9rem;
+  font-family: var(--font-main);
+  font-size: 1.6rem;
   font-weight: var(--fw-heavy);
   line-height: 1;
   color: var(--ink);
-  background: var(--face);
-  border: 3px solid var(--rim);
+  background-color: var(--fill);
+  border: 0;
   border-radius: 50%;
-  box-shadow: 0 var(--depth) 0 var(--edge);
   cursor: pointer;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
-    filter var(--transition-fast);
-}
-
-.medallion:hover {
-  filter: brightness(1.05);
+  transition: transform var(--transition-fast), background-color var(--transition);
 }
 
 .medallion:active {
-  transform: translateY(var(--depth));
-  box-shadow: 0 0 0 var(--edge);
-}
-
-/* ამოტვიფრული შიდა რგოლი */
-.medallion::before {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border-radius: 50%;
-  border: 2px solid rgba(0, 0, 0, 0.18);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  pointer-events: none;
-}
-
-/* მონეტის დაკბილული კიდე */
-.medallion::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: repeating-conic-gradient(rgba(0, 0, 0, 0.2) 0 3deg, transparent 3deg 7deg);
-  -webkit-mask: radial-gradient(closest-side, transparent 86%, #000 88%);
-  mask: radial-gradient(closest-side, transparent 86%, #000 88%);
-  pointer-events: none;
+  transform: scale(0.94);
 }
 
 .medallion__symbol {
-  position: relative;
-  z-index: 1;
-  /* ამოტვიფრული (engraved) ეფექტი */
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55), 0 -1px 0 rgba(0, 0, 0, 0.25);
+  display: grid;
+  place-items: center;
 }
 
-/* გავლილი — ოქროს მედალიონი */
+.medallion__symbol svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* გავლილი — მქრქალი ზურმუხტი, თეთრი ✓ */
 .medallion--completed {
-  --face: radial-gradient(circle at 35% 30%, var(--gold-hi) 0 12%, var(--gold) 40%, var(--gold-mid) 74%, var(--gold-low) 100%);
-  --rim: var(--gold-low);
-  --edge: #6f5000;
-  --ink: #6f4e00;
+  --fill: var(--color-primary);
+  --ink: #fffdf9;
 }
 
-/* მიმდინარე — ბრინჯაოს მედალიონი მანათობელი ბეჭდით */
+.medallion--completed:hover {
+  background-color: var(--color-primary-dark);
+}
+
+/* მიმდინარე — მქრქალი ტერაკოტა + რბილი, სადა ჩარჩო */
 .medallion--current {
-  --size: 86px;
-  --face: radial-gradient(circle at 35% 30%, #ffe7b3 0 10%, #e9b468 38%, #c08433 72%, #8c5a1c 100%);
-  --rim: #7a4f14;
-  --edge: #5c3b0c;
-  --ink: #5a360a;
+  --size: 72px;
+  --fill: var(--color-secondary);
+  --ink: #fffdf9;
+  box-shadow: 0 0 0 5px var(--color-bg), 0 0 0 7px color-mix(in srgb, var(--color-secondary) 45%, transparent);
 }
 
-.medallion-halo {
-  position: absolute;
-  inset: -11px;
-  border: 4px solid var(--gold);
-  border-radius: 50%;
-  box-shadow: 0 0 16px 3px rgba(255, 200, 40, 0.65), inset 0 0 10px rgba(255, 200, 40, 0.5);
-  pointer-events: none;
-  animation: halo-glow 1.8s ease-in-out infinite;
+.medallion--current:hover {
+  background-color: var(--color-secondary-dark);
 }
 
-@keyframes halo-glow {
-  0%, 100% { transform: scale(0.97); opacity: 0.75; }
-  50%      { transform: scale(1.07); opacity: 1; }
-}
-
-/* დაბლოკილი — ქვის გრავიურა */
+/* დაბლოკილი — მქრქალი ღია ქვა */
 .medallion--locked {
-  --face: radial-gradient(circle at 40% 32%, var(--stone-hi) 0 15%, var(--stone) 60%, var(--stone-low) 100%);
-  --rim: var(--stone-low);
-  --edge: color-mix(in srgb, var(--stone-low) 70%, #000);
-  --ink: var(--stone-ink);
   cursor: not-allowed;
-  box-shadow: 0 var(--depth) 0 var(--edge), inset 0 3px 7px rgba(0, 0, 0, 0.22);
 }
 
-.medallion--locked::after {
-  display: none;
-}
-
-.medallion--locked .medallion__symbol {
-  font-size: 1.5rem;
-  filter: grayscale(1);
-  opacity: 0.55;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.medallion--locked:hover {
-  filter: none;
-}
-
-/* "დაწყება" — პერგამენტის იარლიყი მიმდინარე გაკვეთილის თავზე */
+/* "დაწყება" — სადა იარლიყი მიმდინარე გაკვეთილის თავზე */
 .path__start {
   position: relative;
-  padding: var(--space-1) var(--space-4);
-  font-family: var(--font-serif);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-heavy);
-  letter-spacing: 0.04em;
-  color: var(--bronze-dark);
-  background: linear-gradient(180deg, var(--parchment), var(--parchment-deep));
-  border: 2px solid var(--bronze);
+  padding: 2px var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  box-shadow: 0 3px 0 var(--bronze-dark);
-  animation: bob 1.6s ease-in-out infinite;
-}
-
-:root[data-theme="dark"] .path__start {
-  color: var(--parchment-ink);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .path__start {
-    color: var(--parchment-ink);
-  }
-}
-
-.path__start::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -8px;
-  width: 11px;
-  height: 11px;
-  background-color: var(--parchment-deep);
-  border-right: 2px solid var(--bronze);
-  border-bottom: 2px solid var(--bronze);
-  transform: translateX(-50%) rotate(45deg);
-}
-
-@keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-5px); }
 }
 
 /* სახელწოდება — ფონით, რომ მარშრუტის ხაზი არ გადაკვეთოს */
@@ -780,10 +623,9 @@
   max-width: calc(100% - 2rem);
   padding: var(--space-3) var(--space-5);
   font-weight: var(--fw-bold);
-  color: var(--color-text-inverse);
-  background-color: #3c3c3c;
+  color: var(--color-bg);
+  background-color: var(--color-text);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 0 #1f1f1f;
   transform: translateX(-50%);
   animation: toast-in 200ms ease;
 }

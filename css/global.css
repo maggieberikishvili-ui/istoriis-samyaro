@@ -162,7 +162,7 @@ a:hover {
 .btn--accent {
   --btn-bg: var(--color-accent);
   --btn-shadow: var(--color-accent-dark);
-  --btn-color: #4b3800;
+  --btn-color: #2b2623;
 }
 
 /* თეთრი ღილაკი სქელი ბორდერით */
@@ -268,13 +268,13 @@ a:hover {
 }
 
 .alert--error {
-  color: var(--color-danger-dark);
+  color: var(--color-danger);
   background-color: var(--color-danger-light);
   border-color: var(--color-danger);
 }
 
 .alert--success {
-  color: var(--color-primary-dark);
+  color: var(--color-primary);
   background-color: var(--color-primary-light);
   border-color: var(--color-primary);
 }
