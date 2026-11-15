@@ -1,0 +1,111 @@
+/* ==========================================================
+   ისტორიის სამყარო — დიზაინის ცვლადები
+   ნათელი (Duolingo-ს სტილის) პალიტრა + Dark Mode
+   ========================================================== */
+
+:root {
+  /* --- ძირითადი ფერები --- */
+  --color-primary: #58cc02;          /* მწვანე */
+  --color-primary-dark: #46a302;     /* 3D ჩრდილი */
+  --color-primary-light: #d7ffb8;
+
+  --color-secondary: #1cb0f6;        /* ცისფერი */
+  --color-secondary-dark: #1899d6;
+  --color-secondary-light: #ddf4ff;
+
+  --color-accent: #ffc800;           /* ოქროსფერი (XP) */
+  --color-accent-dark: #e5a500;
+
+  --color-danger: #ff4b4b;           /* წითელი (გულები / შეცდომა) */
+  --color-danger-dark: #ea2b2b;
+  --color-danger-light: #ffdfe0;
+
+  --color-streak: #ff9600;           /* ნარინჯისფერი (streak) */
+  --color-streak-dark: #cc7800;
+
+  --color-purple: #ce82ff;
+  --color-purple-dark: #a568cc;
+
+  /* --- ზედაპირები და ტექსტი --- */
+  --color-bg: #ffffff;
+  --color-bg-soft: #f7f7f7;
+  --color-surface: #ffffff;
+  --color-border: #e5e5e5;
+  --color-border-strong: #d0d0d0;
+
+  --color-text: #3c3c3c;
+  --color-text-muted: #777777;
+  --color-text-inverse: #ffffff;
+
+  /* --- ტიპოგრაფია --- */
+  --font-main: "Noto Sans Georgian", "FiraGO", "BPG Arial", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.75rem;
+  --fs-xxl: 2.5rem;
+  --fw-regular: 500;
+  --fw-bold: 700;
+  --fw-heavy: 800;
+
+  /* --- ზომები / ფორმები --- */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  --border-width: 2px;
+  --shadow-depth: 4px;               /* 3D ღილაკის სიღრმე */
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --transition-fast: 100ms ease;
+  --transition: 200ms ease;
+
+  color-scheme: light;
+}
+
+/* --- Dark Mode: სისტემური პარამეტრი (თუ მომხმარებელმა ხელით არ აირჩია ნათელი) --- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #131f24;
+    --color-bg-soft: #1a2a31;
+    --color-surface: #131f24;
+    --color-border: #37464f;
+    --color-border-strong: #4b5b64;
+
+    --color-text: #f1f7fb;
+    --color-text-muted: #a5b4bc;
+
+    --color-primary-light: #1f3a12;
+    --color-secondary-light: #10334a;
+    --color-danger-light: #3d1d1f;
+
+    color-scheme: dark;
+  }
+}
+
+/* --- Dark Mode: ხელით არჩეული --- */
+:root[data-theme="dark"] {
+  --color-bg: #131f24;
+  --color-bg-soft: #1a2a31;
+  --color-surface: #131f24;
+  --color-border: #37464f;
+  --color-border-strong: #4b5b64;
+
+  --color-text: #f1f7fb;
+  --color-text-muted: #a5b4bc;
+
+  --color-primary-light: #1f3a12;
+  --color-secondary-light: #10334a;
+  --color-danger-light: #3d1d1f;
+
+  color-scheme: dark;
+}

@@ -1,0 +1,225 @@
+/* ==========================================================
+   ისტორიის სამყარო — ავტორიზაციის გვერდი
+   ========================================================== */
+
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-inline: var(--space-4);
+}
+
+/* --- ზედა ზოლი --- */
+.auth-header {
+  display: flex;
+  justify-content: flex-end;
+  padding-block: var(--space-4);
+  max-width: 1100px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+/* --- ძირითადი განლაგება --- */
+.auth-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: var(--space-6);
+  max-width: 1100px;
+  width: 100%;
+  margin-inline: auto;
+  padding-block: var(--space-4) var(--space-7);
+}
+
+@media (min-width: 860px) {
+  .auth-main {
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--space-7);
+  }
+}
+
+/* --- მისალმების ბლოკი --- */
+.hero {
+  text-align: center;
+}
+
+@media (min-width: 860px) {
+  .hero {
+    text-align: left;
+  }
+}
+
+.hero__emblem {
+  display: inline-grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  margin-bottom: var(--space-5);
+  font-size: 3.5rem;
+  background-color: var(--color-accent);
+  border-radius: 32px;
+  box-shadow: 0 6px 0 var(--color-accent-dark);
+  animation: float 3.2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+.logo {
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-weight: var(--fw-heavy);
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-3);
+}
+
+.hero__text {
+  font-size: var(--fs-lg);
+  color: var(--color-text-muted);
+  max-width: 34ch;
+  margin-inline: auto;
+}
+
+@media (min-width: 860px) {
+  .hero__text {
+    margin-inline: 0;
+  }
+}
+
+.hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 860px) {
+  .hero__stats {
+    justify-content: flex-start;
+  }
+}
+
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface);
+}
+
+.stat-chip--xp     { color: var(--color-accent-dark); }
+.stat-chip--streak { color: var(--color-streak); }
+.stat-chip--hearts { color: var(--color-danger); }
+
+/* --- ფორმის ბარათი --- */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+/* ჩანართები: შესვლა / რეგისტრაცია */
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  margin-bottom: var(--space-5);
+  background-color: var(--color-bg-soft);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.tab {
+  min-height: 42px;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--color-secondary);
+  background-color: var(--color-surface);
+  box-shadow: 0 2px 0 var(--color-border);
+}
+
+.auth-form__title {
+  font-size: var(--fs-xl);
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+
+.auth-form .alert {
+  margin-bottom: var(--space-4);
+}
+
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap .input {
+  padding-right: 3.25rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: var(--space-2);
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  font-size: 1.1rem;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.field__hint {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* გამყოფი "ან" */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: var(--border-width);
+  background-color: var(--color-border);
+}
+
+.auth-footer {
+  margin-top: var(--space-5);
+  font-size: var(--fs-xs);
+  text-align: center;
+  color: var(--color-text-muted);
+}
