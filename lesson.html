@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ისტორიის სამყარო — გაკვეთილი</title>
+
+  <!-- ავტორიზაციის შემოწმება და თემის ადრეული ჩატვირთვა -->
+  <script>
+    try {
+      if (!localStorage.getItem("ims_currentUser")) {
+        window.location.replace("index.html");
+      }
+      var savedTheme = localStorage.getItem("ims_theme");
+      if (savedTheme === "dark" || savedTheme === "light") {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      }
+    } catch (e) {
+      window.location.replace("index.html");
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/lesson.css">
+
+  <script src="js/data.js" defer></script>
+  <script src="js/lesson.js" defer></script>
+</head>
+<body>
+  <div class="lesson-app">
+    <!-- ზედა პანელი -->
+    <header class="lesson-top">
+      <a class="lesson-top__close" href="dashboard.html" aria-label="გაკვეთილის დახურვა და დაფაზე დაბრუნება">✕</a>
+
+      <div class="lesson-progress" role="progressbar" id="progressBar"
+           aria-label="გაკვეთილის პროგრესი" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="lesson-progress__fill" id="progressFill"></div>
+      </div>
+
+      <div class="lesson-hearts" id="heartsBox" title="დარჩენილი სიცოცხლეები">
+        <span aria-hidden="true">❤️</span>
+        <span id="heartsCount">5</span>
+        <span class="visually-hidden">სიცოცხლე</span>
+      </div>
+    </header>
+
+    <!-- სავარჯიშოს არე -->
+    <main class="lesson-stage" id="stage" aria-live="polite"></main>
+
+    <!-- ქვედა პანელი: ღილაკი + უკუკავშირი -->
+    <footer class="lesson-footer" id="footer" data-state="idle">
+      <div class="lesson-footer__inner">
+        <div class="feedback" id="feedback" role="status" hidden>
+          <span class="feedback__icon" id="feedbackIcon" aria-hidden="true"></span>
+          <div class="feedback__body">
+            <p class="feedback__title" id="feedbackTitle"></p>
+            <p class="feedback__text" id="feedbackText"></p>
+          </div>
+        </div>
+        <button type="button" class="btn lesson-footer__btn" id="primaryBtn" disabled>შემოწმება</button>
+      </div>
+    </footer>
+
+    <!-- გამარჯვების ეკრანი -->
+    <section class="result" id="victoryScreen" aria-labelledby="victoryTitle" hidden>
+      <div class="result__emblem result__emblem--win" aria-hidden="true">🏆</div>
+      <h1 class="result__title" id="victoryTitle">გაკვეთილი დასრულდა!</h1>
+      <p class="result__subtitle" id="victorySubtitle"></p>
+      <div class="result__stats">
+        <div class="result-stat result-stat--xp">
+          <span class="result-stat__label">მიღებული XP</span>
+          <span class="result-stat__value" id="victoryXp"></span>
+        </div>
+        <div class="result-stat result-stat--accuracy">
+          <span class="result-stat__label">სიზუსტე</span>
+          <span class="result-stat__value" id="victoryAccuracy"></span>
+        </div>
+      </div>
+      <a class="btn btn--block result__btn" href="dashboard.html">დაფაზე დაბრუნება</a>
+    </section>
+
+    <!-- სიცოცხლეები ამოიწურა -->
+    <section class="result" id="gameOverScreen" aria-labelledby="gameOverTitle" hidden>
+      <div class="result__emblem result__emblem--lose" aria-hidden="true">💔</div>
+      <h1 class="result__title" id="gameOverTitle">სიცოცხლეები ამოიწურა — სცადე თავიდან!</h1>
+      <p class="result__subtitle">დაფაზე სიცოცხლეები 5-მდე აღდგება. რამდენიმე წამში ავტომატურად გადახვალ.</p>
+      <a class="btn btn--danger btn--block result__btn" href="dashboard.html">დაფაზე დაბრუნება</a>
+    </section>
+  </div>
+</body>
+</html>

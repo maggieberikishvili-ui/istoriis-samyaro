@@ -1,0 +1,615 @@
+/* ==========================================================
+   ისტორიის სამყარო — გაკვეთილის ლოგიკა
+   ----------------------------------------------------------
+   - სავარჯიშოები: theory, choice, truefalse, fill, match
+   - არასწორი პასუხი = −1 სიცოცხლე (მაშინვე ინახება პროფილში)
+   - 0 სიცოცხლე → „სიცოცხლეები ამოიწურა“ → dashboard.html
+   - დასრულება: პირველად → სრული XP, განმეორებით → +5 XP
+   - პროფილი ინახება ორივეგან: ims_currentUser და
+     ims_users[email].profile (თუ სტუმარი არ არის)
+   - ტექსტი DOM-ში მხოლოდ textContent-ით
+   ========================================================== */
+
+(function () {
+  "use strict";
+
+  const STORAGE_KEYS = {
+    users: "ims_users",
+    currentUser: "ims_currentUser",
+  };
+
+  const LOGIN_URL = "index.html";
+  const DASHBOARD_URL = "dashboard.html";
+  const REPEAT_XP = 5;
+  const MAX_HEARTS = 5;
+  const GAME_OVER_REDIRECT_MS = 4000;
+
+  /* ==========================================================
+     პროფილის საცავი (იგივე წესები, რაც dashboard.js-ში)
+     ========================================================== */
+
+  function readJSON(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function writeJSON(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function toCount(value, fallback) {
+    const n = Number(value);
+    return Number.isFinite(n) && n >= 0 ? Math.floor(n) : fallback;
+  }
+
+  function normalizeProfile(raw) {
+    if (!raw || typeof raw !== "object") return null;
+    return {
+      name: typeof raw.name === "string" && raw.name.trim() ? raw.name : "მოსწავლე",
+      email: typeof raw.email === "string" ? raw.email : null,
+      isGuest: raw.isGuest === true || !raw.email,
+      xp: toCount(raw.xp, 0),
+      streak: toCount(raw.streak, 1),
+      hearts: Math.min(toCount(raw.hearts, MAX_HEARTS), MAX_HEARTS),
+      completedLessons: Array.isArray(raw.completedLessons)
+        ? raw.completedLessons.filter((id) => typeof id === "string")
+        : [],
+      lastActive: typeof raw.lastActive === "string" ? raw.lastActive : "",
+    };
+  }
+
+  function loadProfile() {
+    return normalizeProfile(readJSON(STORAGE_KEYS.currentUser, null));
+  }
+
+  function saveProfile(profile) {
+    writeJSON(STORAGE_KEYS.currentUser, profile);
+    if (!profile.isGuest && profile.email) {
+      const users = readJSON(STORAGE_KEYS.users, {});
+      if (users && Object.prototype.hasOwnProperty.call(users, profile.email)) {
+        users[profile.email].profile = profile;
+        writeJSON(STORAGE_KEYS.users, users);
+      }
+    }
+  }
+
+  /** ყოველთვის ახლად კითხულობს პროფილს, ცვლის და ინახავს ორივეგან. */
+  function updateProfile(mutator) {
+    const profile = loadProfile();
+    if (!profile) {
+      window.location.replace(LOGIN_URL);
+      return null;
+    }
+    mutator(profile);
+    saveProfile(profile);
+    return profile;
+  }
+
+  /* ==========================================================
+     გაკვეთილის ჩატვირთვა და შემოწმება
+     ========================================================== */
+
+  const initialProfile = loadProfile();
+  if (!initialProfile) {
+    window.location.replace(LOGIN_URL);
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const course = window.IMS_DATA.getCourse(params.get("course"));
+  const lesson = course ? window.IMS_DATA.getLesson(course.id, params.get("lesson")) : null;
+
+  if (!lesson || !Array.isArray(lesson.steps) || lesson.steps.length === 0) {
+    window.location.replace(DASHBOARD_URL);
+    return;
+  }
+
+  // დაბლოკილ გაკვეთილზე პირდაპირი ბმულით შესვლის აკრძალვა
+  const doneSet = new Set(initialProfile.completedLessons);
+  const lessonIndex = course.lessons.indexOf(lesson);
+  const firstOpenIndex = course.lessons.findIndex((l) => !doneSet.has(l.id));
+  if (firstOpenIndex !== -1 && lessonIndex > firstOpenIndex) {
+    window.location.replace(DASHBOARD_URL);
+    return;
+  }
+
+  document.title = lesson.title + " — ისტორიის სამყარო";
+
+  /* ==========================================================
+     მდგომარეობა და DOM
+     ========================================================== */
+
+  const steps = lesson.steps;
+  const questionTotal = steps.filter((s) => s.type !== "theory").length;
+
+  const state = {
+    index: 0,
+    hearts: initialProfile.hearts,
+    correct: 0,
+    onPrimary: null,
+    finished: false,
+  };
+
+  const el = {
+    stage: document.getElementById("stage"),
+    footer: document.getElementById("footer"),
+    feedback: document.getElementById("feedback"),
+    feedbackIcon: document.getElementById("feedbackIcon"),
+    feedbackTitle: document.getElementById("feedbackTitle"),
+    feedbackText: document.getElementById("feedbackText"),
+    primaryBtn: document.getElementById("primaryBtn"),
+    progressBar: document.getElementById("progressBar"),
+    progressFill: document.getElementById("progressFill"),
+    heartsBox: document.getElementById("heartsBox"),
+    heartsCount: document.getElementById("heartsCount"),
+    victory: document.getElementById("victoryScreen"),
+    victorySubtitle: document.getElementById("victorySubtitle"),
+    victoryXp: document.getElementById("victoryXp"),
+    victoryAccuracy: document.getElementById("victoryAccuracy"),
+    gameOver: document.getElementById("gameOverScreen"),
+  };
+
+  function createEl(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function shuffle(list) {
+    const arr = list.slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  /* ==========================================================
+     ზედა პანელი: პროგრესი და სიცოცხლეები
+     ========================================================== */
+
+  function renderProgress() {
+    const pct = Math.round((state.index / steps.length) * 100);
+    el.progressFill.style.width = pct + "%";
+    el.progressBar.setAttribute("aria-valuenow", String(pct));
+  }
+
+  function renderHearts(animate) {
+    el.heartsCount.textContent = String(state.hearts);
+    if (animate) {
+      el.heartsBox.classList.remove("is-hit");
+      void el.heartsBox.offsetWidth; // ანიმაციის თავიდან გაშვება
+      el.heartsBox.classList.add("is-hit");
+    }
+  }
+
+  function loseHeart() {
+    state.hearts = Math.max(0, state.hearts - 1);
+    updateProfile((p) => {
+      p.hearts = state.hearts;
+    });
+    renderHearts(true);
+  }
+
+  /* ==========================================================
+     ქვედა პანელი
+     ========================================================== */
+
+  function setFooter(options) {
+    el.footer.dataset.state = options.state || "idle";
+    el.feedback.hidden = true;
+    el.primaryBtn.textContent = options.label;
+    el.primaryBtn.disabled = !options.enabled;
+    el.primaryBtn.classList.toggle("btn--danger", options.state === "wrong");
+    state.onPrimary = options.onPrimary || null;
+  }
+
+  function enablePrimary(enabled) {
+    el.primaryBtn.disabled = !enabled;
+  }
+
+  el.primaryBtn.addEventListener("click", () => {
+    if (!el.primaryBtn.disabled && typeof state.onPrimary === "function") {
+      state.onPrimary();
+    }
+  });
+
+  /**
+   * პასუხის შედეგის ჩვენება.
+   * heartAlreadyLost — წყვილების სავარჯიშოში სიცოცხლე შეცდომისთანავე აკლდება.
+   */
+  function showResult(isCorrect, explanation, heartAlreadyLost) {
+    if (isCorrect) {
+      state.correct += 1;
+    } else if (!heartAlreadyLost) {
+      loseHeart();
+    }
+
+    const outOfHearts = state.hearts <= 0;
+
+    setFooter({
+      state: isCorrect ? "correct" : "wrong",
+      label: "გაგრძელება",
+      enabled: true,
+      onPrimary: outOfHearts ? showGameOver : nextStep,
+    });
+
+    el.feedbackIcon.textContent = isCorrect ? "✓" : "✕";
+    el.feedbackTitle.textContent = isCorrect ? pickPraise() : "არასწორია";
+    el.feedbackText.textContent = explanation || "";
+    el.feedback.hidden = false;
+    el.primaryBtn.focus();
+  }
+
+  function pickPraise() {
+    const list = ["შესანიშნავია!", "სწორია!", "ყოჩაღ!", "ზუსტად ასეა!"];
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  /* ==========================================================
+     ნაბიჯების ნავიგაცია
+     ========================================================== */
+
+  function nextStep() {
+    state.index += 1;
+    renderProgress();
+    if (state.index >= steps.length) {
+      finishLesson();
+    } else {
+      renderStep();
+    }
+  }
+
+  function renderStep() {
+    const step = steps[state.index];
+    el.stage.replaceChildren();
+    // ახალი ნაბიჯის ანიმაცია
+    el.stage.style.animation = "none";
+    void el.stage.offsetWidth;
+    el.stage.style.animation = "";
+
+    const renderers = {
+      theory: renderTheory,
+      choice: renderChoice,
+      truefalse: renderTrueFalse,
+      fill: renderFill,
+      match: renderMatch,
+    };
+    (renderers[step.type] || renderTheory)(step);
+  }
+
+  /* ==========================================================
+     სავარჯიშოების ტიპები
+     ========================================================== */
+
+  // --- თეორიული ბარათი ---
+  function renderTheory(step) {
+    const wrap = createEl("article", "theory");
+    wrap.append(createEl("div", "theory__icon", step.icon || "📖"));
+    wrap.firstChild.setAttribute("aria-hidden", "true");
+    wrap.append(createEl("h1", "theory__title", step.title || ""));
+
+    (step.paragraphs || []).forEach((text) => {
+      wrap.append(createEl("p", "theory__text", text));
+    });
+
+    if (step.fact) {
+      const fact = createEl("aside", "theory__fact");
+      const icon = createEl("span", "theory__fact-icon", "💡");
+      icon.setAttribute("aria-hidden", "true");
+      fact.append(icon, createEl("p", "theory__fact-text", step.fact));
+      wrap.append(fact);
+    }
+
+    el.stage.append(wrap);
+    setFooter({ label: "გასაგებია, გავაგრძელოთ", enabled: true, onPrimary: nextStep });
+  }
+
+  /**
+   * ზოგადი „აირჩიე ერთი“ სავარჯიშო (choice / truefalse / fill).
+   * options: [{ text, correct }], onSelect: არჩევისას დამატებითი მოქმედება
+   */
+  function renderOptionExercise(config) {
+    let selected = null;
+
+    const list = createEl("div", "options " + (config.layout || ""));
+    list.setAttribute("role", "group");
+    list.setAttribute("aria-label", "პასუხის ვარიანტები");
+
+    const buttons = config.options.map((opt, i) => {
+      const btn = createEl("button", "option");
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", "false");
+      if (config.showKeys) {
+        const key = createEl("span", "option__key", String(i + 1));
+        key.setAttribute("aria-hidden", "true");
+        btn.append(key);
+      }
+      btn.append(createEl("span", "option__text", opt.text));
+
+      btn.addEventListener("click", () => {
+        selected = i;
+        buttons.forEach((b, j) => {
+          b.classList.toggle("is-selected", j === i);
+          b.setAttribute("aria-pressed", String(j === i));
+        });
+        if (config.onSelect) config.onSelect(opt);
+        enablePrimary(true);
+      });
+
+      list.append(btn);
+      return btn;
+    });
+
+    el.stage.append(list);
+
+    setFooter({
+      label: "შემოწმება",
+      enabled: false,
+      onPrimary: () => {
+        if (selected === null) return;
+        const isCorrect = config.options[selected].correct;
+
+        buttons.forEach((b, j) => {
+          b.disabled = true;
+          b.classList.remove("is-selected");
+          if (config.options[j].correct) b.classList.add("is-correct");
+          else if (j === selected) b.classList.add("is-wrong");
+        });
+        if (config.onCheck) config.onCheck(isCorrect);
+
+        let text = config.explanation || "";
+        if (!isCorrect && config.correctText) {
+          text = "სწორი პასუხი: " + config.correctText + ". " + text;
+        }
+        showResult(isCorrect, text, false);
+      },
+    });
+  }
+
+  function exerciseHeader(label, question) {
+    el.stage.append(createEl("p", "exercise__label", label));
+    if (question) el.stage.append(createEl("h1", "exercise__question", question));
+  }
+
+  // --- ტესტი 4 ვარიანტით ---
+  function renderChoice(step) {
+    exerciseHeader("აირჩიე სწორი პასუხი", step.question);
+    const options = shuffle(step.options.map((text, i) => ({ text, correct: i === step.answer })));
+    renderOptionExercise({
+      options: options,
+      showKeys: true,
+      explanation: step.explanation,
+      correctText: step.options[step.answer],
+    });
+  }
+
+  // --- სწორია / მცდარია ---
+  function renderTrueFalse(step) {
+    exerciseHeader("სწორია თუ მცდარი?", step.statement);
+    renderOptionExercise({
+      layout: "options--row",
+      options: [
+        { text: "✓ სწორია", correct: step.answer === true },
+        { text: "✕ მცდარია", correct: step.answer === false },
+      ],
+      showKeys: false,
+      explanation: step.explanation,
+    });
+  }
+
+  // --- წინადადების შევსება ---
+  function renderFill(step) {
+    exerciseHeader("შეავსე გამოტოვებული სიტყვა");
+
+    const sentence = createEl("p", "fill-sentence");
+    const blank = createEl("span", "fill-blank", " ");
+    blank.setAttribute("aria-label", "გამოტოვებული სიტყვა");
+    sentence.append(
+      document.createTextNode((step.before || "") + " "),
+      blank,
+      document.createTextNode(" " + (step.after || ""))
+    );
+    el.stage.append(sentence);
+
+    const options = shuffle(step.options.map((text, i) => ({ text, correct: i === step.answer })));
+    renderOptionExercise({
+      layout: "options--chips",
+      options: options,
+      showKeys: false,
+      explanation: step.explanation,
+      correctText: step.options[step.answer],
+      onSelect: (opt) => {
+        blank.textContent = opt.text;
+        blank.classList.add("is-filled");
+      },
+      onCheck: (isCorrect) => {
+        blank.classList.add(isCorrect ? "is-correct" : "is-wrong");
+      },
+    });
+  }
+
+  // --- წყვილების დაკავშირება ---
+  function renderMatch(step) {
+    exerciseHeader("დააკავშირე წყვილები", step.prompt);
+
+    const grid = createEl("div", "match-grid");
+    const leftCol = createEl("div", "match-col");
+    const rightCol = createEl("div", "match-col");
+    grid.append(leftCol, rightCol);
+    el.stage.append(grid);
+
+    let pickLeft = null;
+    let pickRight = null;
+    let matched = 0;
+    let mistakes = 0;
+    let locked = false;
+
+    function makeTile(text, pairIndex, side) {
+      const btn = createEl("button", "option", text);
+      btn.type = "button";
+      btn.dataset.pair = String(pairIndex);
+      btn.setAttribute("aria-pressed", "false");
+      btn.addEventListener("click", () => onPick(btn, side));
+      return btn;
+    }
+
+    const leftTiles = step.pairs.map((pair, i) => makeTile(pair[0], i, "left"));
+    const rightTiles = shuffle(step.pairs.map((pair, i) => makeTile(pair[1], i, "right")));
+    leftCol.append(...leftTiles);
+    rightCol.append(...rightTiles);
+
+    function select(btn, on) {
+      btn.classList.toggle("is-selected", on);
+      btn.setAttribute("aria-pressed", String(on));
+    }
+
+    function onPick(btn, side) {
+      if (locked || btn.disabled) return;
+
+      if (side === "left") {
+        if (pickLeft) select(pickLeft, false);
+        pickLeft = pickLeft === btn ? null : btn;
+        if (pickLeft) select(pickLeft, true);
+      } else {
+        if (pickRight) select(pickRight, false);
+        pickRight = pickRight === btn ? null : btn;
+        if (pickRight) select(pickRight, true);
+      }
+
+      if (pickLeft && pickRight) evaluatePair();
+    }
+
+    function evaluatePair() {
+      const a = pickLeft;
+      const b = pickRight;
+      pickLeft = null;
+      pickRight = null;
+      select(a, false);
+      select(b, false);
+
+      if (a.dataset.pair === b.dataset.pair) {
+        [a, b].forEach((t) => {
+          t.classList.add("is-matched");
+          t.disabled = true;
+        });
+        matched += 1;
+        if (matched === step.pairs.length) {
+          const perfect = mistakes === 0;
+          showResult(
+            perfect,
+            perfect
+              ? step.explanation || ""
+              : "ყველა წყვილი დაკავშირებულია, მაგრამ " + mistakes + " შეცდომით. " + (step.explanation || ""),
+            true
+          );
+        }
+        return;
+      }
+
+      // არასწორი წყვილი
+      mistakes += 1;
+      locked = true;
+      [a, b].forEach((t) => t.classList.add("is-wrong", "is-shake"));
+      loseHeart();
+
+      setTimeout(() => {
+        [a, b].forEach((t) => t.classList.remove("is-wrong", "is-shake"));
+        locked = false;
+        if (state.hearts <= 0) {
+          showResult(false, "წყვილის დაკავშირებისას დაშვებულია შეცდომა.", true);
+        }
+      }, 600);
+    }
+
+    setFooter({ label: "შემოწმება", enabled: false });
+  }
+
+  /* ==========================================================
+     დასრულება / სიცოცხლეების ამოწურვა
+     ========================================================== */
+
+  function hideLesson() {
+    el.stage.hidden = true;
+    el.footer.hidden = true;
+  }
+
+  function finishLesson() {
+    if (state.finished) return;
+    state.finished = true;
+
+    let xpGain = 0;
+    let firstTime = false;
+
+    updateProfile((p) => {
+      firstTime = !p.completedLessons.includes(lesson.id);
+      xpGain = firstTime ? toCount(lesson.xp, 10) : REPEAT_XP;
+      if (firstTime) p.completedLessons.push(lesson.id);
+      p.xp += xpGain;
+    });
+
+    const accuracy = questionTotal ? Math.round((state.correct / questionTotal) * 100) : 100;
+
+    hideLesson();
+    el.victoryXp.textContent = "+" + xpGain;
+    el.victoryAccuracy.textContent = accuracy + "%";
+    el.victorySubtitle.textContent = firstTime
+      ? "„" + lesson.title + "“ — გავლილია!"
+      : "განმეორებითი გავლა — სიმბოლური +" + REPEAT_XP + " XP.";
+    el.victory.hidden = false;
+    el.victory.querySelector(".result__btn").focus();
+  }
+
+  function showGameOver() {
+    if (state.finished) return;
+    state.finished = true;
+    hideLesson();
+    el.gameOver.hidden = false;
+    el.gameOver.querySelector(".result__btn").focus();
+    setTimeout(() => window.location.replace(DASHBOARD_URL), GAME_OVER_REDIRECT_MS);
+  }
+
+  /* ==========================================================
+     კლავიატურა: Enter → მთავარი ღილაკი, 1–4 → ვარიანტის არჩევა
+     ========================================================== */
+
+  document.addEventListener("keydown", (e) => {
+    if (state.finished || e.altKey || e.ctrlKey || e.metaKey) return;
+    const tag = document.activeElement && document.activeElement.tagName;
+
+    if (e.key === "Enter" && tag !== "BUTTON" && tag !== "A") {
+      e.preventDefault();
+      el.primaryBtn.click();
+      return;
+    }
+
+    if (/^[1-9]$/.test(e.key) && el.footer.dataset.state === "idle") {
+      const options = el.stage.querySelectorAll(".options .option:not(:disabled)");
+      const target = options[Number(e.key) - 1];
+      if (target) target.click();
+    }
+  });
+
+  /* ==========================================================
+     ინიციალიზაცია
+     ========================================================== */
+
+  renderHearts(false);
+  renderProgress();
+
+  if (state.hearts <= 0) {
+    showGameOver();
+  } else {
+    renderStep();
+  }
+})();

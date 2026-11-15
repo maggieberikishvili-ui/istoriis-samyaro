@@ -212,6 +212,17 @@
     });
   }
 
+  /* ---------- სიცოცხლეების აღდგენა ---------- */
+
+  // თუ გაკვეთილზე სიცოცხლეები ამოიწურა, დაფაზე დაბრუნებისას 5-მდე აღდგება
+  function refreshHearts() {
+    if (state.profile.hearts > 0) return;
+    updateProfile((p) => {
+      p.hearts = 5;
+    });
+    showToast("❤️ სიცოცხლეები აღდგა — სცადე თავიდან!");
+  }
+
   /* ---------- კურსის პროგრესი ---------- */
 
   function courseProgress(course) {
@@ -407,6 +418,7 @@
 
   renderStats();
   refreshStreak();
+  refreshHearts();
   renderThemeIcon();
 
   let savedCourse = null;
