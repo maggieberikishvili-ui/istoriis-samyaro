@@ -164,6 +164,9 @@
     if (!data.getCourse(courseId)) courseId = data.courses[0].id;
     state.courseId = courseId;
     store.writeString(store.KEYS.selectedCourse, courseId);
+    // „+ ❤️ აღდგენა“ — სავარჯიშო მხოლოდ არჩეული კურსის კითხვებით
+    el.refillBtn.href = store.URLS.lesson + "?" +
+      new URLSearchParams({ mode: "practice", course: courseId }).toString();
     renderCourses();
     renderPath();
   }

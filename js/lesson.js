@@ -28,7 +28,6 @@
   const PRACTICE_XP = 5;
   const PRACTICE_REDIRECT_MS = 3500;
   const PRACTICE_TYPES = ["choice", "truefalse", "fill"];
-  const PRACTICE_BASIC_COURSE = "grade-7"; // საბაზისო თემები
 
   /* ==========================================================
      გაკვეთილის ჩატვირთვა და შემოწმება
@@ -49,6 +48,8 @@
 
   let lesson = null;
   let steps;
+  let practiceCourse = null;
+  let practiceTarget = PRACTICE_SIZE; // რამდენი სწორი პასუხი სჭირდება სავარჯიშოს
 
   if (isPractice) {
     // სავარჯიშო საჭიროა მხოლოდ მაშინ, როცა სიცოცხლე 5-ზე ნაკლებია (და არა Pro)
@@ -56,11 +57,18 @@
       store.redirect(DASHBOARD_URL);
       return;
     }
-    steps = buildPracticeSteps(initialProfile);
+    // კურსი: ?course=… → დაფაზე ბოლოს არჩეული → პირველი კურსი
+    practiceCourse =
+      window.IMS_DATA.getCourse(params.get("course")) ||
+      window.IMS_DATA.getCourse(store.readString(store.KEYS.selectedCourse)) ||
+      window.IMS_DATA.courses[0];
+
+    steps = buildPracticeSteps(initialProfile, practiceCourse);
     if (steps.length === 0) {
       store.redirect(DASHBOARD_URL);
       return;
     }
+    practiceTarget = steps.length; // ჩვეულებრივ ზუსტად 3
     document.title = "სიცოცხლის აღდგენა — ისტორიის სამყარო";
   } else {
     const course = window.IMS_DATA.getCourse(params.get("course"));
@@ -85,31 +93,24 @@
   }
 
   /**
-   * სავარჯიშოს კითხვები: ჯერ გავლილი გაკვეთილებიდან,
-   * საკმარისი თუ არ არის — საბაზისო (მე-7 კლასის) თემებიდან.
+   * სავარჯიშოს კითხვები — მხოლოდ ერთი კურსიდან:
+   * მისი გავლილი გაკვეთილები + მიმდინარე (პირველი დაუსრულებელი).
+   * დაბლოკილი გაკვეთილები და სხვა კლასები არ შედის.
    */
-  function buildPracticeSteps(profile) {
+  function buildPracticeSteps(profile, course) {
     const done = new Set(profile.completedLessons);
+    const currentIndex = course.lessons.findIndex((l) => !done.has(l.id));
 
-    function collect(filter) {
-      const out = [];
-      window.IMS_DATA.courses.forEach((c) => {
-        c.lessons.forEach((l) => {
-          if (!filter(c, l)) return;
-          (l.steps || []).forEach((s) => {
-            if (PRACTICE_TYPES.includes(s.type)) out.push(s);
-          });
-        });
+    const pool = [];
+    course.lessons.forEach((l, i) => {
+      const unlocked = done.has(l.id) || i === currentIndex;
+      if (!unlocked) return;
+      (l.steps || []).forEach((s) => {
+        if (PRACTICE_TYPES.includes(s.type)) pool.push(s);
       });
-      return out;
-    }
+    });
 
-    let pool = shuffle(collect((c, l) => done.has(l.id)));
-    if (pool.length < PRACTICE_SIZE) {
-      const basics = collect((c) => c.id === PRACTICE_BASIC_COURSE).filter((s) => !pool.includes(s));
-      pool = pool.concat(shuffle(basics));
-    }
-    return pool.slice(0, PRACTICE_SIZE);
+    return shuffle(pool).slice(0, PRACTICE_SIZE);
   }
 
   /* ==========================================================
@@ -176,7 +177,7 @@
      ========================================================== */
 
   function renderProgress() {
-    const ratio = isPractice ? state.correct / PRACTICE_SIZE : state.index / steps.length;
+    const ratio = isPractice ? state.correct / practiceTarget : state.index / steps.length;
     const pct = Math.min(100, Math.round(ratio * 100));
     el.progressFill.style.width = pct + "%";
     el.progressBar.setAttribute("aria-valuenow", String(pct));
@@ -245,9 +246,11 @@
       }
     }
 
+    const practiceDone = isPractice && state.correct >= practiceTarget;
+
     setFooter({
       state: isCorrect ? "correct" : "wrong",
-      label: "გაგრძელება",
+      label: practiceDone ? "დასრულება" : "გაგრძელება",
       enabled: true,
       onPrimary: isOutOfHearts() ? showGameOver : nextStep,
     });
@@ -271,7 +274,9 @@
   function nextStep() {
     state.index += 1;
     renderProgress();
-    if (state.index >= steps.length) {
+    // სავარჯიშო მთავრდება ზუსტად 3 სწორ პასუხზე — ზედმეტი კითხვა აღარ გამოდის
+    const practiceDone = isPractice && state.correct >= practiceTarget;
+    if (practiceDone || state.index >= steps.length) {
       finishLesson();
     } else {
       renderStep();
@@ -386,7 +391,7 @@
   }
 
   function exerciseHeader(label, question) {
-    el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " : "") + label));
+    el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " + practiceCourse.title + " · " : "") + label));
     if (question) el.stage.append(createEl("h1", "exercise__question", question));
   }
 
@@ -610,13 +615,13 @@
     renderHearts(heartGain > 0);
     renderProgress();
 
-    const accuracy = state.attempts ? Math.round((PRACTICE_SIZE / state.attempts) * 100) : 100;
+    const accuracy = state.attempts ? Math.round((state.correct / state.attempts) * 100) : 100;
 
     hideLesson();
     el.victoryEmblem.textContent = "❤️";
     el.victoryTitle.textContent = "სიცოცხლე აღდგა!";
     el.victorySubtitle.textContent =
-      "3-ვე კითხვას სწორად უპასუხე. ახლა გაქვს " + profile.hearts + " ❤️ — ბრუნდები დაფაზე…";
+      (practiceTarget === 3 ? "3-ვე" : "ყველა") + " კითხვას სწორად უპასუხე. ახლა გაქვს " + profile.hearts + " ❤️ — ბრუნდები დაფაზე…";
     el.victoryXp.textContent = "+" + PRACTICE_XP;
     el.victoryAccuracy.textContent = accuracy + "%";
     el.victoryHeartsStat.hidden = heartGain === 0;
