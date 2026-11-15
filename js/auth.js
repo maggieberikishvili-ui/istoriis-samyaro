@@ -62,6 +62,14 @@
 
   /* ---------- საწყისი პროფილი ---------- */
 
+  // YYYY-MM-DD ლოკალური დროით (dashboard.js-ის streak ლოგიკასთან თავსებადი)
+  function localDateKey() {
+    const d = new Date();
+    return d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+  }
+
   function createProfile(name, email, isGuest) {
     return {
       name: name,
@@ -71,7 +79,7 @@
       streak: 1,
       hearts: 5,
       completedLessons: [],
-      lastActive: new Date().toISOString().slice(0, 10),
+      lastActive: localDateKey(),
     };
   }
 

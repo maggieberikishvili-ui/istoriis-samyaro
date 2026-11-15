@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ისტორიის სამყარო — სასწავლო დაფა</title>
+
+  <!-- ავტორიზაციის შემოწმება და თემის ადრეული ჩატვირთვა -->
+  <script>
+    try {
+      if (!localStorage.getItem("ims_currentUser")) {
+        window.location.replace("index.html");
+      }
+      var savedTheme = localStorage.getItem("ims_theme");
+      if (savedTheme === "dark" || savedTheme === "light") {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      }
+    } catch (e) {
+      window.location.replace("index.html");
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <script src="js/data.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+</head>
+<body>
+  <!-- ზედა პანელი -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <a class="navbar__logo" href="dashboard.html">
+        <span class="navbar__logo-icon" aria-hidden="true">🏛️</span>
+        <span class="navbar__logo-text">ისტორიის სამყარო</span>
+      </a>
+
+      <ul class="navbar__stats" aria-label="შენი სტატისტიკა">
+        <li class="nav-stat nav-stat--streak" title="უწყვეტი დღეები">
+          <span aria-hidden="true">🔥</span>
+          <span class="nav-stat__value" id="statStreak">0</span>
+          <span class="visually-hidden">უწყვეტი დღე</span>
+        </li>
+        <li class="nav-stat nav-stat--xp" title="XP ქულები">
+          <span aria-hidden="true">⚡</span>
+          <span class="nav-stat__value" id="statXp">0</span>
+          <span class="visually-hidden">XP</span>
+        </li>
+        <li class="nav-stat nav-stat--hearts" title="სიცოცხლეები">
+          <span aria-hidden="true">❤️</span>
+          <span class="nav-stat__value" id="statHearts">0</span>
+          <span class="visually-hidden">სიცოცხლე</span>
+        </li>
+      </ul>
+
+      <div class="navbar__actions">
+        <span class="navbar__user" id="userName" title="მომხმარებელი"></span>
+        <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
+          <span aria-hidden="true" id="themeIcon">🌙</span>
+        </button>
+        <button type="button" class="btn btn--outline btn--danger-text" id="logoutBtn">გასვლა</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <!-- მისალმება -->
+    <section class="greeting" aria-labelledby="greetingTitle">
+      <h1 class="greeting__title" id="greetingTitle">გამარჯობა!</h1>
+      <p class="greeting__text">აირჩიე კურსი და გააგრძელე სწავლა.</p>
+    </section>
+
+    <!-- კურსის არჩევა -->
+    <section class="courses" aria-labelledby="coursesTitle">
+      <h2 class="section-title" id="coursesTitle">კურსები</h2>
+      <div class="course-list" id="courseList" role="tablist" aria-label="კურსის არჩევა"></div>
+    </section>
+
+    <!-- გაკვეთილების ბილიკი -->
+    <section class="path-section" id="pathSection" role="tabpanel" aria-labelledby="unitTitle">
+      <div class="unit-banner" id="unitBanner">
+        <div>
+          <p class="unit-banner__eyebrow" id="unitEyebrow"></p>
+          <h2 class="unit-banner__title" id="unitTitle"></h2>
+          <p class="unit-banner__subtitle" id="unitSubtitle"></p>
+        </div>
+        <div class="unit-banner__progress" aria-live="polite">
+          <span id="unitProgressText"></span>
+          <div class="progress" aria-hidden="true">
+            <div class="progress__fill" id="unitProgressFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <ol class="path" id="lessonPath" aria-label="გაკვეთილების ბილიკი"></ol>
+
+      <p class="path-note">ახალი თემები მალე დაემატება ✨</p>
+    </section>
+  </main>
+
+  <!-- შეტყობინება (toast) -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
