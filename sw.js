@@ -10,7 +10,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v1";
+const VERSION = "v2";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 
@@ -30,6 +30,7 @@ const CORE_FILES = [
   "./css/lesson.css",
   "./js/storage.js",
   "./js/data.js",
+  "./js/illustrations.js",
   "./js/auth.js",
   "./js/dashboard.js",
   "./js/lesson.js",

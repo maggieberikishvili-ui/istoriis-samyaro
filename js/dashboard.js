@@ -12,7 +12,8 @@
   const data = window.IMS_DATA;
 
   // ზიგზაგის ფორმა (ჰორიზონტალური წანაცვლება)
-  const PATH_OFFSETS = [0, -1, -1.6, -1, 0, 1, 1.6, 1];
+  // მარშრუტი ცენტრთან ახლოს — გვერდებზე ილუსტრაციებისთვის ადგილი რჩება
+  const PATH_OFFSETS = [0, -1, 0, 1];
 
   if (!store.requireAuth()) return;
 
@@ -261,8 +262,14 @@
     route.setAttribute("focusable", "false");
     path.append(route);
 
+    // თემატური ილუსტრაციები: ყოველი გაკვეთილის შემდეგ ერთი, დარჩენილი — ბოლოს;
+    // მხარეები მონაცვლეობს (მარჯვნივ / მარცხნივ)
+    const decor = window.IMS_ILLUSTRATIONS ? window.IMS_ILLUSTRATIONS.forChapter(chapter.id) : [];
+    const n = chapter.lessons.length;
     chapter.lessons.forEach((lesson, i) => {
       path.append(buildLessonNode(course, lesson, i, lessonStatus(course, lesson, done, currentIndex)));
+      const slot = i < n - 1 ? decor.slice(i, i + 1) : decor.slice(i);
+      slot.forEach((illustration, j) => path.append(buildDecor(illustration, i + j)));
     });
 
     section.append(path);
@@ -319,6 +326,61 @@
     item.append(wrap, label);
     return item;
   }
+
+  /* ---------- თემატური ილუსტრაციები + ფაქტის tooltip ---------- */
+
+  let decorSeq = 0;
+
+  function buildDecor(illustration, k) {
+    const item = createEl("li", "path__decor path__decor--" + (k % 2 === 0 ? "right" : "left"));
+    // სხვადასხვა ფაზა, რომ ილუსტრაციები სინქრონულად არ „ცეკვავდნენ“
+    item.style.setProperty("--delay", (-(k * 1.3)).toFixed(1) + "s");
+
+    const tipId = "decor-tip-" + (++decorSeq);
+    const btn = createEl("button", "path__decor-btn");
+    btn.type = "button";
+    btn.setAttribute("aria-label", illustration.title + " — საინტერესო ფაქტი");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-describedby", tipId);
+    btn.append(window.IMS_ILLUSTRATIONS.createSvg(illustration));
+
+    const tip = createEl("span", "path__decor-tip");
+    tip.id = tipId;
+    tip.setAttribute("role", "tooltip");
+    tip.append(
+      createEl("strong", "path__decor-title", illustration.title),
+      createEl("span", "path__decor-fact", illustration.fact)
+    );
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleDecor(item);
+    });
+
+    item.append(btn, tip);
+    return item;
+  }
+
+  function closeDecors(except) {
+    el.chapterList.querySelectorAll(".path__decor.is-open").forEach((d) => {
+      if (d === except) return;
+      d.classList.remove("is-open");
+      d.querySelector(".path__decor-btn").setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function toggleDecor(item) {
+    const open = !item.classList.contains("is-open");
+    closeDecors(item);
+    item.classList.toggle("is-open", open);
+    item.querySelector(".path__decor-btn").setAttribute("aria-expanded", String(open));
+  }
+
+  // შეხება სხვაგან ან Escape — tooltip იხურება
+  document.addEventListener("click", () => closeDecors(null));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDecors(null);
+  });
 
   /** ბრტყელი ბოქლომის ხატულა (SVG) დაბლოკილი ნიშნისთვის. */
   function lockIcon() {

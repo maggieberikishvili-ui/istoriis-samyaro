@@ -634,3 +634,188 @@
   from { opacity: 0; transform: translate(-50%, 10px); }
   to   { opacity: 1; transform: translate(-50%, 0); }
 }
+
+/* ----------------------------------------------------------
+   თემატური ილუსტრაციები ბილიკის გვერდით
+   ---------------------------------------------------------- */
+.path {
+  container-type: inline-size;       /* ილუსტრაციების პოზიცია ბილიკის სიგანიდან (cqw) */
+}
+
+.path__decor {
+  --size: 110px;
+  --side: 1;
+  position: relative;
+  z-index: 2;
+  width: var(--size);
+  margin-block: -1.5rem;
+  list-style: none;
+  /* ცენტრიდან გვერდზე, მაგრამ ყოველთვის ბილიკის საზღვრებში */
+  transform: translateX(calc(var(--side) * 140px));
+  transform: translateX(calc(var(--side) * min(190px, 50cqw - var(--size) / 2 - 8px)));
+}
+
+.path__decor--left {
+  --side: -1;
+}
+
+.path__decor.is-open,
+.path__decor:focus-within {
+  z-index: 6;
+}
+
+@media (max-width: 420px) {
+  .path__decor {
+    --size: 96px;
+  }
+}
+
+@media (max-width: 340px) {
+  .path__decor {
+    --size: 90px;
+  }
+}
+
+/* მუზეუმის ექსპონატის ფირფიტა — განზრახ არა წრე, რომ ნიშნებში არ აგერიოს */
+.path__decor-btn {
+  display: block;
+  width: 100%;
+  padding: 6px;
+  color: inherit;
+  background-color: var(--parchment);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  animation: gentle-float 4s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  transition: border-color var(--transition);
+}
+
+.path__decor-btn:hover,
+.path__decor.is-open .path__decor-btn {
+  border-color: var(--color-secondary);
+}
+
+/* --- ილუსტრაციის სტილი: მქრქალი, ბრტყელი ვექტორი --- */
+.il {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+.il .f-terra   { fill: var(--color-secondary); }
+.il .f-emerald { fill: var(--color-primary); }
+.il .f-sand    { fill: var(--stone); }
+.il .f-ochre   { fill: var(--color-accent); }
+.il .f-paper   { fill: var(--color-surface); }
+.il .f-ink     { fill: var(--color-text); }
+.il .o         { fill: none; }
+
+.il .s-ink,
+.il .s-thin,
+.il .s-terra,
+.il .s-ochre {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.il .s-ink   { stroke: var(--color-text); stroke-width: 2; }
+.il .s-thin  { stroke: var(--color-text); stroke-width: 1.3; opacity: 0.7; }
+.il .s-terra { stroke: var(--color-secondary); stroke-width: 3.2; }
+.il .s-ochre { stroke: var(--color-accent); stroke-width: 2.4; }
+.il .w6      { stroke-width: 6; }
+
+/* ცეცხლის ნელი რხევა */
+.il .a-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flame-sway 2.8s ease-in-out infinite;
+}
+
+@keyframes flame-sway {
+  0%, 100% { transform: scale(1, 1) skewX(0deg); }
+  33%      { transform: scale(0.96, 1.05) skewX(-3deg); }
+  66%      { transform: scale(1.03, 0.97) skewX(2deg); }
+}
+
+/* მზის სხივების / ბორბლის ნელი ბრუნვა */
+.il .a-rays,
+.il .a-wheel {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: slow-turn 30s linear infinite;
+}
+
+.il .a-wheel {
+  animation-duration: 16s;
+}
+
+@keyframes slow-turn {
+  to { transform: rotate(360deg); }
+}
+
+/* --- ფაქტის tooltip --- */
+.path__decor-tip {
+  position: absolute;
+  top: calc(100% + 6px);
+  width: max-content;
+  max-width: min(240px, 70vw);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-regular);
+  line-height: 1.45;
+  text-align: left;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 6px 18px rgba(43, 38, 35, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
+  pointer-events: none;
+}
+
+.path__decor--right .path__decor-tip { right: 0; }
+.path__decor--left .path__decor-tip  { left: 0; }
+
+.path__decor.is-open .path__decor-tip,
+.path__decor-btn:focus-visible + .path__decor-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+@media (hover: hover) {
+  .path__decor:hover {
+    z-index: 6;
+  }
+
+  .path__decor:hover .path__decor-tip {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+}
+
+.path__decor-title {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--font-serif);
+  font-size: var(--fs-sm);
+  color: var(--color-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .path__decor-btn,
+  .il * {
+    animation: none !important;
+  }
+}
