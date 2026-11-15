@@ -20,7 +20,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&family=Noto+Serif+Georgian:wght@700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/global.css">
@@ -97,24 +97,10 @@
     </section>
 
     <!-- გაკვეთილების ბილიკი -->
-    <section class="path-section" id="pathSection" role="tabpanel" aria-labelledby="unitTitle">
-      <div class="unit-banner" id="unitBanner">
-        <div>
-          <p class="unit-banner__eyebrow" id="unitEyebrow"></p>
-          <h2 class="unit-banner__title" id="unitTitle"></h2>
-          <p class="unit-banner__subtitle" id="unitSubtitle"></p>
-        </div>
-        <div class="unit-banner__progress" aria-live="polite">
-          <span id="unitProgressText"></span>
-          <div class="progress" aria-hidden="true">
-            <div class="progress__fill" id="unitProgressFill"></div>
-          </div>
-        </div>
-      </div>
-
-      <ol class="path" id="lessonPath" aria-label="გაკვეთილების ბილიკი"></ol>
-
-      <p class="path-note">ახალი თემები მალე დაემატება ✨</p>
+    <!-- თავები: ყოველ თავს — პერგამენტის ბანერი + გაკვეთილების ბილიკი (რუკის მარშრუტით) -->
+    <section class="path-section" id="pathSection" role="tabpanel">
+      <div class="chapter-list" id="chapterList"></div>
+      <p class="path-note">ახალი თავები მალე დაემატება 📜</p>
     </section>
   </main>
 

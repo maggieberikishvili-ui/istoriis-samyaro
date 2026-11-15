@@ -37,8 +37,28 @@
   --color-text-muted: #777777;
   --color-text-inverse: #ffffff;
 
+  /* --- ისტორიული პალიტრა: პერგამენტი, ბრინჯაო, ოქრო, ქვა, რუკა --- */
+  --parchment: #f7e9c4;
+  --parchment-deep: #ecd49c;
+  --parchment-ink: #4a3517;
+  --parchment-muted: #7a5f35;
+  --bronze: #a8792b;
+  --bronze-dark: #7a5518;
+  --bronze-light: #d9b56a;
+  --gold-hi: #fff3b0;
+  --gold: #ffd23f;
+  --gold-mid: #e0a800;
+  --gold-low: #9c7200;
+  --stone-hi: #ebe8e1;
+  --stone: #c4bfb4;
+  --stone-low: #948e82;
+  --stone-ink: #6f6a60;
+  --route: #a8792b;
+  --route-muted: #cdbf9f;
+
   /* --- ტიპოგრაფია --- */
   --font-main: "Noto Sans Georgian", "FiraGO", "BPG Arial", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Noto Serif Georgian", "BPG Nino Mtavruli", Georgia, "Times New Roman", serif;
   --fs-xs: 0.8125rem;
   --fs-sm: 0.9375rem;
   --fs-md: 1rem;
@@ -88,6 +108,21 @@
     --color-secondary-light: #10334a;
     --color-danger-light: #3d1d1f;
 
+    /* ისტორიული პალიტრა — მუქი პერგამენტი */
+    --parchment: #3a2e1b;
+    --parchment-deep: #2c2213;
+    --parchment-ink: #f3e3b8;
+    --parchment-muted: #cdb27a;
+    --bronze: #c49a4a;
+    --bronze-dark: #6e4f1c;
+    --bronze-light: #8a6a30;
+    --stone-hi: #59605f;
+    --stone: #454b4c;
+    --stone-low: #2f3536;
+    --stone-ink: #a7aeae;
+    --route: #c49a4a;
+    --route-muted: #4f5a5c;
+
     color-scheme: dark;
   }
 }
@@ -106,6 +141,21 @@
   --color-primary-light: #1f3a12;
   --color-secondary-light: #10334a;
   --color-danger-light: #3d1d1f;
+
+  /* ისტორიული პალიტრა — მუქი პერგამენტი */
+  --parchment: #3a2e1b;
+  --parchment-deep: #2c2213;
+  --parchment-ink: #f3e3b8;
+  --parchment-muted: #cdb27a;
+  --bronze: #c49a4a;
+  --bronze-dark: #6e4f1c;
+  --bronze-light: #8a6a30;
+  --stone-hi: #59605f;
+  --stone: #454b4c;
+  --stone-low: #2f3536;
+  --stone-ink: #a7aeae;
+  --route: #c49a4a;
+  --route-muted: #4f5a5c;
 
   color-scheme: dark;
 }

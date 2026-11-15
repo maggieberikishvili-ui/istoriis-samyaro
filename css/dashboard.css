@@ -334,75 +334,192 @@
 }
 
 /* ----------------------------------------------------------
-   ერთეულის ბანერი
+   თავები (Chapters) — პერგამენტის ბანერები
    ---------------------------------------------------------- */
 .path-section {
   margin-top: var(--space-6);
 }
 
-.unit-banner {
+.chapter-list {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.chapter-banner {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-5);
-  color: var(--color-text-inverse);
-  background-color: var(--c);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 var(--shadow-depth) 0 var(--c-dark);
+  padding: var(--space-5) calc(var(--space-5) + 4px);
+  color: var(--parchment-ink);
+  background:
+    /* გაცვეთილი კიდეები */
+    radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(122, 85, 24, 0.2) 100%),
+    /* სინათლის ლაქა */
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.35), transparent 42%),
+    /* ძველი ქაღალდის ბოჭკოები */
+    repeating-linear-gradient(115deg, rgba(122, 85, 24, 0.035) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg, var(--parchment), var(--parchment-deep));
+  border: 3px solid var(--bronze);
+  border-radius: 18px;
+  box-shadow:
+    0 5px 0 var(--bronze-dark),
+    inset 0 0 28px rgba(122, 85, 24, 0.16);
 }
 
-.unit-banner[data-color="gold"] {
-  color: #4b3800;
+/* შიდა კლასიკური ჩარჩო */
+.chapter-banner::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1.5px solid var(--bronze-light);
+  border-radius: 12px;
+  pointer-events: none;
 }
 
-.unit-banner__eyebrow {
+/* ბრინჯაოს მოქლონები ჩარჩოს კუთხეებში */
+.chapter-banner::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  pointer-events: none;
+  --rivet: radial-gradient(circle, var(--bronze-light) 0 2px, var(--bronze) 2.5px 4px, transparent 4.5px);
+  background:
+    var(--rivet) top left / 12px 12px no-repeat,
+    var(--rivet) top right / 12px 12px no-repeat,
+    var(--rivet) bottom left / 12px 12px no-repeat,
+    var(--rivet) bottom right / 12px 12px no-repeat;
+}
+
+/* ცვილის ბეჭედი — კურსის ფერით */
+.chapter-banner__seal {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-heavy);
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
+  background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--c) 70%, #fff), var(--c) 55%, var(--c-dark));
+  border-radius: 46% 54% 50% 50% / 52% 48% 54% 46%;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--c-dark) 85%, #000),
+    inset 0 0 0 5px rgba(255, 255, 255, 0.18),
+    0 3px 0 3px rgba(0, 0, 0, 0.18);
+}
+
+.chapter-banner__body {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.chapter-banner__eyebrow {
   margin: 0 0 var(--space-1);
+  font-family: var(--font-serif);
   font-size: var(--fs-xs);
   font-weight: var(--fw-heavy);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  opacity: 0.85;
+  letter-spacing: 0.12em;
+  color: var(--bronze);
 }
 
-.unit-banner__title {
-  font-size: var(--fs-xl);
+.chapter-banner__title {
   margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 4.5vw, 1.65rem);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
-.unit-banner__subtitle {
+.chapter-banner__desc {
   margin: var(--space-1) 0 0;
+  font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
-  opacity: 0.9;
+  color: var(--parchment-muted);
 }
 
-.unit-banner__progress {
-  min-width: 160px;
+.chapter-banner__progress {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 160px;
+  max-width: 240px;
   font-size: var(--fs-sm);
   font-weight: var(--fw-heavy);
 }
 
-.progress {
-  height: 14px;
-  margin-top: var(--space-2);
-  background-color: rgba(0, 0, 0, 0.18);
+.chapter-banner__status {
+  display: inline-block;
+  margin-bottom: var(--space-1);
+  padding: 1px var(--space-2);
+  font-size: var(--fs-xs);
   border-radius: var(--radius-pill);
+}
+
+.chapter--completed .chapter-banner__status {
+  color: #5a3d00;
+  background: linear-gradient(180deg, var(--gold), var(--gold-mid));
+}
+
+.chapter--locked .chapter-banner__status {
+  color: var(--stone-ink);
+  background-color: var(--stone-hi);
+}
+
+/* პროგრესი: ბრინჯაოს ღარი + ოქროს შევსება */
+.chapter-progress {
+  height: 12px;
+  margin-top: var(--space-1);
+  background-color: color-mix(in srgb, var(--parchment-deep) 70%, var(--bronze-dark));
+  border: 1.5px solid var(--bronze);
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.25);
   overflow: hidden;
 }
 
-.progress__fill {
+.chapter-progress__fill {
   width: 0;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold) 45%, var(--gold-mid));
   border-radius: inherit;
   transition: width 400ms ease;
 }
 
+/* დაბლოკილი თავი — „ჩაქრალი“ პერგამენტი */
+.chapter--locked .chapter-banner {
+  filter: grayscale(0.85);
+  opacity: 0.75;
+}
+
+@media (max-width: 420px) {
+  .chapter-banner {
+    gap: var(--space-3);
+    padding: var(--space-4) calc(var(--space-4) + 4px);
+  }
+
+  .chapter-banner__seal {
+    width: 48px;
+    height: 48px;
+    font-size: var(--fs-md);
+  }
+
+  .chapter-banner__progress {
+    max-width: none;
+    flex-basis: 100%;
+  }
+}
+
 /* ----------------------------------------------------------
-   გაკვეთილების ბილიკი (Path)
+   გაკვეთილების ბილიკი — რუკის მარშრუტი + მედალიონები
    ---------------------------------------------------------- */
 .path {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -412,9 +529,35 @@
   list-style: none;
 }
 
+/* ძველი რუკის დაკლაკნილი წყვეტილი გზა (SVG, JS ხატავს) */
+.path__route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.path__route-line {
+  fill: none;
+  stroke: var(--route-muted);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 1 11;
+}
+
+.path__route-line--done {
+  stroke: var(--route);
+  stroke-width: 4.5;
+}
+
 .path__item {
   /* ზიგზაგი: --offset JS-იდან (-1.6 … 1.6) */
   --step: 52px;
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -429,89 +572,161 @@
   }
 }
 
-.path-node {
-  --node-size: 76px;
-  --node-depth: 7px;
+.medallion-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+/* --- მედალიონი (საერთო) --- */
+.medallion {
+  --size: 78px;
+  --depth: 6px;
+  --face: var(--stone);
+  --rim: var(--stone-low);
+  --edge: var(--stone-low);
+  --ink: var(--stone-ink);
 
   position: relative;
   display: grid;
   place-items: center;
-  width: var(--node-size);
-  height: var(--node-size);
+  width: var(--size);
+  height: var(--size);
   padding: 0;
-  font-family: inherit;
-  font-size: 2rem;
-  color: var(--color-text-inverse);
-  background-color: var(--c);
-  border: 0;
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  font-weight: var(--fw-heavy);
+  line-height: 1;
+  color: var(--ink);
+  background: var(--face);
+  border: 3px solid var(--rim);
   border-radius: 50%;
-  box-shadow: 0 var(--node-depth) 0 var(--c-dark);
+  box-shadow: 0 var(--depth) 0 var(--edge);
   cursor: pointer;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast),
     filter var(--transition-fast);
 }
 
-.path-node:hover {
-  filter: brightness(1.06);
+.medallion:hover {
+  filter: brightness(1.05);
 }
 
-.path-node:active {
-  transform: translateY(var(--node-depth));
-  box-shadow: 0 0 0 var(--c-dark);
+.medallion:active {
+  transform: translateY(var(--depth));
+  box-shadow: 0 0 0 var(--edge);
 }
 
-/* დასრულებული — ოქროსფერი */
-.path-node--completed {
-  --c: var(--color-accent);
-  --c-dark: var(--color-accent-dark);
-  color: #4b3800;
-}
-
-/* მიმდინარე — კურსის ფერი, პულსირებადი რგოლი */
-.path-node--current {
-  --node-size: 86px;
-}
-
-.path-node--current::before {
+/* ამოტვიფრული შიდა რგოლი */
+.medallion::before {
   content: "";
   position: absolute;
-  inset: -10px;
-  border: 5px solid var(--c);
+  inset: 8px;
   border-radius: 50%;
-  opacity: 0.35;
-  animation: pulse-ring 1.8s ease-out infinite;
+  border: 2px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  pointer-events: none;
 }
 
-@keyframes pulse-ring {
-  0%   { transform: scale(0.92); opacity: 0.5; }
-  100% { transform: scale(1.12); opacity: 0; }
+/* მონეტის დაკბილული კიდე */
+.medallion::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(rgba(0, 0, 0, 0.2) 0 3deg, transparent 3deg 7deg);
+  -webkit-mask: radial-gradient(closest-side, transparent 86%, #000 88%);
+  mask: radial-gradient(closest-side, transparent 86%, #000 88%);
+  pointer-events: none;
 }
 
-/* დაბლოკილი — ნაცრისფერი */
-.path-node--locked {
-  --c: var(--color-border);
-  --c-dark: var(--color-border-strong);
-  color: var(--color-text-muted);
+.medallion__symbol {
+  position: relative;
+  z-index: 1;
+  /* ამოტვიფრული (engraved) ეფექტი */
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55), 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* გავლილი — ოქროს მედალიონი */
+.medallion--completed {
+  --face: radial-gradient(circle at 35% 30%, var(--gold-hi) 0 12%, var(--gold) 40%, var(--gold-mid) 74%, var(--gold-low) 100%);
+  --rim: var(--gold-low);
+  --edge: #6f5000;
+  --ink: #6f4e00;
+}
+
+/* მიმდინარე — ბრინჯაოს მედალიონი მანათობელი ბეჭდით */
+.medallion--current {
+  --size: 86px;
+  --face: radial-gradient(circle at 35% 30%, #ffe7b3 0 10%, #e9b468 38%, #c08433 72%, #8c5a1c 100%);
+  --rim: #7a4f14;
+  --edge: #5c3b0c;
+  --ink: #5a360a;
+}
+
+.medallion-halo {
+  position: absolute;
+  inset: -11px;
+  border: 4px solid var(--gold);
+  border-radius: 50%;
+  box-shadow: 0 0 16px 3px rgba(255, 200, 40, 0.65), inset 0 0 10px rgba(255, 200, 40, 0.5);
+  pointer-events: none;
+  animation: halo-glow 1.8s ease-in-out infinite;
+}
+
+@keyframes halo-glow {
+  0%, 100% { transform: scale(0.97); opacity: 0.75; }
+  50%      { transform: scale(1.07); opacity: 1; }
+}
+
+/* დაბლოკილი — ქვის გრავიურა */
+.medallion--locked {
+  --face: radial-gradient(circle at 40% 32%, var(--stone-hi) 0 15%, var(--stone) 60%, var(--stone-low) 100%);
+  --rim: var(--stone-low);
+  --edge: color-mix(in srgb, var(--stone-low) 70%, #000);
+  --ink: var(--stone-ink);
   cursor: not-allowed;
+  box-shadow: 0 var(--depth) 0 var(--edge), inset 0 3px 7px rgba(0, 0, 0, 0.22);
 }
 
-.path-node--locked:hover {
+.medallion--locked::after {
+  display: none;
+}
+
+.medallion--locked .medallion__symbol {
+  font-size: 1.5rem;
+  filter: grayscale(1);
+  opacity: 0.55;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.medallion--locked:hover {
   filter: none;
 }
 
-/* "დაწყება" ბუშტი მიმდინარე გაკვეთილის თავზე */
+/* "დაწყება" — პერგამენტის იარლიყი მიმდინარე გაკვეთილის თავზე */
 .path__start {
   position: relative;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-1) var(--space-4);
+  font-family: var(--font-serif);
   font-size: var(--fs-sm);
   font-weight: var(--fw-heavy);
-  text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--c);
-  background-color: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
+  color: var(--bronze-dark);
+  background: linear-gradient(180deg, var(--parchment), var(--parchment-deep));
+  border: 2px solid var(--bronze);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 3px 0 var(--bronze-dark);
   animation: bob 1.6s ease-in-out infinite;
+}
+
+:root[data-theme="dark"] .path__start {
+  color: var(--parchment-ink);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .path__start {
+    color: var(--parchment-ink);
+  }
 }
 
 .path__start::after {
@@ -519,11 +734,11 @@
   position: absolute;
   left: 50%;
   bottom: -8px;
-  width: 12px;
-  height: 12px;
-  background-color: var(--color-surface);
-  border-right: var(--border-width) solid var(--color-border);
-  border-bottom: var(--border-width) solid var(--color-border);
+  width: 11px;
+  height: 11px;
+  background-color: var(--parchment-deep);
+  border-right: 2px solid var(--bronze);
+  border-bottom: 2px solid var(--bronze);
   transform: translateX(-50%) rotate(45deg);
 }
 
@@ -532,11 +747,15 @@
   50%      { transform: translateY(-5px); }
 }
 
+/* სახელწოდება — ფონით, რომ მარშრუტის ხაზი არ გადაკვეთოს */
 .path__label {
+  padding: 2px var(--space-2);
   font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
   text-align: center;
   line-height: 1.3;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-sm);
 }
 
 .path__label--locked {
@@ -544,6 +763,7 @@
 }
 
 .path-note {
+  margin-top: var(--space-5);
   text-align: center;
   font-weight: var(--fw-bold);
   color: var(--color-text-muted);
