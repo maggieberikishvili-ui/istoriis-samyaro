@@ -518,10 +518,13 @@
     const sentence = createEl("p", "fill-sentence");
     const blank = createEl("span", "fill-blank", " ");
     blank.setAttribute("aria-label", "გამოტოვებული სიტყვა");
+    // პუნქტუაციის (. , ; : ! ?) წინ ჰარი არ ჩაჯდეს: „მონები, რომლებიც…“
+    const after = (step.after || "").trim();
+    const glue = /^[.,;:!?)»“]/.test(after) ? "" : " ";
     sentence.append(
       document.createTextNode((step.before || "") + " "),
       blank,
-      document.createTextNode(" " + (step.after || ""))
+      document.createTextNode(after ? glue + after : "")
     );
     el.stage.append(sentence);
 
