@@ -265,17 +265,15 @@
     route.setAttribute("focusable", "false");
     path.append(route);
 
-    // თემატური ილუსტრაციები: ყოველი მეორე გაკვეთილის შემდეგ (მე-2, მე-4, მე-6…),
-    // მხარეები მონაცვლეობს (მარჯვნივ / მარცხნივ), ნაკრები კი ციკლურად მეორდება —
-    // რამდენი გაკვეთილიც არ უნდა დაემატოს თავში. ერთგაკვეთილიან თავში — ერთი, ბოლოს.
+    // თემატური ილუსტრაციები: თითო ფირფიტა = ერთი არტეფაქტი საკუთარი tooltip-ით.
+    // ერთ თავში ბარათი არასოდეს მეორდება (იხ. planDecor), მხარეები მონაცვლეობს.
     const decor = window.IMS_ILLUSTRATIONS ? window.IMS_ILLUSTRATIONS.forChapter(chapter.id) : [];
-    const n = chapter.lessons.length;
+    const plan = planDecor(chapter.lessons.length, decor.length);
     let decorIndex = 0;
     chapter.lessons.forEach((lesson, i) => {
       path.append(buildLessonNode(course, lesson, i, lessonStatus(course, lesson, done, currentIndex)));
-      const isSlot = (i + 1) % DECOR_EVERY === 0 || n === 1;
-      if (decor.length && isSlot) {
-        path.append(buildDecor(decor[decorIndex % decor.length], decorIndex));
+      if (plan.has(i)) {
+        path.append(buildDecor(decor[plan.get(i)], decorIndex));
         decorIndex += 1;
       }
     });
@@ -336,6 +334,24 @@
   }
 
   /* ---------- თემატური ილუსტრაციები + ფაქტის tooltip ---------- */
+
+  /**
+   * სად და რომელი ბარათი ჩავსვათ: Map(გაკვეთილის ინდექსი → ბარათის ინდექსი).
+   * ადგილები — ყოველი DECOR_EVERY გაკვეთილის შემდეგ (ერთგაკვეთილიან თავში — ერთი).
+   * ბარათები თანაბრად ნაწილდება და არასოდეს მეორდება: თუ ადგილი ბარათებზე
+   * მეტია, ზედმეტი ადგილები გამოიტოვება (ფირფიტები უფრო იშვიათად ჩნდება).
+   */
+  function planDecor(lessonCount, cardCount) {
+    const plan = new Map();
+    if (!lessonCount || !cardCount) return plan;
+    const slots = [];
+    for (let i = DECOR_EVERY - 1; i < lessonCount; i += DECOR_EVERY) slots.push(i);
+    if (!slots.length) slots.push(lessonCount - 1);
+    const used = Math.min(slots.length, cardCount);
+    const pick = (k, from) => (used === 1 ? 0 : Math.round((k * (from - 1)) / (used - 1)));
+    for (let k = 0; k < used; k++) plan.set(slots[pick(k, slots.length)], pick(k, cardCount));
+    return plan;
+  }
 
   let decorSeq = 0;
 
