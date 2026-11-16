@@ -14,6 +14,8 @@
   // ზიგზაგის ფორმა (ჰორიზონტალური წანაცვლება)
   // მარშრუტი ცენტრთან ახლოს — გვერდებზე ილუსტრაციებისთვის ადგილი რჩება
   const PATH_OFFSETS = [0, -1, 0, 1];
+  // ილუსტრაცია ყოველი მეორე გაკვეთილის შემდეგ — ასე ის ყოველთვის მარშრუტის საპირისპირო მხარესაა
+  const DECOR_EVERY = 2;
 
   if (!store.requireAuth()) return;
 
@@ -262,14 +264,19 @@
     route.setAttribute("focusable", "false");
     path.append(route);
 
-    // თემატური ილუსტრაციები: ყოველი გაკვეთილის შემდეგ ერთი, დარჩენილი — ბოლოს;
-    // მხარეები მონაცვლეობს (მარჯვნივ / მარცხნივ)
+    // თემატური ილუსტრაციები: ყოველი მეორე გაკვეთილის შემდეგ (მე-2, მე-4, მე-6…),
+    // მხარეები მონაცვლეობს (მარჯვნივ / მარცხნივ), ნაკრები კი ციკლურად მეორდება —
+    // რამდენი გაკვეთილიც არ უნდა დაემატოს თავში. ერთგაკვეთილიან თავში — ერთი, ბოლოს.
     const decor = window.IMS_ILLUSTRATIONS ? window.IMS_ILLUSTRATIONS.forChapter(chapter.id) : [];
     const n = chapter.lessons.length;
+    let decorIndex = 0;
     chapter.lessons.forEach((lesson, i) => {
       path.append(buildLessonNode(course, lesson, i, lessonStatus(course, lesson, done, currentIndex)));
-      const slot = i < n - 1 ? decor.slice(i, i + 1) : decor.slice(i);
-      slot.forEach((illustration, j) => path.append(buildDecor(illustration, i + j)));
+      const isSlot = (i + 1) % DECOR_EVERY === 0 || n === 1;
+      if (decor.length && isSlot) {
+        path.append(buildDecor(decor[decorIndex % decor.length], decorIndex));
+        decorIndex += 1;
+      }
     });
 
     section.append(path);
