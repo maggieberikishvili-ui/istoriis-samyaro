@@ -218,7 +218,8 @@
     const firstIndex = course.lessons.indexOf(chapter.lessons[0]);
 
     let chapterState = "active";
-    if (total > 0 && completed === total) chapterState = "completed";
+    if (total === 0) chapterState = "locked"; // გაკვეთილები ჯერ არ დამატებულა
+    else if (completed === total) chapterState = "completed";
     else if (currentIndex !== -1 && firstIndex > currentIndex) chapterState = "locked";
 
     const section = createEl("section", "chapter chapter--" + chapterState);
@@ -238,7 +239,7 @@
 
     const progressBox = createEl("div", "chapter-banner__progress");
     if (chapterState === "completed") progressBox.append(createEl("span", "chapter-banner__status", "✓ დასრულებული"));
-    if (chapterState === "locked") progressBox.append(createEl("span", "chapter-banner__status", "🔒 დაბლოკილი"));
+    if (chapterState === "locked") progressBox.append(createEl("span", "chapter-banner__status", total ? "🔒 დაბლოკილი" : "⏳ მალე დაემატება"));
     progressBox.append(createEl("div", "", completed + " / " + total + " გაკვეთილი"));
     const bar = createEl("div", "chapter-progress");
     bar.setAttribute("role", "progressbar");
