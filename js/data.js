@@ -24,6 +24,10 @@
      truefalse { statement, answer: true|false, explanation }
      fill      { before, after, options: [...], answer: index, explanation }
      match     { prompt, pairs: [[მარცხენა, მარჯვენა], ...], explanation }
+
+   ნებისმიერ ნაბიჯს (თეორიასა და კითხვას) შეიძლება ჰქონდეს სურათი:
+     image: { src: "assets/images/ფაილი.jpg", caption: "სურ. 1. …", alt?: "…" }
+   (src — მხოლოდ assets/images/ საქაღალდიდან: jpg, png, webp, gif, svg, avif)
    ========================================================== */
 
 (function () {
@@ -1321,6 +1325,12 @@
             }
             if (s.type === "choice" && (s.options || []).length !== 4) problems.push(where + ": ტესტს 4 ვარიანტი სჭირდება");
             if (s.type === "truefalse" && typeof s.answer !== "boolean") problems.push(where + ": answer უნდა იყოს true/false");
+            if (s.image !== undefined) {
+              const src = typeof s.image === "string" ? s.image : s.image && s.image.src;
+              if (typeof src !== "string" || !/^assets\/images\/[^\s?#]+\.(jpe?g|png|webp|gif|svg|avif)$/i.test(src)) {
+                problems.push(where + ": image.src უნდა იყოს assets/images/… (jpg, png, webp, gif, svg, avif, ჰარის გარეშე)");
+              }
+            }
             if (s.type === "match") {
               const left = new Set((s.pairs || []).map((p) => p[0]));
               const right = new Set((s.pairs || []).map((p) => p[1]));

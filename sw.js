@@ -7,12 +7,16 @@
      უახლესი ვერსია მოდის (და ქეშიც ახლდება); ინტერნეტის
      გარეშე ან ნელ ქსელზე — ქეშიდან.
    • Google Fonts: Stale-While-Revalidate.
+   • სურათები (assets/images/): Stale-While-Revalidate ცალკე ქეშში,
+     მაქსიმუმ MAX_IMAGES ფაილი (ძველი იშლება).
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v2";
+const VERSION = "v3";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
+const IMAGE_CACHE = "ims-images-" + VERSION;
+const MAX_IMAGES = 120;
 
 // ნელ ქსელზე რამდენ ხანს ველოდოთ, სანამ ქეშს გამოვიყენებთ
 const NETWORK_TIMEOUT_MS = 4000;
@@ -57,7 +61,7 @@ self.addEventListener("install", (event) => {
 /* ---------- activate: ძველი ვერსიების ქეშის წაშლა ---------- */
 
 self.addEventListener("activate", (event) => {
-  const keep = [STATIC_CACHE, FONT_CACHE];
+  const keep = [STATIC_CACHE, FONT_CACHE, IMAGE_CACHE];
   event.waitUntil(
     caches
       .keys()
@@ -82,10 +86,12 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
 
-  if (url.origin === self.location.origin) {
+  if (url.origin === self.location.origin && url.pathname.includes("/assets/images/")) {
+    event.respondWith(staleWhileRevalidate(request, IMAGE_CACHE, MAX_IMAGES));
+  } else if (url.origin === self.location.origin) {
     event.respondWith(networkFirst(request));
   } else if (FONT_HOSTS.includes(url.hostname)) {
-    event.respondWith(staleWhileRevalidate(request));
+    event.respondWith(staleWhileRevalidate(request, FONT_CACHE));
   }
   // სხვა ყველაფერს ბრაუზერი ჩვეულებრივად ამუშავებს
 });
@@ -145,18 +151,27 @@ async function networkFirst(request) {
 }
 
 /** Stale-While-Revalidate: ქეშიდან მაშინვე, ფონურად — განახლება. */
-async function staleWhileRevalidate(request) {
-  const cache = await caches.open(FONT_CACHE);
+async function staleWhileRevalidate(request, cacheName, maxEntries) {
+  const cache = await caches.open(cacheName);
   const cached = await cache.match(request);
 
   const network = fetch(request)
-    .then((response) => {
+    .then(async (response) => {
       if (response && (response.ok || response.type === "opaque")) {
-        cache.put(request, response.clone());
+        await cache.put(request, response.clone());
+        if (maxEntries) await trimCache(cache, maxEntries);
       }
       return response;
     })
-    .catch(() => cached);
+    .catch(() => cached || Response.error());
 
   return cached || network;
+}
+
+/** ქეშში მაქსიმუმ maxEntries ჩანაწერი — ყველაზე ძველი იშლება. */
+async function trimCache(cache, maxEntries) {
+  const keys = await cache.keys();
+  for (let i = 0; i < keys.length - maxEntries; i++) {
+    await cache.delete(keys[i]);
+  }
 }

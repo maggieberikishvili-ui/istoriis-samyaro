@@ -307,12 +307,63 @@
      სავარჯიშოების ტიპები
      ========================================================== */
 
+  /* ---------- სურათი / არტეფაქტი (არასავალდებულო) ---------- */
+
+  // მხოლოდ პროექტის assets/images/ საქაღალდიდან და მხოლოდ სურათის ფორმატები
+  const IMAGE_PATH = /^assets\/images\/(?!.*\.\.)[^\s"'<>\\?#]+\.(jpe?g|png|webp|gif|svg|avif)$/i;
+
+  /** step.image: "assets/images/x.jpg" ან { src, caption, alt } → ნორმალიზებული ობიექტი ან null */
+  function normalizeImage(image) {
+    if (!image) return null;
+    const data = typeof image === "string" ? { src: image } : image;
+    if (!data || typeof data.src !== "string" || !IMAGE_PATH.test(data.src.trim())) return null;
+    return {
+      src: data.src.trim(),
+      caption: typeof data.caption === "string" ? data.caption.trim() : "",
+      alt: typeof data.alt === "string" && data.alt.trim() ? data.alt.trim() : "",
+    };
+  }
+
+  /** <figure> სურათითა და წარწერით; ჩატვირთვის შეცდომისას იმალება. */
+  function buildFigure(image) {
+    const data = normalizeImage(image);
+    if (!data) return null;
+
+    const figure = createEl("figure", "lesson-figure");
+    const img = document.createElement("img");
+    img.className = "lesson-figure__img";
+    img.src = data.src;
+    img.alt = data.alt || data.caption || "ილუსტრაცია";
+    img.decoding = "async";
+    img.addEventListener("error", () => {
+      figure.hidden = true;
+    });
+    figure.append(img);
+
+    if (data.caption) figure.append(createEl("figcaption", "lesson-figure__caption", data.caption));
+    return figure;
+  }
+
+  /** გაკვეთილის ყველა სურათის წინასწარ ჩატვირთვა — სწრაფი ჩვენება და ოფლაინ ქეში. */
+  function preloadImages() {
+    steps.forEach((step) => {
+      const data = normalizeImage(step.image);
+      if (data) {
+        const img = new Image();
+        img.src = data.src;
+      }
+    });
+  }
+
   // --- თეორიული ბარათი ---
   function renderTheory(step) {
     const wrap = createEl("article", "theory");
     wrap.append(createEl("div", "theory__icon", step.icon || "📖"));
     wrap.firstChild.setAttribute("aria-hidden", "true");
     wrap.append(createEl("h1", "theory__title", step.title || ""));
+
+    const figure = buildFigure(step.image);
+    if (figure) wrap.append(figure);
 
     (step.paragraphs || []).forEach((text) => {
       wrap.append(createEl("p", "theory__text", text));
@@ -392,14 +443,16 @@
     });
   }
 
-  function exerciseHeader(label, question) {
+  function exerciseHeader(label, question, image) {
     el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " + practiceCourse.title + " · " : "") + label));
     if (question) el.stage.append(createEl("h1", "exercise__question", question));
+    const figure = buildFigure(image);
+    if (figure) el.stage.append(figure);
   }
 
   // --- ტესტი 4 ვარიანტით ---
   function renderChoice(step) {
-    exerciseHeader("აირჩიე სწორი პასუხი", step.question);
+    exerciseHeader("აირჩიე სწორი პასუხი", step.question, step.image);
     const options = shuffle(step.options.map((text, i) => ({ text, correct: i === step.answer })));
     renderOptionExercise({
       options: options,
@@ -411,7 +464,7 @@
 
   // --- სწორია / მცდარია ---
   function renderTrueFalse(step) {
-    exerciseHeader("სწორია თუ მცდარი?", step.statement);
+    exerciseHeader("სწორია თუ მცდარი?", step.statement, step.image);
     renderOptionExercise({
       layout: "options--row",
       options: [
@@ -425,7 +478,7 @@
 
   // --- წინადადების შევსება ---
   function renderFill(step) {
-    exerciseHeader("შეავსე გამოტოვებული სიტყვა");
+    exerciseHeader("შეავსე გამოტოვებული სიტყვა", "", step.image);
 
     const sentence = createEl("p", "fill-sentence");
     const blank = createEl("span", "fill-blank", " ");
@@ -456,7 +509,7 @@
 
   // --- წყვილების დაკავშირება ---
   function renderMatch(step) {
-    exerciseHeader("დააკავშირე წყვილები", step.prompt);
+    exerciseHeader("დააკავშირე წყვილები", step.prompt, step.image);
 
     const grid = createEl("div", "match-grid");
     const leftCol = createEl("div", "match-col");
@@ -669,6 +722,7 @@
      ========================================================== */
 
   renderHearts(false);
+  preloadImages();
   renderProgress();
 
   if (isOutOfHearts()) {
