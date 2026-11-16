@@ -26,7 +26,9 @@
      match     { prompt, pairs: [[მარცხენა, მარჯვენა], ...], explanation }
 
    ნებისმიერ ნაბიჯს (თეორიასა და კითხვას) შეიძლება ჰქონდეს სურათი:
-     image: { src: "assets/images/ფაილი.jpg", caption: "სურ. 1. …", alt?: "…" }
+     image: { src: "assets/images/ფაილი.jpg", caption: "სურ. 1. …", alt?: "…",
+              credit?: "ფოტო: ავტორი (მოჭრილია)", licenseName?: "CC BY-SA 4.0",
+              licenseUrl?: "https://…", sourceUrl?: "https://…" }
    (src — მხოლოდ assets/images/ საქაღალდიდან: jpg, png, webp, gif, svg, avif)
    ========================================================== */
 
@@ -87,7 +89,11 @@
                   title: "რას გვიყვება ერთი თიხის ჭურჭელი და ქვის ფილა?",
                   image: {
                     src: "assets/images/clay-pot.jpg",
-                    caption: "სურ. 1. ორნამენტიანი თიხის ჭურჭელი — ყურძნის მტევნის გამოსახულებებით, საქართველო. ფოტო: Wikimedia Commons (მოჭრილია)",
+                    caption: "სურ. 1. ქვევრი ყურძნის მტევნის გამოსახულებებით, ძვ. წ. VI ათასწლეულის I ნახევარი, ხრამის დიდი გორა (საქართველოს ეროვნული მუზეუმი)",
+                    credit: "ფოტო: Carole Raddato, Wikimedia Commons (მოჭრილია)",
+                    licenseName: "CC BY-SA 2.0",
+                    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0/",
+                    sourceUrl: "https://commons.wikimedia.org/wiki/File:A_terracotta_Kvevri_used_to_ferment_and_age_wine_decorated_with_depictions_of_bunches_of_grapes,_First_half_of_the_6th_millennium_BC,_from_Khramis_Didid_Gora,_National_Museum_of_Georgia,_Tbilisi,_Georgia.jpg",
                     alt: "უძველესი თიხის ჭურჭელი, რომლის ყელთან ყურძნის მტევნის ფორმის რელიეფური ორნამენტებია",
                   },
                   paragraphs: [
@@ -152,7 +158,11 @@
                   statement: "საქართველოში აღმოჩენილ ძველ თიხის ჭურჭელზე ყურძნის მტევნის მსგავსი ორნამენტი იმაზე მიუთითებს, რომ მოსახლეობა მევენახეობას მისდევდა.",
                   image: {
                     src: "assets/images/clay-pot.jpg",
-                    caption: "სურ. 1. ორნამენტიანი თიხის ჭურჭელი — ყურძნის მტევნის გამოსახულებებით, საქართველო. ფოტო: Wikimedia Commons (მოჭრილია)",
+                    caption: "სურ. 1. ქვევრი ყურძნის მტევნის გამოსახულებებით, ძვ. წ. VI ათასწლეულის I ნახევარი, ხრამის დიდი გორა (საქართველოს ეროვნული მუზეუმი)",
+                    credit: "ფოტო: Carole Raddato, Wikimedia Commons (მოჭრილია)",
+                    licenseName: "CC BY-SA 2.0",
+                    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0/",
+                    sourceUrl: "https://commons.wikimedia.org/wiki/File:A_terracotta_Kvevri_used_to_ferment_and_age_wine_decorated_with_depictions_of_bunches_of_grapes,_First_half_of_the_6th_millennium_BC,_from_Khramis_Didid_Gora,_National_Museum_of_Georgia,_Tbilisi,_Georgia.jpg",
                     alt: "უძველესი თიხის ჭურჭელი, რომლის ყელთან ყურძნის მტევნის ფორმის რელიეფური ორნამენტებია",
                   },
                   answer: true,

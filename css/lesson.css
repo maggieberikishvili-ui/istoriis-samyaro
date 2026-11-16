@@ -566,3 +566,23 @@
 .theory .lesson-figure {
   margin-top: calc(-1 * var(--space-1));
 }
+
+.lesson-figure__text {
+  display: block;
+}
+
+/* ავტორი · ლიცენზია · წყარო — უფრო წვრილად */
+.lesson-figure__credit {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.75rem;
+  font-weight: var(--fw-regular);
+  overflow-wrap: anywhere;
+}
+
+.lesson-figure__link {
+  color: var(--color-secondary);
+  font-weight: var(--fw-bold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

@@ -312,7 +312,20 @@
   // მხოლოდ პროექტის assets/images/ საქაღალდიდან და მხოლოდ სურათის ფორმატები
   const IMAGE_PATH = /^assets\/images\/(?!.*\.\.)[^\s"'<>\\?#]+\.(jpe?g|png|webp|gif|svg|avif)$/i;
 
-  /** step.image: "assets/images/x.jpg" ან { src, caption, alt } → ნორმალიზებული ობიექტი ან null */
+  /** მხოლოდ https:// ბმულები (ავტორობისა და ლიცენზიისთვის) */
+  function safeUrl(url) {
+    return typeof url === "string" && /^https:\/\/[^\s"'<>]+$/.test(url.trim()) ? url.trim() : "";
+  }
+
+  function externalLink(text, href) {
+    const a = createEl("a", "lesson-figure__link", text);
+    a.href = href;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    return a;
+  }
+
+  /** step.image: "assets/images/x.jpg" ან { src, caption, alt, credit, licenseName, licenseUrl, sourceUrl } */
   function normalizeImage(image) {
     if (!image) return null;
     const data = typeof image === "string" ? { src: image } : image;
@@ -320,6 +333,10 @@
     return {
       src: data.src.trim(),
       caption: typeof data.caption === "string" ? data.caption.trim() : "",
+      credit: typeof data.credit === "string" ? data.credit.trim() : "",
+      licenseName: typeof data.licenseName === "string" ? data.licenseName.trim() : "",
+      licenseUrl: safeUrl(data.licenseUrl),
+      sourceUrl: safeUrl(data.sourceUrl),
       alt: typeof data.alt === "string" && data.alt.trim() ? data.alt.trim() : "",
     };
   }
@@ -340,7 +357,25 @@
     });
     figure.append(img);
 
-    if (data.caption) figure.append(createEl("figcaption", "lesson-figure__caption", data.caption));
+    if (data.caption || data.credit || data.licenseName) {
+      const caption = createEl("figcaption", "lesson-figure__caption");
+      if (data.caption) caption.append(createEl("span", "lesson-figure__text", data.caption));
+
+      // ავტორობა: „ფოტო: … · CC BY-SA 2.0 · წყარო“ (CC ლიცენზიების მოთხოვნა)
+      if (data.credit || data.licenseName) {
+        const credit = createEl("span", "lesson-figure__credit");
+        if (data.credit) credit.append(document.createTextNode(data.credit));
+        if (data.licenseName) {
+          if (credit.childNodes.length) credit.append(document.createTextNode(" · "));
+          credit.append(data.licenseUrl ? externalLink(data.licenseName, data.licenseUrl) : document.createTextNode(data.licenseName));
+        }
+        if (data.sourceUrl) {
+          credit.append(document.createTextNode(" · "), externalLink("წყარო", data.sourceUrl));
+        }
+        caption.append(credit);
+      }
+      figure.append(caption);
+    }
     return figure;
   }
 
