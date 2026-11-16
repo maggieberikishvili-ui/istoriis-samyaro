@@ -518,11 +518,14 @@
     const sentence = createEl("p", "fill-sentence");
     const blank = createEl("span", "fill-blank", " ");
     blank.setAttribute("aria-label", "გამოტოვებული სიტყვა");
-    // პუნქტუაციის (. , ; : ! ?) წინ ჰარი არ ჩაჯდეს: „მონები, რომლებიც…“
+    // პუნქტუაციის (. , ; : ! ?) წინ და გამხსნელი ბრჭყალის/ფრჩხილის შემდეგ ჰარი არ ჩაჯდეს:
+    // „მონები, რომლებიც…“, „„ღმერთის კარიბჭე“
+    const before = (step.before || "").trim();
     const after = (step.after || "").trim();
     const glue = /^[.,;:!?)»“]/.test(after) ? "" : " ";
+    const lead = /[„“«(]$/.test(before) ? "" : " ";
     sentence.append(
-      document.createTextNode((step.before || "") + " "),
+      document.createTextNode(before ? before + lead : ""),
       blank,
       document.createTextNode(after ? glue + after : "")
     );
