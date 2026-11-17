@@ -7,6 +7,8 @@
       გაკვეთილების match-სავარჯიშოებიდან; ვარსკვლავები სვლების მიხედვით.
    3. „დროის ხაზი“ — 3 რაუნდი × 5 მოვლენა (js/timeline-data.js);
       ერთ რაუნდში მოვლენების თარიღები ერთმანეთს არასოდეს ფარავს.
+   4. „ვინ ვარ მე?“ — 5 გმირი (js/whoami-data.js), თითოს 4 მინიშნება;
+      ქულა: 4 → 1, ყოველი დამატებითი მინიშნება ან შეცდომა −1.
    - მასალა: მხოლოდ არჩეული კურსის გავლილი გაკვეთილები + მიმდინარე
      (ზუსტად ისე, როგორც „❤️ აღდგენის“ სავარჯიშოში).
    - რეკორდები და დღიური XP — localStorage (IMS_STORE, გასაღები ims_games),
@@ -41,6 +43,10 @@
   const TIMELINE_ROUNDS = 3;
   const TIMELINE_SIZE = 5;
   const TIMELINE_XP_CAP = 15;
+
+  const WHO_ROUNDS = 5;
+  const WHO_CLUES = 4;
+  const WHO_XP_CAP = 15;
 
   const GAMES_XP_DAILY_CAP = 60;
 
@@ -77,7 +83,27 @@
     timelineCard: $("timelineCard"),
     timelineRecord: $("timelineRecord"),
     timelineStart: $("timelineStart"),
+    whoCard: $("whoCard"),
+    whoRecord: $("whoRecord"),
+    whoStart: $("whoStart"),
     xpNote: $("xpNote"),
+
+    who: $("who"),
+    whoRound: $("whoRound"),
+    whoProgress: $("whoProgress"),
+    whoProgressFill: $("whoProgressFill"),
+    whoKind: $("whoKind"),
+    whoPoints: $("whoPoints"),
+    whoClues: $("whoClues"),
+    whoMore: $("whoMore"),
+    whoHint: $("whoHint"),
+    whoOptions: $("whoOptions"),
+    whoFooter: $("whoFooter"),
+    whoFeedback: $("whoFeedback"),
+    whoFeedbackIcon: $("whoFeedbackIcon"),
+    whoFeedbackTitle: $("whoFeedbackTitle"),
+    whoFeedbackText: $("whoFeedbackText"),
+    whoNext: $("whoNext"),
 
     timeline: $("timeline"),
     timelineRound: $("timelineRound"),
@@ -206,6 +232,11 @@
     return window.IMS_TIMELINE ? window.IMS_TIMELINE.forCourse(course.id) : [];
   }
 
+  /** „ვინ ვარ მე?“ გმირები ამ კურსისთვის (js/whoami-data.js). */
+  function whoHeroes() {
+    return window.IMS_WHOAMI ? window.IMS_WHOAMI.forCourse(course.id) : [];
+  }
+
   /* ==========================================================
      რეკორდები და XP (localStorage → IMS_STORE)
      ========================================================== */
@@ -291,6 +322,7 @@
     el.race.hidden = screen !== "race";
     el.memory.hidden = screen !== "memory";
     el.timeline.hidden = screen !== "timeline";
+    el.who.hidden = screen !== "who";
     el.result.hidden = screen !== "result";
     window.scrollTo(0, 0);
   }
@@ -307,6 +339,7 @@
     if (state.lastGame === "race") startRace();
     else if (state.lastGame === "memory") startMemory();
     else if (state.lastGame === "timeline") startTimeline();
+    else if (state.lastGame === "who") startWho();
   });
 
   /* ==========================================================
@@ -376,6 +409,15 @@
       "🔒 ჯერ გაიარე მეტი გაკვეთილი — თარიღიანი მოვლენები არ ჰყოფნის"
     );
 
+    const heroes = whoHeroes().filter((h) => lessonIds.has(h.lesson));
+    const whoRec = getRecord("who");
+    setCardState(
+      el.whoCard, el.whoStart, el.whoRecord,
+      heroes.length >= WHO_ROUNDS,
+      whoRec ? "🏅 რეკორდი: " + whoRec.score + " / " + WHO_ROUNDS * WHO_CLUES + " · " + "★".repeat(whoRec.stars) : "რეკორდი ჯერ არ გაქვს — დაამყარე პირველი!",
+      "🔒 ჯერ გაიარე მეტი გაკვეთილი — გმირები ჯერ არ ჰყოფნის"
+    );
+
     const earned = xpEarnedToday();
     el.xpNote.textContent = earned >= GAMES_XP_DAILY_CAP
       ? "⚡ დღევანდელი XP-ის ლიმიტი თამაშებიდან ამოიწურა (" + GAMES_XP_DAILY_CAP + "). შეგიძლია ითამაშო რეკორდისთვის!"
@@ -385,6 +427,7 @@
   el.raceStart.addEventListener("click", startRace);
   el.memoryStart.addEventListener("click", startMemory);
   el.timelineStart.addEventListener("click", startTimeline);
+  el.whoStart.addEventListener("click", startWho);
 
   /* ==========================================================
      შედეგის ეკრანი
@@ -947,14 +990,206 @@
     }
   });
 
-  /* ---------- კლავიატურა: 1–4 რბოლაში ---------- */
+  /* ==========================================================
+     4. ვინ ვარ მე?
+     ========================================================== */
+
+  const WHO_KIND = {
+    person: "👤 პიროვნება",
+    ancient: "🦴 უძველესი ადამიანი",
+    place: "📍 ადგილი",
+    state: "🏛️ სახელმწიფო",
+    object: "🏺 ნივთი",
+    people: "👥 ხალხი",
+  };
+
+  const who = {
+    rounds: [],
+    round: 0,
+    hero: null,
+    shown: 1,       // რამდენი მინიშნება ჩანს
+    wrong: 0,
+    done: false,
+    score: 0,
+    guessed: 0,
+    buttons: [],
+    review: [],
+  };
+
+  function heroesInScope() {
+    const ids = new Set(scopeLessons().map((l) => l.id));
+    return whoHeroes().filter((h) => ids.has(h.lesson));
+  }
+
+  /** 3 არასწორი ვარიანტი: ჯერ იმავე ტიპის ღია გმირები, მერე იმავე ტიპის სხვები, ბოლოს — ნებისმიერი. */
+  function pickDistractors(hero, scopePool) {
+    const all = whoHeroes();
+    const groups = [
+      scopePool.filter((h) => h.kind === hero.kind),
+      all.filter((h) => h.kind === hero.kind),
+      scopePool,
+      all,
+    ];
+    const picked = [];
+    const names = new Set([hero.answer]);
+    groups.forEach((group) => {
+      shuffle(group).forEach((h) => {
+        if (picked.length < 3 && !names.has(h.answer)) {
+          names.add(h.answer);
+          picked.push(h);
+        }
+      });
+    });
+    return picked;
+  }
+
+  function whoPoints() {
+    return Math.max(0, WHO_CLUES + 1 - who.shown);
+  }
+
+  function startWho() {
+    const pool = heroesInScope();
+    if (pool.length < WHO_ROUNDS) return goHub();
+
+    state.lastGame = "who";
+    Object.assign(who, { pool: pool, rounds: shuffle(pool).slice(0, WHO_ROUNDS), round: 0, score: 0, guessed: 0, review: [] });
+    show("who");
+    nextWhoRound();
+  }
+
+  function nextWhoRound() {
+    who.hero = who.rounds[who.round];
+    who.round += 1;
+    who.shown = 1;
+    who.wrong = 0;
+    who.done = false;
+
+    el.whoRound.textContent = who.round + " / " + WHO_ROUNDS;
+    el.whoProgress.setAttribute("aria-valuenow", String(who.round - 1));
+    el.whoProgressFill.style.width = ((who.round - 1) / WHO_ROUNDS) * 100 + "%";
+    el.whoKind.textContent = WHO_KIND[who.hero.kind] || "";
+    el.whoHint.textContent = "";
+    el.whoFeedback.hidden = true;
+    el.whoFooter.dataset.state = "idle";
+    el.whoNext.disabled = true;
+    el.whoNext.textContent = "აირჩიე პასუხი";
+
+    // ვარიანტები — ერთხელ რაუნდზე
+    el.whoOptions.replaceChildren();
+    const options = shuffle([who.hero].concat(pickDistractors(who.hero, who.pool)));
+    who.buttons = options.map((h, i) => {
+      const btn = createEl("button", "option");
+      btn.type = "button";
+      btn.append(createEl("span", "option__key", String(i + 1)), createEl("span", "option__text", h.answer));
+      btn.addEventListener("click", () => answerWho(btn, h));
+      el.whoOptions.append(btn);
+      return { btn: btn, hero: h };
+    });
+
+    renderWho();
+    window.scrollTo(0, 0);
+  }
+
+  function renderWho() {
+    el.whoClues.replaceChildren();
+    who.hero.clues.forEach((text, i) => {
+      if (i >= who.shown && !who.done) return;
+      const li = createEl("li", "who-clue" + (i >= who.shown ? " is-extra" : "") + (i === who.shown - 1 && !who.done ? " is-new" : ""));
+      li.append(createEl("span", "who-clue__num", String(i + 1)), createEl("span", "who-clue__text", text));
+      el.whoClues.append(li);
+    });
+    el.whoPoints.textContent = who.done ? "" : "შესაძლო ქულა: " + whoPoints();
+    el.whoMore.hidden = who.done;
+    el.whoMore.disabled = who.shown >= WHO_CLUES;
+    el.whoMore.textContent = who.shown >= WHO_CLUES ? "🔍 ყველა მინიშნება გახსნილია" : "🔍 კიდევ ერთი მინიშნება (−1 ქულა)";
+  }
+
+  el.whoMore.addEventListener("click", () => {
+    if (who.done || who.shown >= WHO_CLUES) return;
+    who.shown += 1;
+    el.whoHint.textContent = "";
+    renderWho();
+  });
+
+  function endWhoRound(gained) {
+    who.done = true;
+    who.buttons.forEach((b) => {
+      b.btn.disabled = true;
+      if (b.hero === who.hero) b.btn.classList.add("is-correct");
+    });
+    if (gained < WHO_CLUES) who.review.push({ question: who.hero.clues[WHO_CLUES - 1], answer: who.hero.answer });
+
+    el.whoHint.textContent = "";
+    el.whoFooter.dataset.state = gained > 0 ? "correct" : "wrong";
+    el.whoFeedback.hidden = false;
+    el.whoFeedbackIcon.textContent = gained > 0 ? "✓" : "✗";
+    el.whoFeedbackTitle.textContent = gained > 0 ? "სწორია! +" + gained + " ქულა" : "ვერ გამოიცანი";
+    el.whoFeedbackText.textContent = (gained > 0 ? "" : "სწორი პასუხი: ") + who.hero.answer + (gained > 0 ? " — ქვემოთ ყველა მინიშნება ჩანს." : "");
+    el.whoNext.disabled = false;
+    el.whoNext.textContent = who.round < WHO_ROUNDS ? "შემდეგი" : "შედეგების ნახვა";
+    el.whoProgress.setAttribute("aria-valuenow", String(who.round));
+    el.whoProgressFill.style.width = (who.round / WHO_ROUNDS) * 100 + "%";
+    renderWho();
+  }
+
+  function answerWho(btn, hero) {
+    if (who.done || btn.disabled) return;
+    if (hero === who.hero) {
+      const gained = whoPoints();
+      who.score += gained;
+      who.guessed += 1;
+      btn.classList.add("is-correct");
+      endWhoRound(gained);
+      return;
+    }
+    who.wrong += 1;
+    btn.disabled = true;
+    btn.classList.add("is-wrong", "is-shake");
+    if (who.shown < WHO_CLUES) {
+      who.shown += 1;
+      el.whoHint.textContent = "არასწორია — გაიხსნა ახალი მინიშნება.";
+      renderWho();
+    } else {
+      endWhoRound(0);
+    }
+  }
+
+  el.whoNext.addEventListener("click", () => {
+    if (!who.done) return;
+    if (who.round < WHO_ROUNDS) nextWhoRound();
+    else finishWho();
+  });
+
+  function finishWho() {
+    const max = WHO_ROUNDS * WHO_CLUES;
+    const stars = who.score >= max - 4 ? 3 : who.score >= Math.ceil(max / 2) ? 2 : 1;
+    const result = { score: who.score, stars: stars };
+    const newRecord = who.score > 0 && saveRecord("who", result, (a, b) => a.score > b.score);
+    const xp = awardXp(Math.min(WHO_XP_CAP, who.score));
+
+    showResult({
+      emblem: "★".repeat(stars) + "☆".repeat(3 - stars),
+      title: stars === 3 ? "ისტორიის ნამდვილი მცოდნე!" : stars === 2 ? "კარგი შედეგია!" : "სცადე კიდევ ერთხელ!",
+      subtitle: "ქულა მით მეტია, რაც ნაკლები მინიშნებით გამოიცნობ.",
+      newRecord: newRecord,
+      stats: [
+        statBox("ქულა", who.score + " / " + max, "result-stat--accuracy"),
+        statBox("გამოიცანი", who.guessed + " / " + WHO_ROUNDS, "result-stat--accuracy"),
+        statBox("XP", "+" + xp, "result-stat--xp"),
+      ],
+      mistakes: who.review,
+    });
+  }
+
+  /* ---------- კლავიატურა: 1–4 რბოლასა და „ვინ ვარ მე?“-ში ---------- */
 
   document.addEventListener("keydown", (e) => {
-    if (state.screen !== "race" || race.locked) return;
     const n = Number(e.key);
     if (!Number.isInteger(n) || n < 1) return;
-    const buttons = el.raceStage.querySelectorAll(".option");
-    if (buttons[n - 1]) buttons[n - 1].click();
+    let buttons = null;
+    if (state.screen === "race" && !race.locked) buttons = el.raceStage.querySelectorAll(".option");
+    if (state.screen === "who" && !who.done) buttons = el.whoOptions.querySelectorAll(".option");
+    if (buttons && buttons[n - 1]) buttons[n - 1].click();
   });
 
   /* ---------- სტარტი ---------- */

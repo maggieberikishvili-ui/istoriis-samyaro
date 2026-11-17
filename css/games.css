@@ -611,6 +611,119 @@
 }
 
 /* ----------------------------------------------------------
+   ვინ ვარ მე?
+   ---------------------------------------------------------- */
+.btn--purple {
+  --btn-bg: var(--color-purple);
+  --btn-shadow: var(--color-purple-dark);
+}
+
+#whoCard {
+  border-left-color: var(--color-purple);
+}
+
+.who-stage {
+  animation: none;
+}
+
+.who-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.who-kind {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  color: var(--color-purple-dark);
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.who-points {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  color: var(--color-accent-dark);
+}
+
+.who-title {
+  margin-bottom: var(--space-3);
+  font-family: var(--font-serif);
+  font-size: var(--fs-xl);
+}
+
+.who-clues {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.who-clue {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  font-weight: var(--fw-bold);
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border);
+  border-left: 4px solid var(--color-purple);
+  border-radius: var(--radius-md);
+}
+
+.who-clue.is-new {
+  animation: feedback-in 260ms ease;
+}
+
+.who-clue.is-extra {
+  opacity: 0.7;
+  border-left-color: var(--color-border-strong);
+}
+
+.who-clue__num {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-inverse);
+  background-color: var(--color-purple);
+  border-radius: 50%;
+}
+
+.who-clue.is-extra .who-clue__num {
+  background-color: var(--color-border-strong);
+}
+
+.who-clue__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.who-more {
+  margin-bottom: var(--space-3);
+}
+
+.who-hint {
+  min-height: 1.4em;
+  margin-bottom: var(--space-2);
+  font-weight: var(--fw-heavy);
+  color: var(--color-danger);
+}
+
+.who-options .option {
+  min-height: 52px;
+}
+
+/* ----------------------------------------------------------
    შედეგი
    ---------------------------------------------------------- */
 .game-result {

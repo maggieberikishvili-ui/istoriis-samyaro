@@ -29,6 +29,7 @@
 
   <script src="js/data.js" defer></script>
   <script src="js/timeline-data.js" defer></script>
+  <script src="js/whoami-data.js" defer></script>
   <script src="js/games.js" defer></script>
 </head>
 <body>
@@ -77,6 +78,16 @@
             <p class="game-card__record" id="timelineRecord"></p>
           </div>
           <button type="button" class="btn btn--accent game-card__btn" id="timelineStart">თამაში</button>
+        </article>
+
+        <article class="game-card" id="whoCard">
+          <div class="game-card__icon" aria-hidden="true">🎭</div>
+          <div class="game-card__body">
+            <h2 class="game-card__title">ვინ ვარ მე?</h2>
+            <p class="game-card__text">გამოიცანი ისტორიული პიროვნება, ადგილი ან ნივთი მინიშნებებით. რაც ნაკლებ მინიშნებას გამოიყენებ — მით მეტ ქულას მიიღებ.</p>
+            <p class="game-card__record" id="whoRecord"></p>
+          </div>
+          <button type="button" class="btn btn--purple game-card__btn" id="whoStart">თამაში</button>
         </article>
       </div>
 
@@ -153,6 +164,42 @@
             </div>
           </div>
           <button type="button" class="btn lesson-footer__btn" id="timelineBtn" disabled>შემოწმება</button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- ============ ვინ ვარ მე? ============ -->
+    <section class="game-screen" id="who" hidden>
+      <header class="lesson-top">
+        <button type="button" class="lesson-top__close games-exit" aria-label="თამაშის შეწყვეტა">✕</button>
+        <div class="lesson-progress" role="progressbar" aria-label="რაუნდები" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="whoProgress">
+          <div class="lesson-progress__fill" id="whoProgressFill"></div>
+        </div>
+        <span class="race-clock tl-round" id="whoRound">1 / 5</span>
+      </header>
+
+      <main class="lesson-stage who-stage">
+        <div class="who-head">
+          <span class="who-kind" id="whoKind"></span>
+          <span class="who-points" id="whoPoints"></span>
+        </div>
+        <h1 class="who-title">ვინ ვარ მე?</h1>
+        <ol class="who-clues" id="whoClues" aria-live="polite"></ol>
+        <button type="button" class="btn btn--outline btn--block who-more" id="whoMore">🔍 კიდევ ერთი მინიშნება (−1 ქულა)</button>
+        <p class="who-hint" id="whoHint" role="status"></p>
+        <div class="options who-options" id="whoOptions"></div>
+      </main>
+
+      <footer class="lesson-footer" id="whoFooter" data-state="idle">
+        <div class="lesson-footer__inner">
+          <div class="feedback" id="whoFeedback" role="status" hidden>
+            <span class="feedback__icon" id="whoFeedbackIcon" aria-hidden="true"></span>
+            <div class="feedback__body">
+              <p class="feedback__title" id="whoFeedbackTitle"></p>
+              <p class="feedback__text" id="whoFeedbackText"></p>
+            </div>
+          </div>
+          <button type="button" class="btn lesson-footer__btn" id="whoNext" disabled>აირჩიე პასუხი</button>
         </div>
       </footer>
     </section>

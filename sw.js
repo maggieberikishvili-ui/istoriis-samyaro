@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v7";
+const VERSION = "v8";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -37,6 +37,7 @@ const CORE_FILES = [
   "./js/storage.js",
   "./js/data.js",
   "./js/timeline-data.js",
+  "./js/whoami-data.js",
   "./js/illustrations.js",
   "./js/auth.js",
   "./js/dashboard.js",
