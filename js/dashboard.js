@@ -35,6 +35,7 @@
     heartsStat: document.getElementById("heartsStat"),
     refillItem: document.getElementById("refillItem"),
     refillBtn: document.getElementById("refillBtn"),
+    gamesLink: document.getElementById("gamesLink"),
     logoutBtn: document.getElementById("logoutBtn"),
     courseList: document.getElementById("courseList"),
     pathSection: document.getElementById("pathSection"),
@@ -164,6 +165,8 @@
     // „+ ❤️ აღდგენა“ — სავარჯიშო მხოლოდ არჩეული კურსის კითხვებით
     el.refillBtn.href = store.URLS.lesson + "?" +
       new URLSearchParams({ mode: "practice", course: courseId }).toString();
+    // თამაშები — არჩეული კურსის მასალით
+    el.gamesLink.href = store.URLS.games + "?" + new URLSearchParams({ course: courseId }).toString();
     renderCourses();
     renderPath();
   }

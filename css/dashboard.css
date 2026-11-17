@@ -334,6 +334,68 @@
 }
 
 /* ----------------------------------------------------------
+   თამაშების ბარათი
+   ---------------------------------------------------------- */
+.games-entry {
+  margin-top: var(--space-5);
+}
+
+.games-entry__card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  color: var(--color-text);
+  text-decoration: none;
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border);
+  border-left: 6px solid var(--color-secondary);
+  border-bottom-width: calc(var(--border-width) + var(--shadow-depth));
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition-fast), background-color var(--transition);
+}
+
+.games-entry__card:hover {
+  text-decoration: none;
+  background-color: var(--color-bg-soft);
+}
+
+.games-entry__card:active {
+  transform: translateY(var(--shadow-depth));
+  border-bottom-width: var(--border-width);
+}
+
+.games-entry__icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.games-entry__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.games-entry__title {
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-heavy);
+}
+
+.games-entry__text {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+.games-entry__arrow {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-heavy);
+  color: var(--color-secondary);
+}
+
+/* ----------------------------------------------------------
    თავები (Chapters) — აკადემიური ბარათი
    ---------------------------------------------------------- */
 .path-section {

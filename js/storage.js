@@ -29,12 +29,14 @@
     theme: "ims_theme",
     selectedCourse: "ims_selectedCourse",
     installDismissed: "ims_installDismissed",
+    games: "ims_games",             // თამაშების რეკორდები და დღიური XP (თითო მომხმარებელზე)
   });
 
   const URLS = Object.freeze({
     login: "index.html",
     dashboard: "dashboard.html",
     lesson: "lesson.html",
+    games: "games.html",
   });
 
   const MAX_HEARTS = 5;

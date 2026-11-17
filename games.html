@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>თამაშები — ისტორიის სამყარო</title>
+
+  <!-- საერთო საცავი: ავტორიზაციის შემოწმება + თემის ადრეული ჩატვირთვა -->
+  <script src="js/storage.js" data-auth="required"></script>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e6f5e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ისტორიის სამყარო">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&family=Noto+Serif+Georgian:wght@700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/lesson.css">
+  <link rel="stylesheet" href="css/games.css">
+
+  <script src="js/data.js" defer></script>
+  <script src="js/games.js" defer></script>
+</head>
+<body>
+  <div class="lesson-app games-app">
+
+    <!-- ============ თამაშების მენიუ ============ -->
+    <section class="games-hub" id="hub" aria-labelledby="hubTitle">
+      <header class="games-hub__top">
+        <a class="lesson-top__close" href="dashboard.html" aria-label="დაფაზე დაბრუნება">←</a>
+        <div>
+          <h1 class="games-hub__title" id="hubTitle">თამაშები</h1>
+          <p class="games-hub__course" id="hubCourse"></p>
+        </div>
+      </header>
+
+      <div class="games-scope">
+        <p class="games-scope__label" id="scopeLabel">რომელი მასალით ითამაშებ?</p>
+        <div class="games-scope__list" id="scopeList" role="radiogroup" aria-labelledby="scopeLabel"></div>
+      </div>
+
+      <div class="games-list">
+        <article class="game-card" id="raceCard">
+          <div class="game-card__icon" aria-hidden="true">⏱️</div>
+          <div class="game-card__body">
+            <h2 class="game-card__title">დროსთან რბოლა</h2>
+            <p class="game-card__text">60 წამში უპასუხე რაც შეიძლება მეტ კითხვას. ზედიზედ სწორი პასუხები ქულას ამრავლებს (×2, ×3).</p>
+            <p class="game-card__record" id="raceRecord"></p>
+          </div>
+          <button type="button" class="btn game-card__btn" id="raceStart">თამაში</button>
+        </article>
+
+        <article class="game-card" id="memoryCard">
+          <div class="game-card__icon" aria-hidden="true">🧠</div>
+          <div class="game-card__body">
+            <h2 class="game-card__title">მეხსიერების ბარათები</h2>
+            <p class="game-card__text">გადააბრუნე ბარათები და დააწყვილე ცნება მის განმარტებასთან. რაც ნაკლები სვლით — მით მეტი ვარსკვლავი.</p>
+            <p class="game-card__record" id="memoryRecord"></p>
+          </div>
+          <button type="button" class="btn btn--secondary game-card__btn" id="memoryStart">თამაში</button>
+        </article>
+      </div>
+
+      <p class="games-hub__note" id="xpNote"></p>
+    </section>
+
+    <!-- ============ დროსთან რბოლა ============ -->
+    <section class="game-screen" id="race" hidden>
+      <header class="lesson-top">
+        <button type="button" class="lesson-top__close games-exit" aria-label="თამაშის შეწყვეტა">✕</button>
+        <div class="lesson-progress race-timer" role="timer" aria-label="დარჩენილი დრო">
+          <div class="lesson-progress__fill race-timer__fill" id="raceTimerFill"></div>
+        </div>
+        <span class="race-clock" id="raceClock" aria-live="off">60</span>
+      </header>
+
+      <div class="race-hud">
+        <span class="race-hud__score">ქულა: <strong id="raceScore">0</strong></span>
+        <span class="race-hud__combo" id="raceCombo" hidden></span>
+      </div>
+
+      <main class="lesson-stage race-stage" id="raceStage" aria-live="polite"></main>
+    </section>
+
+    <!-- ============ მეხსიერების ბარათები ============ -->
+    <section class="game-screen" id="memory" hidden>
+      <header class="lesson-top">
+        <button type="button" class="lesson-top__close games-exit" aria-label="თამაშის შეწყვეტა">✕</button>
+        <div class="memory-hud">
+          <span>სვლა: <strong id="memoryMoves">0</strong></span>
+          <span>წყვილი: <strong id="memoryPairs">0</strong></span>
+          <span>⏱ <strong id="memoryTime">0:00</strong></span>
+        </div>
+      </header>
+      <main class="memory-stage">
+        <p class="memory-hint">იპოვე ცნება და მისი განმარტება</p>
+        <div class="memory-grid" id="memoryGrid"></div>
+      </main>
+    </section>
+
+    <!-- ============ შედეგი ============ -->
+    <section class="result game-result" id="result" aria-labelledby="resultTitle" hidden>
+      <div class="result__emblem result__emblem--win" id="resultEmblem" aria-hidden="true">🏆</div>
+      <h1 class="result__title" id="resultTitle"></h1>
+      <p class="result__subtitle" id="resultSubtitle"></p>
+      <p class="game-result__record" id="resultRecord" hidden>🎉 ახალი რეკორდი!</p>
+      <div class="result__stats" id="resultStats"></div>
+      <div class="game-result__review" id="resultReview" hidden>
+        <h2 class="game-result__review-title">გაიმეორე</h2>
+        <ul class="game-result__mistakes" id="resultMistakes"></ul>
+      </div>
+      <div class="game-result__actions">
+        <button type="button" class="btn btn--block" id="resultAgain">კიდევ ერთხელ</button>
+        <button type="button" class="btn btn--outline btn--block" id="resultMenu">თამაშების მენიუ</button>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
