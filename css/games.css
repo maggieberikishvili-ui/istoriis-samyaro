@@ -404,6 +404,213 @@
 }
 
 /* ----------------------------------------------------------
+   დროის ხაზი
+   ---------------------------------------------------------- */
+#timelineCard {
+  border-left-color: var(--color-accent);
+}
+
+.tl-round {
+  min-width: 3.2em;
+}
+
+.tl-stage {
+  animation: none;
+}
+
+.tl-instruction {
+  margin-bottom: var(--space-4);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+.tl-edge {
+  margin: var(--space-1) 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.04em;
+  color: var(--color-accent-dark);
+}
+
+/* ვერტიკალური ხაზი სლოტებს შორის */
+.tl-slots {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0 0 0 22px;
+  list-style: none;
+}
+
+.tl-slots::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 9px;
+  width: 3px;
+  background-color: var(--route-ahead);
+  border-radius: 2px;
+}
+
+.tl-slot {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  min-height: 52px;
+}
+
+.tl-slot__num {
+  position: absolute;
+  top: 50%;
+  left: -22px;
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  font-size: 0.6875rem;
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-inverse);
+  background-color: var(--color-accent-dark);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.tl-slot.is-empty .tl-slot__num {
+  color: var(--color-text-muted);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border-strong);
+}
+
+.tl-slot__empty {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.tl-slot__event,
+.tl-slot__body {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  text-align: left;
+  color: var(--color-text);
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-accent);
+  border-radius: var(--radius-md);
+}
+
+.tl-slot__event {
+  cursor: pointer;
+}
+
+.tl-slot__event:hover {
+  background-color: var(--color-bg-soft);
+}
+
+.tl-slot__body {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.tl-slot__text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tl-slot__remove {
+  flex-shrink: 0;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.tl-slot__date {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+}
+
+.tl-slot.is-correct .tl-slot__num { background-color: var(--color-primary); }
+.tl-slot.is-wrong .tl-slot__num   { background-color: var(--color-danger); }
+
+.tl-slot.is-correct .tl-slot__body {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.tl-slot.is-correct .tl-slot__date { color: var(--color-primary-dark); }
+
+.tl-slot.is-wrong .tl-slot__body {
+  background-color: var(--color-danger-light);
+  border-color: var(--color-danger);
+}
+
+.tl-slot.is-wrong .tl-slot__date { color: var(--color-danger-dark); }
+
+.tl-pool {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.tl-card {
+  min-height: 52px;
+  font-size: var(--fs-sm);
+}
+
+.tl-answer {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.tl-answer__title {
+  margin-bottom: var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-purple-dark);
+}
+
+.tl-answer__list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+.tl-answer__item {
+  font-size: var(--fs-sm);
+}
+
+.tl-answer__date {
+  display: block;
+  font-weight: var(--fw-heavy);
+  color: var(--color-primary-dark);
+}
+
+.tl-answer__text {
+  display: block;
+}
+
+/* ----------------------------------------------------------
    შედეგი
    ---------------------------------------------------------- */
 .game-result {

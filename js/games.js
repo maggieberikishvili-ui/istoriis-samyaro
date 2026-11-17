@@ -5,6 +5,8 @@
       ზედიზედ სწორი პასუხები ამრავლებს ქულას (×2 / ×3).
    2. „მეხსიერების ბარათები“ — 6 წყვილი (ცნება ↔ განმარტება)
       გაკვეთილების match-სავარჯიშოებიდან; ვარსკვლავები სვლების მიხედვით.
+   3. „დროის ხაზი“ — 3 რაუნდი × 5 მოვლენა (js/timeline-data.js);
+      ერთ რაუნდში მოვლენების თარიღები ერთმანეთს არასოდეს ფარავს.
    - მასალა: მხოლოდ არჩეული კურსის გავლილი გაკვეთილები + მიმდინარე
      (ზუსტად ისე, როგორც „❤️ აღდგენის“ სავარჯიშოში).
    - რეკორდები და დღიური XP — localStorage (IMS_STORE, გასაღები ims_games),
@@ -35,6 +37,10 @@
   const MEMORY_MAX_RIGHT = 70;           // განმარტების მაქსიმალური სიგრძე (ბარათზე რომ დაეტიოს)
   const MEMORY_MISMATCH_MS = 1000;
   const MEMORY_XP = { 3: 10, 2: 7, 1: 4 };
+
+  const TIMELINE_ROUNDS = 3;
+  const TIMELINE_SIZE = 5;
+  const TIMELINE_XP_CAP = 15;
 
   const GAMES_XP_DAILY_CAP = 60;
 
@@ -68,7 +74,26 @@
     memoryCard: $("memoryCard"),
     memoryRecord: $("memoryRecord"),
     memoryStart: $("memoryStart"),
+    timelineCard: $("timelineCard"),
+    timelineRecord: $("timelineRecord"),
+    timelineStart: $("timelineStart"),
     xpNote: $("xpNote"),
+
+    timeline: $("timeline"),
+    timelineRound: $("timelineRound"),
+    timelineProgress: $("timelineProgress"),
+    timelineProgressFill: $("timelineProgressFill"),
+    timelineInstruction: $("timelineInstruction"),
+    timelineSlots: $("timelineSlots"),
+    timelinePool: $("timelinePool"),
+    timelineAnswer: $("timelineAnswer"),
+    timelineAnswerList: $("timelineAnswerList"),
+    timelineFooter: $("timelineFooter"),
+    timelineFeedback: $("timelineFeedback"),
+    timelineFeedbackIcon: $("timelineFeedbackIcon"),
+    timelineFeedbackTitle: $("timelineFeedbackTitle"),
+    timelineFeedbackText: $("timelineFeedbackText"),
+    timelineBtn: $("timelineBtn"),
 
     race: $("race"),
     raceStage: $("raceStage"),
@@ -176,6 +201,11 @@
     return pairs;
   }
 
+  /** „დროის ხაზის“ მოვლენები ამ კურსისთვის (js/timeline-data.js). */
+  function timelineEvents() {
+    return window.IMS_TIMELINE ? window.IMS_TIMELINE.forCourse(course.id) : [];
+  }
+
   /* ==========================================================
      რეკორდები და XP (localStorage → IMS_STORE)
      ========================================================== */
@@ -260,6 +290,7 @@
     el.hub.hidden = screen !== "hub";
     el.race.hidden = screen !== "race";
     el.memory.hidden = screen !== "memory";
+    el.timeline.hidden = screen !== "timeline";
     el.result.hidden = screen !== "result";
     window.scrollTo(0, 0);
   }
@@ -275,6 +306,7 @@
   el.resultAgain.addEventListener("click", () => {
     if (state.lastGame === "race") startRace();
     else if (state.lastGame === "memory") startMemory();
+    else if (state.lastGame === "timeline") startTimeline();
   });
 
   /* ==========================================================
@@ -334,6 +366,16 @@
       "🔒 ჯერ გაიარე მეტი გაკვეთილი — საკმარისი წყვილი არ არის"
     );
 
+    const lessonIds = new Set(lessons.map((l) => l.id));
+    const tlEvents = timelineEvents().filter((e) => lessonIds.has(e.lesson));
+    const tlRec = getRecord("timeline");
+    setCardState(
+      el.timelineCard, el.timelineStart, el.timelineRecord,
+      maxDisjoint(tlEvents) >= TIMELINE_SIZE,
+      tlRec ? "🏅 რეკორდი: " + tlRec.score + " / " + TIMELINE_ROUNDS * TIMELINE_SIZE + " · " + "★".repeat(tlRec.stars) : "რეკორდი ჯერ არ გაქვს — დაამყარე პირველი!",
+      "🔒 ჯერ გაიარე მეტი გაკვეთილი — თარიღიანი მოვლენები არ ჰყოფნის"
+    );
+
     const earned = xpEarnedToday();
     el.xpNote.textContent = earned >= GAMES_XP_DAILY_CAP
       ? "⚡ დღევანდელი XP-ის ლიმიტი თამაშებიდან ამოიწურა (" + GAMES_XP_DAILY_CAP + "). შეგიძლია ითამაშო რეკორდისთვის!"
@@ -342,6 +384,7 @@
 
   el.raceStart.addEventListener("click", startRace);
   el.memoryStart.addEventListener("click", startMemory);
+  el.timelineStart.addEventListener("click", startTimeline);
 
   /* ==========================================================
      შედეგის ეკრანი
@@ -703,6 +746,206 @@
       ],
     });
   }
+
+  /* ==========================================================
+     3. დროის ხაზი
+     ========================================================== */
+
+  const tl = {
+    pool: [],
+    used: new Set(),
+    round: 0,
+    events: [],      // ამ რაუნდის 5 მოვლენა (შემთხვევითი რიგით)
+    placed: [],      // მოთამაშის მიერ დალაგებული
+    checked: false,
+    score: 0,
+    mistakes: [],
+  };
+
+  function overlaps(a, b) {
+    return a.from <= b.to && b.from <= a.to;
+  }
+
+  /** რამდენი ურთიერთგადაუფარავი მოვლენის არჩევა შეიძლება (ხარბი ალგორითმი „to“-ს მიხედვით). */
+  function maxDisjoint(events) {
+    let count = 0;
+    let lastTo = -Infinity;
+    events.slice().sort((a, b) => a.to - b.to).forEach((e) => {
+      if (e.from > lastTo) {
+        count += 1;
+        lastTo = e.to;
+      }
+    });
+    return count;
+  }
+
+  /** 5 მოვლენა, რომელთა თარიღები ერთმანეთს არ ფარავს; ჯერ — ამ თამაშში ჯერ არნაჩვენები. */
+  function pickRoundEvents() {
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const fresh = tl.pool.filter((e) => !tl.used.has(e));
+      const seen = tl.pool.filter((e) => tl.used.has(e));
+      const order = attempt < 30 ? shuffle(fresh).concat(shuffle(seen)) : shuffle(tl.pool);
+      const chosen = [];
+      for (const e of order) {
+        if (chosen.every((c) => !overlaps(c, e))) chosen.push(e);
+        if (chosen.length === TIMELINE_SIZE) return chosen;
+      }
+    }
+    return null;
+  }
+
+  function sortedEvents(events) {
+    return events.slice().sort((a, b) => a.from - b.from);
+  }
+
+  function startTimeline() {
+    const lessons = new Set(scopeLessons().map((l) => l.id));
+    const pool = timelineEvents().filter((e) => lessons.has(e.lesson));
+    if (maxDisjoint(pool) < TIMELINE_SIZE) return goHub();
+
+    state.lastGame = "timeline";
+    Object.assign(tl, { pool: pool, used: new Set(), round: 0, score: 0, mistakes: [] });
+    show("timeline");
+    nextTimelineRound();
+  }
+
+  function nextTimelineRound() {
+    const events = pickRoundEvents();
+    if (!events) return goHub();
+    events.forEach((e) => tl.used.add(e));
+    tl.round += 1;
+    tl.events = shuffle(events);
+    tl.placed = [];
+    tl.checked = false;
+
+    el.timelineRound.textContent = tl.round + " / " + TIMELINE_ROUNDS;
+    el.timelineProgress.setAttribute("aria-valuenow", String(tl.round - 1));
+    el.timelineProgressFill.style.width = ((tl.round - 1) / TIMELINE_ROUNDS) * 100 + "%";
+    el.timelineAnswer.hidden = true;
+    el.timelineFeedback.hidden = true;
+    el.timelineFooter.dataset.state = "idle";
+    el.timelineBtn.textContent = "შემოწმება";
+    renderTimeline();
+    window.scrollTo(0, 0);
+  }
+
+  function renderTimeline() {
+    const correct = tl.checked ? sortedEvents(tl.events) : null;
+
+    el.timelineSlots.replaceChildren();
+    for (let i = 0; i < TIMELINE_SIZE; i++) {
+      const ev = tl.placed[i];
+      const li = createEl("li", "tl-slot");
+      li.append(createEl("span", "tl-slot__num", String(i + 1)));
+
+      if (!ev) {
+        li.classList.add("is-empty");
+        li.append(createEl("span", "tl-slot__empty", i === tl.placed.length ? "შემდეგი მოვლენა აქ ჩაჯდება" : "—"));
+      } else if (tl.checked) {
+        const ok = ev === correct[i];
+        li.classList.add(ok ? "is-correct" : "is-wrong");
+        const body = createEl("span", "tl-slot__body");
+        body.append(createEl("span", "tl-slot__text", ev.text), createEl("span", "tl-slot__date", (ok ? "✓ " : "✗ ") + ev.date));
+        li.append(body);
+      } else {
+        const btn = createEl("button", "tl-slot__event");
+        btn.type = "button";
+        btn.setAttribute("aria-label", (i + 1) + ". " + ev.text + " — შეეხე, რომ ამოიღო");
+        btn.append(createEl("span", "tl-slot__text", ev.text), createEl("span", "tl-slot__remove", "✕"));
+        btn.addEventListener("click", () => {
+          tl.placed.splice(i, 1);
+          renderTimeline();
+        });
+        li.append(btn);
+      }
+      el.timelineSlots.append(li);
+    }
+
+    el.timelinePool.replaceChildren();
+    el.timelinePool.hidden = tl.checked;
+    tl.events.filter((e) => !tl.placed.includes(e)).forEach((ev) => {
+      const btn = createEl("button", "option tl-card");
+      btn.type = "button";
+      btn.append(createEl("span", "option__text", ev.text));
+      btn.addEventListener("click", () => {
+        if (tl.checked || tl.placed.length >= TIMELINE_SIZE) return;
+        tl.placed.push(ev);
+        renderTimeline();
+      });
+      el.timelinePool.append(btn);
+    });
+
+    el.timelineInstruction.hidden = tl.checked;
+    el.timelineBtn.disabled = !tl.checked && tl.placed.length < TIMELINE_SIZE;
+  }
+
+  function checkTimeline() {
+    tl.checked = true;
+    const correct = sortedEvents(tl.events);
+    const right = tl.placed.filter((ev, i) => ev === correct[i]).length;
+    tl.score += right;
+
+    renderTimeline();
+
+    const perfect = right === TIMELINE_SIZE;
+    if (!perfect) {
+      el.timelineAnswerList.replaceChildren();
+      correct.forEach((ev) => {
+        const li = createEl("li", "tl-answer__item");
+        li.append(createEl("span", "tl-answer__date", ev.date), createEl("span", "tl-answer__text", ev.text));
+        el.timelineAnswerList.append(li);
+      });
+      el.timelineAnswer.hidden = false;
+      tl.mistakes.push({ question: "რაუნდი " + tl.round, answer: correct.map((e) => e.date + " — " + e.text).join(" → ") });
+    }
+
+    el.timelineFooter.dataset.state = perfect ? "correct" : "wrong";
+    el.timelineFeedback.hidden = false;
+    el.timelineFeedbackIcon.textContent = perfect ? "✓" : right >= 3 ? "≈" : "✗";
+    el.timelineFeedbackTitle.textContent = perfect ? "ყველაფერი სწორად დაალაგე!" : "სწორ ადგილზეა " + right + " / " + TIMELINE_SIZE;
+    el.timelineFeedbackText.textContent = perfect ? "თარიღები ახლა თითოეულ მოვლენასთან ჩანს." : "ქვემოთ ნახე სწორი თანმიმდევრობა თარიღებით.";
+    el.timelineBtn.textContent = tl.round < TIMELINE_ROUNDS ? "შემდეგი რაუნდი" : "შედეგების ნახვა";
+    el.timelineBtn.disabled = false;
+    el.timelineProgress.setAttribute("aria-valuenow", String(tl.round));
+    el.timelineProgressFill.style.width = (tl.round / TIMELINE_ROUNDS) * 100 + "%";
+  }
+
+  function timelineStars(score) {
+    const max = TIMELINE_ROUNDS * TIMELINE_SIZE;
+    if (score >= max - 2) return 3;
+    if (score >= Math.ceil(max * 0.6)) return 2;
+    return 1;
+  }
+
+  function finishTimeline() {
+    const max = TIMELINE_ROUNDS * TIMELINE_SIZE;
+    const stars = timelineStars(tl.score);
+    const result = { score: tl.score, stars: stars };
+    const newRecord = tl.score > 0 && saveRecord("timeline", result, (a, b) => a.score > b.score);
+    const xp = awardXp(Math.min(TIMELINE_XP_CAP, tl.score));
+
+    showResult({
+      emblem: "★".repeat(stars) + "☆".repeat(3 - stars),
+      title: stars === 3 ? "ნამდვილი ისტორიკოსი!" : stars === 2 ? "კარგი შედეგია!" : "სცადე კიდევ ერთხელ!",
+      subtitle: "სწორ ადგილზე დასვი " + tl.score + " მოვლენა " + max + "-დან.",
+      newRecord: newRecord,
+      stats: [
+        statBox("ქულა", tl.score + " / " + max, "result-stat--accuracy"),
+        statBox("სიზუსტე", Math.round((tl.score / max) * 100) + "%", "result-stat--accuracy"),
+        statBox("XP", "+" + xp, "result-stat--xp"),
+      ],
+    });
+  }
+
+  el.timelineBtn.addEventListener("click", () => {
+    if (!tl.checked) {
+      if (tl.placed.length === TIMELINE_SIZE) checkTimeline();
+    } else if (tl.round < TIMELINE_ROUNDS) {
+      nextTimelineRound();
+    } else {
+      finishTimeline();
+    }
+  });
 
   /* ---------- კლავიატურა: 1–4 რბოლაში ---------- */
 

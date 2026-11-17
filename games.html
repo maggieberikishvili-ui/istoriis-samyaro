@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="css/games.css">
 
   <script src="js/data.js" defer></script>
+  <script src="js/timeline-data.js" defer></script>
   <script src="js/games.js" defer></script>
 </head>
 <body>
@@ -68,6 +69,15 @@
           </div>
           <button type="button" class="btn btn--secondary game-card__btn" id="memoryStart">თამაში</button>
         </article>
+        <article class="game-card" id="timelineCard">
+          <div class="game-card__icon" aria-hidden="true">📜</div>
+          <div class="game-card__body">
+            <h2 class="game-card__title">დროის ხაზი</h2>
+            <p class="game-card__text">დაალაგე მოვლენები ყველაზე ადრეულიდან ყველაზე გვიანდელამდე. 3 რაუნდი, თითოში — 5 მოვლენა.</p>
+            <p class="game-card__record" id="timelineRecord"></p>
+          </div>
+          <button type="button" class="btn btn--accent game-card__btn" id="timelineStart">თამაში</button>
+        </article>
       </div>
 
       <p class="games-hub__note" id="xpNote"></p>
@@ -105,6 +115,46 @@
         <p class="memory-hint">იპოვე ცნება და მისი განმარტება</p>
         <div class="memory-grid" id="memoryGrid"></div>
       </main>
+    </section>
+
+    <!-- ============ დროის ხაზი ============ -->
+    <section class="game-screen" id="timeline" hidden>
+      <header class="lesson-top">
+        <button type="button" class="lesson-top__close games-exit" aria-label="თამაშის შეწყვეტა">✕</button>
+        <div class="lesson-progress" role="progressbar" aria-label="რაუნდები" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" id="timelineProgress">
+          <div class="lesson-progress__fill" id="timelineProgressFill"></div>
+        </div>
+        <span class="race-clock tl-round" id="timelineRound">1 / 3</span>
+      </header>
+
+      <main class="lesson-stage tl-stage">
+        <p class="exercise__label">დაალაგე ქრონოლოგიურად</p>
+        <p class="tl-instruction" id="timelineInstruction">შეეხე მოვლენებს იმ თანმიმდევრობით, როგორც მოხდა — ჯერ ყველაზე ადრეული.</p>
+
+        <p class="tl-edge">⬆ ყველაზე ადრე</p>
+        <ol class="tl-slots" id="timelineSlots"></ol>
+        <p class="tl-edge">⬇ ყველაზე გვიან</p>
+
+        <div class="tl-pool" id="timelinePool" aria-label="დასალაგებელი მოვლენები"></div>
+
+        <div class="tl-answer" id="timelineAnswer" hidden>
+          <h2 class="tl-answer__title">სწორი თანმიმდევრობა</h2>
+          <ol class="tl-answer__list" id="timelineAnswerList"></ol>
+        </div>
+      </main>
+
+      <footer class="lesson-footer" id="timelineFooter" data-state="idle">
+        <div class="lesson-footer__inner">
+          <div class="feedback" id="timelineFeedback" role="status" hidden>
+            <span class="feedback__icon" id="timelineFeedbackIcon" aria-hidden="true"></span>
+            <div class="feedback__body">
+              <p class="feedback__title" id="timelineFeedbackTitle"></p>
+              <p class="feedback__text" id="timelineFeedbackText"></p>
+            </div>
+          </div>
+          <button type="button" class="btn lesson-footer__btn" id="timelineBtn" disabled>შემოწმება</button>
+        </div>
+      </footer>
     </section>
 
     <!-- ============ შედეგი ============ -->
