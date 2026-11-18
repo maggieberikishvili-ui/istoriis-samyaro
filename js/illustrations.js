@@ -850,6 +850,23 @@
           el("rect", { x: 49, y: 46, width: 6, height: 8, rx: 1, class: "f-terra" }),
         ],
       },
+      {
+        id: "crusader-helm",
+        after: "g8-l28",
+        title: "ჯვაროსნის ჩაფხუტი",
+        fact: "ჯვაროსანი რაინდის დახურული ჩაფხუტი თავსა და სახეს მთლიანად ფარავდა: რაინდი სამყაროს მხოლოდ ვიწრო ჭრილიდან ხედავდა, სუნთქავდა კი პატარა ნახვრეტებით.",
+        shapes: [
+          el("path", { d: "M34 32 Q34 14 60 14 Q86 14 86 32 V80 H34 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M60 15 V80", class: "s-ochre o w5" }),
+          el("path", { d: "M38 44 H55 M65 44 H82", class: "s-ink o w4" }),
+          el("path", { d: "M46 56 V72 M41 62 H51", class: "s-terra o" }),
+          el("circle", { cx: 70, cy: 58, r: 1.6, class: "f-ink" }),
+          el("circle", { cx: 76, cy: 62, r: 1.6, class: "f-ink" }),
+          el("circle", { cx: 70, cy: 66, r: 1.6, class: "f-ink" }),
+          el("circle", { cx: 76, cy: 70, r: 1.6, class: "f-ink" }),
+          el("path", { d: "M28 80 H92", class: "s-ink o w4" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
