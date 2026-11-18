@@ -4,7 +4,12 @@
    იერარქია:  კურსი → თავები (chapters) → გაკვეთილები (lessons)
 
      course  { id, badge, title, color, chapters: [...] }
-     chapter { id, title, description, lessons: [...] }
+     chapter { id, title, description, sections?: [...], lessons: [...] }
+     section { id, title, description, start: "პირველი გაკვეთილის id" }
+       ქვეთავი (არასავალდებულო) — თავის გაკვეთილების ნაწილი, start-იდან
+       შემდეგი ქვეთავის start-მდე. გაკვეთილები თავში რჩება (პროგრესი არ
+       იცვლება); ფაილის ბოლოს ივსება section.lessons, section.number
+       („1.2“) და lesson.sectionId.
      lesson  { id, title, description, xp, steps: [...] }
 
    ID-ების წესი (უნიკალური მთელ ფაილში):
@@ -7908,6 +7913,20 @@
           id: "g8-c1",
           title: "ადრეული და განვითარებული შუა საუკუნეები",
           description: "ქრისტიანობის გავრცელება და დამკვიდრება შუა საუკუნეებში, მსოფლიო საეკლესიო კრებები, ბერ-მონაზვნობა და სამონასტრო ცხოვრება საქართველოში",
+          sections: [
+            {
+              id: "g8-c1-s1",
+              title: "ქრისტიანული ევროპის ჩამოყალიბება",
+              description: "ქრისტიანობის გავრცელება და დამკვიდრება შუა საუკუნეებში, მსოფლიო საეკლესიო კრებები, ბერ-მონაზვნობა და სამონასტრო ცხოვრება საქართველოში, ბარბაროსული სამეფოების წარმოშობა, ფრანკთა სამეფო და კარლოს დიდის იმპერია",
+              start: "g8-l1",
+            },
+            {
+              id: "g8-c1-s2",
+              title: "ბიზანტია, ირანი და არაბთა სახალიფო",
+              description: "ბიზანტიისა და ირანის დაპირისპირება, იუსტინიანე I-ის მმართველობა, არაბთა სახალიფოს წარმოშობა, გაძლიერება და დაპყრობები, არაბთა ბატონობა საქართველოში, ქართული სამეფო-სამთავროების ჩამოყალიბება",
+              start: "g8-l5",
+            },
+          ],
           lessons: [
             {
               id: "g8-l1",
@@ -8889,6 +8908,16 @@
         lesson.chapterId = chapter.id;
         course.lessons.push(lesson);
       });
+      // ქვეთავები: გაკვეთილები start-იდან შემდეგი ქვეთავის start-მდე
+      const sections = chapter.sections || [];
+      sections.forEach((section, k) => {
+        section.number = chapter.number + "." + (k + 1);
+        const from = chapter.lessons.findIndex((l) => l.id === section.start);
+        const next = sections[k + 1];
+        const to = next ? chapter.lessons.findIndex((l) => l.id === next.start) : chapter.lessons.length;
+        section.lessons = from === -1 ? [] : chapter.lessons.slice(from, to === -1 ? chapter.lessons.length : to);
+        section.lessons.forEach((lesson) => { lesson.sectionId = section.id; });
+      });
     });
   });
 
@@ -8904,6 +8933,13 @@
       ids.push(c.id);
       c.chapters.forEach((ch) => {
         ids.push(ch.id);
+        (ch.sections || []).forEach((sec, k) => {
+          ids.push(sec.id);
+          const at = ch.lessons.findIndex((l) => l.id === sec.start);
+          if (at === -1) problems.push(sec.id + ": start გაკვეთილი ამ თავში არ არის");
+          if (k === 0 && at !== 0) problems.push(sec.id + ": პირველი ქვეთავი თავის პირველი გაკვეთილით უნდა იწყებოდეს");
+          if (k > 0 && at <= ch.lessons.findIndex((l) => l.id === ch.sections[k - 1].start)) problems.push(sec.id + ": ქვეთავები გაკვეთილების რიგით უნდა იყოს");
+        });
         ch.lessons.forEach((l) => {
           ids.push(l.id);
           if (!Array.isArray(l.steps) || l.steps.length === 0) problems.push(l.id + ": steps ცარიელია");

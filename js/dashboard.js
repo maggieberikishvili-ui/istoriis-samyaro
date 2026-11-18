@@ -273,8 +273,19 @@
     const decor = window.IMS_ILLUSTRATIONS ? window.IMS_ILLUSTRATIONS.forChapter(chapter.id) : [];
     const plan = planDecor(chapter.lessons.length, decor.length);
     let decorIndex = 0;
+    // ქვეთავები (თუ აქვს): ზოლი პირველი გაკვეთილის წინ, ბეჭედი — ბოლოს შემდეგ
+    const sectionByStart = new Map((chapter.sections || []).map((sec) => [sec.start, sec]));
+    const sectionByEnd = new Map((chapter.sections || [])
+      .filter((sec) => sec.lessons && sec.lessons.length)
+      .map((sec) => [sec.lessons[sec.lessons.length - 1].id, sec]));
     chapter.lessons.forEach((lesson, i) => {
+      if (sectionByStart.has(lesson.id)) {
+        path.append(buildSectionBanner(course, sectionByStart.get(lesson.id), done, currentIndex));
+      }
       path.append(buildLessonNode(course, lesson, i, lessonStatus(course, lesson, done, currentIndex)));
+      if (sectionByEnd.has(lesson.id)) {
+        path.append(buildSectionSeal(sectionByEnd.get(lesson.id), done));
+      }
       if (plan.has(i)) {
         path.append(buildDecor(decor[plan.get(i)], decorIndex));
         decorIndex += 1;
@@ -283,6 +294,49 @@
 
     section.append(path);
     return section;
+  }
+
+  /* ---------- ქვეთავები: ზოლი ბილიკზე + დასრულების ბეჭედი ---------- */
+
+  function buildSectionBanner(course, section, done, currentIndex) {
+    const total = section.lessons.length;
+    const completed = section.lessons.filter((l) => done.has(l.id)).length;
+    const firstIndex = total ? course.lessons.indexOf(section.lessons[0]) : -1;
+    let state = "active";
+    if (total && completed === total) state = "completed";
+    else if (!total || (currentIndex !== -1 && firstIndex > currentIndex)) state = "locked";
+
+    const item = createEl("li", "path__section path__section--" + state);
+    item.append(createEl("p", "path__section-eyebrow", "ქვეთავი " + section.number));
+    item.append(createEl("h3", "path__section-title", section.title));
+    if (section.description) item.append(createEl("p", "path__section-desc", section.description));
+
+    const meta = createEl("div", "path__section-meta");
+    meta.append(createEl("span", "", (state === "completed" ? "✓ " : state === "locked" ? "🔒 " : "") + completed + " / " + total + " გაკვეთილი"));
+    const bar = createEl("div", "chapter-progress path__section-progress");
+    bar.setAttribute("role", "progressbar");
+    bar.setAttribute("aria-label", "ქვეთავი " + section.number + " — პროგრესი");
+    bar.setAttribute("aria-valuemin", "0");
+    bar.setAttribute("aria-valuemax", String(total));
+    bar.setAttribute("aria-valuenow", String(completed));
+    const fill = createEl("div", "chapter-progress__fill");
+    fill.style.width = (total ? Math.round((completed / total) * 100) : 0) + "%";
+    bar.append(fill);
+    meta.append(bar);
+    item.append(meta);
+    return item;
+  }
+
+  function buildSectionSeal(section, done) {
+    const finished = section.lessons.every((l) => done.has(l.id));
+    const item = createEl("li", "path__seal" + (finished ? " path__seal--done" : ""));
+    const medal = createEl("span", "path__seal-medal", finished ? "🏅" : "🔒");
+    medal.setAttribute("aria-hidden", "true");
+    item.append(medal);
+    item.append(createEl("span", "path__seal-text", finished
+      ? "ქვეთავი " + section.number + " დასრულდა!"
+      : "ქვეთავი " + section.number + " — დაასრულე ყველა გაკვეთილი"));
+    return item;
   }
 
   function buildLessonNode(course, lesson, indexInChapter, status) {

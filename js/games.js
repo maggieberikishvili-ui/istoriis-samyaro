@@ -209,14 +209,14 @@
   }
 
   const state = {
-    scope: "all",        // "all" ან თავის id
+    scope: "all",        // "all", თავის id ან ქვეთავის id
     screen: "hub",
     lastGame: null,      // "race" | "memory"
   };
 
   function scopeLessons() {
     const lessons = unlockedLessons();
-    return state.scope === "all" ? lessons : lessons.filter((l) => l.chapterId === state.scope);
+    return state.scope === "all" ? lessons : lessons.filter((l) => l.chapterId === state.scope || l.sectionId === state.scope);
   }
 
   function questionPool(lessons) {
@@ -374,12 +374,19 @@
   function renderScope() {
     const unlocked = unlockedLessons();
     const chapters = course.chapters.filter((ch) => unlocked.some((l) => l.chapterId === ch.id));
-    if (state.scope !== "all" && !chapters.some((ch) => ch.id === state.scope)) state.scope = "all";
+    // ქვეთავები — თავის შემდეგ, მხოლოდ ღია გაკვეთილებით
+    const options = [{ id: "all", label: "ყველა გავლილი", title: "ყველა გავლილი თავის მასალა" }];
+    chapters.forEach((ch) => {
+      options.push({ id: ch.id, label: "თავი " + toRoman(ch.number), title: ch.title });
+      (ch.sections || []).forEach((sec) => {
+        if (unlocked.some((l) => l.sectionId === sec.id)) {
+          options.push({ id: sec.id, label: "ქვეთავი " + sec.number, title: sec.title });
+        }
+      });
+    });
+    if (!options.some((opt) => opt.id === state.scope)) state.scope = "all";
 
     el.scopeList.replaceChildren();
-    const options = [{ id: "all", label: "ყველა გავლილი", title: "ყველა გავლილი თავის მასალა" }].concat(
-      chapters.map((ch) => ({ id: ch.id, label: "თავი " + toRoman(ch.number), title: ch.title }))
-    );
     options.forEach((opt) => {
       const btn = createEl("button", "games-scope__chip", opt.label);
       btn.type = "button";
