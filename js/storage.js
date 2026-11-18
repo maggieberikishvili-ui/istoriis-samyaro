@@ -434,6 +434,7 @@
     writeString: writeString,
     toCount: toCount,
     todayKey: todayKey,
+    yesterdayKey: yesterdayKey,
 
     // პროფილი
     createProfile: createProfile,

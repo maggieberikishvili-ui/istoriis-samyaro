@@ -9,6 +9,11 @@
       ერთ რაუნდში მოვლენების თარიღები ერთმანეთს არასოდეს ფარავს.
    4. „ვინ ვარ მე?“ — 5 გმირი (js/whoami-data.js), თითოს 4 მინიშნება;
       ქულა: 4 → 1, ყოველი დამატებითი მინიშნება ან შეცდომა −1.
+   5. „დღის გამოწვევა“ — 10 კითხვა, დღის მიხედვით ერთნაირი ყველასთვის.
+   - კლასი (კურსი) — ?course=… ან დაფაზე არჩეული; მენიუში იცვლება.
+     ყველა თამაში და მისი მასალა/რეკორდები კურსზეა მიბმული, ამიტომ ახალი
+     კლასისთვის საკმარისია გაკვეთილები js/data.js-ში (+ მოვლენები და
+     გმირები timeline-data.js / whoami-data.js-ში იმავე კურსის გასაღებით).
    - მასალა: მხოლოდ არჩეული კურსის გავლილი გაკვეთილები + მიმდინარე
      (ზუსტად ისე, როგორც „❤️ აღდგენის“ სავარჯიშოში).
    - რეკორდები და დღიური XP — localStorage (IMS_STORE, გასაღები ims_games),
@@ -48,13 +53,16 @@
   const WHO_CLUES = 4;
   const WHO_XP_CAP = 15;
 
+  const DAILY_SIZE = 10;
+  const DAILY_XP_PER = 2;                // სწორ პასუხზე, დღეში ერთხელ
+
   const GAMES_XP_DAILY_CAP = 60;
 
   /* ---------- ავტორიზაცია და კურსი ---------- */
 
   if (!store.requireAuth()) return;
-  const daily = store.checkDaily();
-  if (!daily) return;
+  const session = store.checkDaily();
+  if (!session) return;
 
   const params = new URLSearchParams(window.location.search);
   const course =
@@ -62,7 +70,7 @@
     data.getCourse(store.readString(store.KEYS.selectedCourse)) ||
     data.courses[0];
 
-  if (GAMES_PRO_ONLY && !daily.profile.isPro) {
+  if (GAMES_PRO_ONLY && !session.profile.isPro) {
     store.redirect(store.URLS.dashboard);
     return;
   }
@@ -86,7 +94,22 @@
     whoCard: $("whoCard"),
     whoRecord: $("whoRecord"),
     whoStart: $("whoStart"),
+    courseChips: $("courseChips"),
+    dailyCard: $("dailyCard"),
+    dailyDate: $("dailyDate"),
+    dailyStreak: $("dailyStreak"),
+    dailyStatus: $("dailyStatus"),
+    dailyStart: $("dailyStart"),
     xpNote: $("xpNote"),
+
+    daily: $("daily"),
+    dailyProgress: $("dailyProgress"),
+    dailyProgressFill: $("dailyProgressFill"),
+    dailyCounter: $("dailyCounter"),
+    dailyTime: $("dailyTime"),
+    dailyStage: $("dailyStage"),
+    resultShare: $("resultShare"),
+    resultShareNote: $("resultShareNote"),
 
     who: $("who"),
     whoRound: $("whoRound"),
@@ -323,6 +346,7 @@
     el.memory.hidden = screen !== "memory";
     el.timeline.hidden = screen !== "timeline";
     el.who.hidden = screen !== "who";
+    el.daily.hidden = screen !== "daily";
     el.result.hidden = screen !== "result";
     window.scrollTo(0, 0);
   }
@@ -340,6 +364,7 @@
     else if (state.lastGame === "memory") startMemory();
     else if (state.lastGame === "timeline") startTimeline();
     else if (state.lastGame === "who") startWho();
+    else if (state.lastGame === "daily") startDaily();
   });
 
   /* ==========================================================
@@ -377,6 +402,8 @@
 
   function renderHub() {
     el.hubCourse.textContent = course.title;
+    renderCourseChips();
+    renderDaily();
     renderScope();
 
     const lessons = scopeLessons();
@@ -445,6 +472,8 @@
     el.resultTitle.textContent = opts.title;
     el.resultSubtitle.textContent = opts.subtitle;
     el.resultRecord.hidden = !opts.newRecord;
+    el.resultShare.hidden = !opts.share;
+    el.resultShareNote.hidden = true;
     el.resultStats.replaceChildren(...opts.stats);
 
     el.resultMistakes.replaceChildren();
@@ -539,24 +568,29 @@
     return step.question;
   }
 
-  function renderRaceQuestion(step) {
-    el.raceStage.replaceChildren();
-    el.raceStage.classList.remove("is-anim");
-    void el.raceStage.offsetWidth; // ანიმაციის თავიდან ჩართვა
-    el.raceStage.classList.add("is-anim");
+  /**
+   * კითხვის აგება (რბოლა და დღის გამოწვევა): choice / truefalse / fill.
+   * shuffleFn — ვარიანტების არევა (რბოლაში შემთხვევითი, დღის გამოწვევაში — დღის მიხედვით).
+   * აბრუნებს სწორი პასუხის ღილაკს.
+   */
+  function buildQuestion(stage, step, shuffleFn, onPick) {
+    stage.replaceChildren();
+    stage.classList.remove("is-anim");
+    void stage.offsetWidth; // ანიმაციის თავიდან ჩართვა
+    stage.classList.add("is-anim");
 
     let options;
     let blank = null;
 
     if (step.type === "truefalse") {
-      el.raceStage.append(createEl("p", "exercise__label", "სწორია თუ მცდარია?"));
-      el.raceStage.append(createEl("h1", "exercise__question race-question", step.statement));
+      stage.append(createEl("p", "exercise__label", "სწორია თუ მცდარია?"));
+      stage.append(createEl("h1", "exercise__question race-question", step.statement));
       options = [
         { text: "სწორია", correct: step.answer === true },
         { text: "მცდარია", correct: step.answer === false },
       ];
     } else if (step.type === "fill") {
-      el.raceStage.append(createEl("p", "exercise__label", "შეავსე გამოტოვებული"));
+      stage.append(createEl("p", "exercise__label", "შეავსე გამოტოვებული"));
       const sentence = createEl("p", "fill-sentence race-question");
       blank = createEl("span", "fill-blank", " ");
       const before = (step.before || "").trim();
@@ -568,25 +602,31 @@
         blank,
         document.createTextNode(after ? glue + after : "")
       );
-      el.raceStage.append(sentence);
-      options = shuffle(step.options.map((t, i) => ({ text: t, correct: i === step.answer })));
+      stage.append(sentence);
+      options = shuffleFn(step.options.map((t, i) => ({ text: t, correct: i === step.answer })));
     } else {
-      el.raceStage.append(createEl("p", "exercise__label", "აირჩიე სწორი პასუხი"));
-      el.raceStage.append(createEl("h1", "exercise__question race-question", step.question));
-      options = shuffle(step.options.map((t, i) => ({ text: t, correct: i === step.answer })));
+      stage.append(createEl("p", "exercise__label", "აირჩიე სწორი პასუხი"));
+      stage.append(createEl("h1", "exercise__question race-question", step.question));
+      options = shuffleFn(step.options.map((t, i) => ({ text: t, correct: i === step.answer })));
     }
 
+    let correctBtn = null;
     const list = createEl("div", "options" + (step.type === "truefalse" ? " options--row" : step.type === "fill" ? " options--chips" : ""));
     options.forEach((opt, i) => {
       const btn = createEl("button", "option");
       btn.type = "button";
       if (step.type === "choice") btn.append(createEl("span", "option__key", String(i + 1)));
       btn.append(createEl("span", "option__text", opt.text));
-      btn.addEventListener("click", () => answerRace(btn, opt, list, blank));
-      if (opt.correct) race.correctBtn = btn;
+      btn.addEventListener("click", () => onPick(btn, opt, list, blank));
+      if (opt.correct) correctBtn = btn;
       list.append(btn);
     });
-    el.raceStage.append(list);
+    stage.append(list);
+    return correctBtn;
+  }
+
+  function renderRaceQuestion(step) {
+    race.correctBtn = buildQuestion(el.raceStage, step, shuffle, answerRace);
   }
 
   function answerRace(btn, opt, list, blank) {
@@ -1181,7 +1221,257 @@
     });
   }
 
-  /* ---------- კლავიატურა: 1–4 რბოლასა და „ვინ ვარ მე?“-ში ---------- */
+  /* ==========================================================
+     5. დღის გამოწვევა
+     ----------------------------------------------------------
+     კითხვების რიგი და ვარიანტების რიგი გამოითვლება თარიღიდან და
+     კურსიდან (seeded PRNG) — სერვერის გარეშე, ყველასთვის ერთნაირად.
+     იმავე ეტაპზე მყოფი კლასელები ერთსა და იმავე 10 კითხვას იღებენ.
+     ქულა ითვლება დღეში ერთხელ; შემდეგ — მხოლოდ ვარჯიში.
+     ========================================================== */
+
+  const MONTHS = ["იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი",
+    "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"];
+
+  /** სტრიქონიდან 32-ბიტიანი რიცხვი (FNV-1a). */
+  function hashSeed(text) {
+    let h = 2166136261;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+
+  /** განმეორებადი შემთხვევითი რიცხვები (mulberry32). */
+  function seededRandom(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function seededShuffle(list, rnd) {
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rnd() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function todayLabel() {
+    const d = new Date();
+    return d.getDate() + " " + MONTHS[d.getMonth()] + ", " + d.getFullYear();
+  }
+
+  /** დღის 10 კითხვა: მთელი კურსის კითხვები დღის მიხედვით არეულია, შემდეგ — მხოლოდ ღია გაკვეთილებიდან. */
+  function dailyQuestions() {
+    const all = [];
+    course.lessons.forEach((l) => {
+      (l.steps || []).forEach((s) => {
+        if (RACE_TYPES.includes(s.type)) all.push({ step: s, lesson: l.id, n: all.length });
+      });
+    });
+    const open = new Set(unlockedLessons().map((l) => l.id));
+    const rnd = seededRandom(hashSeed(store.todayKey() + "|" + course.id));
+    return seededShuffle(all, rnd).filter((q) => open.has(q.lesson)).slice(0, DAILY_SIZE);
+  }
+
+  function dailyRecord() {
+    const mine = userGames();
+    const rec = mine.daily && mine.daily[course.id];
+    return rec && rec.date === store.todayKey() ? rec : null;
+  }
+
+  function dailyStreak() {
+    const mine = userGames();
+    const s = mine.dailyStreak;
+    if (!s || (s.last !== store.todayKey() && s.last !== store.yesterdayKey())) return 0;
+    return store.toCount(s.count, 0);
+  }
+
+  function renderDaily() {
+    el.dailyDate.textContent = todayLabel() + " · " + course.title;
+    const streak = dailyStreak();
+    el.dailyStreak.hidden = streak < 2;
+    el.dailyStreak.textContent = "🔥 " + streak + " დღე";
+
+    const enough = dailyQuestions().length >= DAILY_SIZE;
+    const rec = dailyRecord();
+    el.dailyCard.classList.toggle("is-done", Boolean(rec));
+    el.dailyCard.classList.toggle("is-locked", !enough);
+    el.dailyStart.disabled = !enough;
+    el.dailyStatus.hidden = !rec && enough;
+    if (!enough) {
+      el.dailyStatus.textContent = "🔒 ჯერ გაიარე მეტი გაკვეთილი — საჭიროა მინიმუმ " + DAILY_SIZE + " კითხვა.";
+      el.dailyStart.textContent = "დაწყება";
+    } else if (rec) {
+      el.dailyStatus.textContent = "✅ დღეს შესრულებულია: " + rec.correct + " / " + DAILY_SIZE + " · " + formatTime(rec.seconds) + ". ახალი გამოწვევა — ხვალ!";
+      el.dailyStart.textContent = "ხელახლა (ვარჯიში)";
+    } else {
+      el.dailyStart.textContent = "დაწყება";
+    }
+  }
+
+  const daily = {
+    questions: [],
+    index: 0,
+    correct: 0,
+    mistakes: [],
+    startedAt: 0,
+    locked: false,
+    practice: false,
+    correctBtn: null,
+  };
+
+  function startDaily() {
+    const questions = dailyQuestions();
+    if (questions.length < DAILY_SIZE) return goHub();
+    state.lastGame = "daily";
+    Object.assign(daily, {
+      questions: questions,
+      index: 0,
+      correct: 0,
+      mistakes: [],
+      startedAt: Date.now(),
+      locked: false,
+      practice: Boolean(dailyRecord()),
+    });
+    show("daily");
+    renderDailyQuestion();
+    stopTimer();
+    activeTimer = setInterval(() => {
+      el.dailyTime.textContent = formatTime((Date.now() - daily.startedAt) / 1000);
+    }, 500);
+  }
+
+  function renderDailyQuestion() {
+    const q = daily.questions[daily.index];
+    el.dailyCounter.textContent = daily.index + 1 + " / " + DAILY_SIZE;
+    el.dailyProgress.setAttribute("aria-valuenow", String(daily.index));
+    el.dailyProgressFill.style.width = (daily.index / DAILY_SIZE) * 100 + "%";
+    el.dailyTime.textContent = formatTime((Date.now() - daily.startedAt) / 1000);
+    daily.locked = false;
+    const rnd = seededRandom(hashSeed(store.todayKey() + "|" + course.id + "|" + q.n));
+    daily.correctBtn = buildQuestion(el.dailyStage, q.step, (list) => seededShuffle(list, rnd), answerDaily);
+  }
+
+  function answerDaily(btn, opt, list, blank) {
+    if (daily.locked) return;
+    daily.locked = true;
+    list.querySelectorAll(".option").forEach((b) => { b.disabled = true; });
+    if (blank) {
+      blank.textContent = opt.text;
+      blank.classList.add("is-filled", opt.correct ? "is-correct" : "is-wrong");
+    }
+    const step = daily.questions[daily.index].step;
+    if (opt.correct) {
+      daily.correct += 1;
+      btn.classList.add("is-correct");
+    } else {
+      btn.classList.add("is-wrong", "is-shake");
+      if (daily.correctBtn) daily.correctBtn.classList.add("is-correct");
+      daily.mistakes.push({ question: questionText(step), answer: correctText(step) });
+    }
+    setTimeout(() => {
+      if (state.screen !== "daily") return;
+      daily.index += 1;
+      if (daily.index >= DAILY_SIZE) finishDaily();
+      else renderDailyQuestion();
+    }, opt.correct ? FEEDBACK_OK_MS + 220 : FEEDBACK_BAD_MS);
+  }
+
+  function finishDaily() {
+    stopTimer();
+    const seconds = Math.round((Date.now() - daily.startedAt) / 1000);
+    let xp = 0;
+    let streak = dailyStreak();
+
+    if (!daily.practice) {
+      const mine = userGames();
+      mine.daily = mine.daily || {};
+      mine.daily[course.id] = { date: store.todayKey(), correct: daily.correct, seconds: seconds };
+      const s = mine.dailyStreak || {};
+      if (s.last !== store.todayKey()) {
+        mine.dailyStreak = { last: store.todayKey(), count: s.last === store.yesterdayKey() ? store.toCount(s.count, 0) + 1 : 1 };
+      }
+      streak = mine.dailyStreak.count;
+      saveUserGames(mine);
+      // დღის გამოწვევის XP დღიურ ლიმიტში არ ითვლება — დღეში ერთხელ ხდება
+      xp = daily.correct * DAILY_XP_PER;
+      if (xp > 0) store.updateProfile((p) => { p.xp += xp; });
+    }
+
+    const perfect = daily.correct === DAILY_SIZE;
+    state.shareText = "📅 ისტორიის სამყარო — დღის გამოწვევა\n" + todayLabel() + " · " + course.title + "\n" +
+      "✅ " + daily.correct + " / " + DAILY_SIZE + " · ⏱ " + formatTime(seconds) +
+      (streak >= 2 ? " · 🔥 " + streak + " დღე ზედიზედ" : "");
+
+    showResult({
+      emblem: perfect ? "🏆" : daily.correct >= 7 ? "🎯" : "📅",
+      title: daily.practice ? "ვარჯიში დასრულდა" : perfect ? "იდეალური შედეგი!" : "დღის გამოწვევა შესრულდა!",
+      subtitle: daily.practice
+        ? "დღევანდელი ქულა უკვე შენახულია — ეს ვარჯიში იყო. ახალი გამოწვევა ხვალ გელოდება!"
+        : "შეადარე შედეგი კლასელებს — დღეს მათაც იგივე კითხვები აქვთ.",
+      newRecord: false,
+      share: !daily.practice,
+      stats: [
+        statBox("სწორი", daily.correct + " / " + DAILY_SIZE, "result-stat--accuracy"),
+        statBox("დრო", formatTime(seconds), "result-stat--accuracy"),
+        statBox("XP", "+" + xp, "result-stat--xp"),
+      ],
+      mistakes: daily.mistakes,
+    });
+  }
+
+  el.dailyStart.addEventListener("click", startDaily);
+
+  el.resultShare.addEventListener("click", async () => {
+    const text = state.shareText || "";
+    let note = "";
+    try {
+      if (navigator.share) {
+        await navigator.share({ text: text });
+        note = "გაზიარებულია!";
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        note = "შედეგი დაკოპირდა — ჩასვი Messenger-ში ან WhatsApp-ში.";
+      } else {
+        note = text;
+      }
+    } catch (e) {
+      if (e && e.name === "AbortError") return;
+      note = text;
+    }
+    el.resultShareNote.textContent = note;
+    el.resultShareNote.hidden = false;
+  });
+
+  /* ==========================================================
+     კლასის (კურსის) არჩევა
+     ========================================================== */
+
+  function renderCourseChips() {
+    el.courseChips.replaceChildren();
+    data.courses.forEach((c) => {
+      const btn = createEl("button", "games-scope__chip", c.title);
+      btn.type = "button";
+      btn.setAttribute("role", "radio");
+      btn.setAttribute("aria-checked", String(c.id === course.id));
+      btn.addEventListener("click", () => {
+        if (c.id === course.id) return;
+        store.writeString(store.KEYS.selectedCourse, c.id);
+        window.location.href = store.URLS.games + "?" + new URLSearchParams({ course: c.id }).toString();
+      });
+      el.courseChips.append(btn);
+    });
+  }
+
+  /* ---------- კლავიატურა: 1–4 რბოლაში, „ვინ ვარ მე?“-სა და დღის გამოწვევაში ---------- */
 
   document.addEventListener("keydown", (e) => {
     const n = Number(e.key);
@@ -1189,6 +1479,7 @@
     let buttons = null;
     if (state.screen === "race" && !race.locked) buttons = el.raceStage.querySelectorAll(".option");
     if (state.screen === "who" && !who.done) buttons = el.whoOptions.querySelectorAll(".option");
+    if (state.screen === "daily" && !daily.locked) buttons = el.dailyStage.querySelectorAll(".option");
     if (buttons && buttons[n - 1]) buttons[n - 1].click();
   });
 

@@ -46,6 +46,26 @@
       </header>
 
       <div class="games-scope">
+        <p class="games-scope__label" id="courseLabel">კლასი</p>
+        <div class="games-scope__list games-courses" id="courseChips" role="radiogroup" aria-labelledby="courseLabel"></div>
+      </div>
+
+      <!-- დღის გამოწვევა -->
+      <article class="daily-card" id="dailyCard">
+        <div class="daily-card__top">
+          <span class="daily-card__icon" aria-hidden="true">📅</span>
+          <div class="daily-card__body">
+            <h2 class="daily-card__title">დღის გამოწვევა</h2>
+            <p class="daily-card__date" id="dailyDate"></p>
+          </div>
+          <span class="daily-card__streak" id="dailyStreak" hidden></span>
+        </div>
+        <p class="daily-card__text" id="dailyText">10 კითხვა — დღეს ყველასთვის ერთნაირი (ვინც ამ კლასში ერთსა და იმავე ეტაპზეა). შეადარე შედეგი კლასელებს!</p>
+        <p class="daily-card__status" id="dailyStatus" hidden></p>
+        <button type="button" class="btn btn--block" id="dailyStart">დაწყება</button>
+      </article>
+
+      <div class="games-scope">
         <p class="games-scope__label" id="scopeLabel">რომელი მასალით ითამაშებ?</p>
         <div class="games-scope__list" id="scopeList" role="radiogroup" aria-labelledby="scopeLabel"></div>
       </div>
@@ -204,6 +224,22 @@
       </footer>
     </section>
 
+    <!-- ============ დღის გამოწვევა ============ -->
+    <section class="game-screen" id="daily" hidden>
+      <header class="lesson-top">
+        <button type="button" class="lesson-top__close games-exit" aria-label="გამოწვევის შეწყვეტა">✕</button>
+        <div class="lesson-progress" role="progressbar" aria-label="კითხვები" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="dailyProgress">
+          <div class="lesson-progress__fill" id="dailyProgressFill"></div>
+        </div>
+        <span class="race-clock tl-round" id="dailyCounter">1 / 10</span>
+      </header>
+      <div class="race-hud">
+        <span>📅 დღის გამოწვევა</span>
+        <span>⏱ <strong id="dailyTime">0:00</strong></span>
+      </div>
+      <main class="lesson-stage race-stage" id="dailyStage" aria-live="polite"></main>
+    </section>
+
     <!-- ============ შედეგი ============ -->
     <section class="result game-result" id="result" aria-labelledby="resultTitle" hidden>
       <div class="result__emblem result__emblem--win" id="resultEmblem" aria-hidden="true">🏆</div>
@@ -216,6 +252,8 @@
         <ul class="game-result__mistakes" id="resultMistakes"></ul>
       </div>
       <div class="game-result__actions">
+        <button type="button" class="btn btn--accent btn--block" id="resultShare" hidden>📤 გაუზიარე შედეგი</button>
+        <p class="game-result__share-note" id="resultShareNote" role="status" hidden></p>
         <button type="button" class="btn btn--block" id="resultAgain">კიდევ ერთხელ</button>
         <button type="button" class="btn btn--outline btn--block" id="resultMenu">თამაშების მენიუ</button>
       </div>
