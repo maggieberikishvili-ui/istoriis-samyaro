@@ -867,6 +867,22 @@
           el("path", { d: "M28 80 H92", class: "s-ink o w4" }),
         ],
       },
+      {
+        id: "trebuchet",
+        after: "g8-l30",
+        title: "ტრებუშეტი",
+        fact: "ტრებუშეტი საპირწონის სიმძიმით მუშაობდა: მძიმე ყუთი ქვემოთ ეშვებოდა, გრძელი მკლავი კი ასობით მეტრზე ტყორცნიდა ქვებს და ციხის კედლებს ანგრევდა.",
+        shapes: [
+          ground(92),
+          el("rect", { x: 22, y: 84, width: 60, height: 7, class: "f-sand s-ink" }),
+          el("path", { d: "M32 84 L52 42 L72 84 M40 68 H64", class: "s-ochre o w5" }),
+          el("line", { x1: 30, y1: 54, x2: 100, y2: 18, class: "s-ink o w5" }),
+          el("rect", { x: 18, y: 54, width: 20, height: 16, rx: 1, class: "f-terra s-ink" }),
+          el("circle", { cx: 52, cy: 42, r: 3.2, class: "f-ink" }),
+          el("path", { d: "M100 18 L106 32", class: "s-thin o" }),
+          el("circle", { cx: 106, cy: 36, r: 5, class: "f-sand s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
