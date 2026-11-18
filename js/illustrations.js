@@ -20,6 +20,9 @@
      g7-c2 — ბრინჯაოს ხანა / ძველი აღმოსავლეთი
      g7-c3 — ანტიკური საბერძნეთი და ელინისტური სამყარო
      g7-c4 — ძველი რომი და ანტიკური საქართველო
+     g8-c1 — ადრეული და განვითარებული შუა საუკუნეები
+     g9-c1 … g12-c1, ne-c1 — სხვა კლასების პირველი თავები (თითო ბარათი;
+       ახალი გაკვეთილების დამატებისას ბარათებიც ემატება)
    ========================================================== */
 
 (function () {
@@ -602,6 +605,234 @@
           el("path", { d: "M60 4 V14 M56 8 H64", class: "s-ink o" }),
           el("path", { d: "M55 90 V78 A5 5 0 0 1 65 78 V90 Z", class: "f-paper s-ink" }),
           el("path", { d: "M43 64 V72 M77 64 V72 M60 32 V38", class: "s-ink o" }),
+        ],
+      },
+    ],
+
+    /* ===== მე-8 კლასი, თავი I — ადრეული და განვითარებული შუა საუკუნეები ===== */
+    "g8-c1": [
+      {
+        id: "gareja-cells",
+        title: "დავით გარეჯის კლდის სენაკები",
+        fact: "VI საუკუნეში ასურელმა (სირიელმა) მამამ დავითმა გარეჯის უდაბნოში მონასტერი დააარსა; ბერები კლდეში გამოკვეთილ სენაკებში ცხოვრობდნენ და ლოცულობდნენ.",
+        shapes: [
+          ground(90),
+          el("path", { d: "M8 90 C10 60 18 34 40 24 C58 16 80 18 96 30 C108 40 112 64 112 90 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M18 52 C30 48 40 50 48 46 M70 62 C84 58 96 60 106 56", class: "s-thin o" }),
+          el("path", { d: "M30 70 V60 A6 6 0 0 1 42 60 V70 Z", class: "f-ink" }),
+          el("path", { d: "M58 50 V42 A5 5 0 0 1 68 42 V50 Z", class: "f-ink" }),
+          el("path", { d: "M80 72 V60 A6 6 0 0 1 92 60 V72 Z", class: "f-ink" }),
+          el("path", { d: "M50 82 V76 A4 4 0 0 1 58 76 V82 Z", class: "f-ink" }),
+          el("path", { d: "M26 70 H46 M54 50 H72 M76 72 H96", class: "s-thin o" }),
+          el("path", { d: "M66 6 V20 M61 11 H71", class: "s-terra o" }),
+        ],
+      },
+      {
+        id: "manuscript",
+        title: "ხელნაწერი წიგნი",
+        fact: "მონასტრებში წიგნებს ეტრატზე (სპეციალურად დამუშავებულ ტყავზე) ხელით წერდნენ და მოხატავდნენ — ერთი წიგნის გადაწერას ზოგჯერ წლები სჭირდებოდა.",
+        shapes: [
+          el("path", { d: "M60 30 C48 24 30 24 14 28 V82 C30 78 48 78 60 84 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M60 30 C72 24 90 24 106 28 V82 C90 78 72 78 60 84 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M22 40 H52 M22 47 H52 M22 54 H50 M22 61 H52 M22 68 H46", class: "s-thin o" }),
+          el("rect", { x: 68, y: 36, width: 14, height: 14, class: "f-terra s-ink" }),
+          el("circle", { cx: 75, cy: 43, r: 3, class: "f-ochre" }),
+          el("path", { d: "M86 38 H98 M86 45 H98 M68 56 H98 M68 63 H96 M68 70 H98", class: "s-thin o" }),
+          el("path", { d: "M60 84 V95", class: "s-terra o" }),
+        ],
+      },
+      {
+        id: "papal-keys",
+        title: "პაპის გასაღებები",
+        fact: "რომის პაპის სიმბოლოა ორი გადაჯვარედინებული გასაღები — ოქროსა და ვერცხლის, „ცათა სასუფევლის გასაღებები“, რომლებიც, გადმოცემით, ქრისტემ მოციქულ პეტრეს გადასცა.",
+        shapes: [
+          ["f-sand", -38], ["f-ochre", 38],
+        ].map(([fill, angle]) => el("g", { transform: "rotate(" + angle + " 60 54)" }, [
+          el("circle", { cx: 60, cy: 22, r: 9, class: fill + " s-ink" }),
+          el("circle", { cx: 60, cy: 22, r: 4, class: "f-paper s-ink" }),
+          el("rect", { x: 57, y: 30, width: 6, height: 52, class: fill + " s-ink" }),
+          el("path", { d: "M63 70 H72 V76 H68 V82 H63 Z", class: fill + " s-ink" }),
+          el("path", { d: "M63 61 H70 V66 H63 Z", class: fill + " s-ink" }),
+        ])).concat([
+          el("path", { d: "M44 88 Q60 97 76 88", class: "s-terra o" }),
+        ]),
+      },
+      {
+        id: "francisca",
+        title: "ფრანცისკა — ფრანკების ცული",
+        fact: "ფრანცისკა ფრანკი მეომრების სატყორცნი ცული იყო — მას ბრძოლის დასაწყისში ისროდნენ, რომ მტრის ფარები დაემსხვრიათ და მწკრივი აერიათ.",
+        shapes: [
+          el("line", { x1: 30, y1: 92, x2: 70, y2: 18, class: "s-ink o w8" }),
+          el("line", { x1: 30, y1: 92, x2: 70, y2: 18, class: "s-ochre o w5" }),
+          el("path", { d: "M62 20 C70 14 84 10 96 16 C92 26 90 38 94 48 C84 44 74 36 66 34 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M96 16 C92 26 90 38 94 48", class: "s-ochre o" }),
+          el("path", { d: "M36 80 L44 84 M40 72 L48 76", class: "s-terra o" }),
+        ],
+      },
+      {
+        id: "imperial-crown",
+        title: "საიმპერატორო გვირგვინი",
+        fact: "800 წლის შობას, რომის წმინდა პეტრეს ტაძარში, პაპმა ლევ III-მ კარლოსს საიმპერატორო გვირგვინი დაადგა — დასავლეთში კვლავ გაჩნდა იმპერატორი.",
+        shapes: [
+          el("path", { d: "M24 78 H96 L92 88 H28 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M28 56 L28 34 L40 46 L50 28 L60 42 L70 28 L80 46 L92 34 L92 56 Z", class: "f-ochre s-ink" }),
+          el("rect", { x: 28, y: 56, width: 64, height: 22, rx: 2, class: "f-ochre s-ink" }),
+          el("circle", { cx: 40, cy: 67, r: 4, class: "f-terra s-ink" }),
+          el("circle", { cx: 60, cy: 67, r: 4, class: "f-terra s-ink" }),
+          el("circle", { cx: 80, cy: 67, r: 4, class: "f-terra s-ink" }),
+          el("circle", { cx: 50, cy: 67, r: 2.6, class: "f-emerald" }),
+          el("circle", { cx: 70, cy: 67, r: 2.6, class: "f-emerald" }),
+          el("circle", { cx: 28, cy: 34, r: 2.5, class: "f-paper s-ink" }),
+          el("circle", { cx: 50, cy: 28, r: 2.5, class: "f-paper s-ink" }),
+          el("circle", { cx: 70, cy: 28, r: 2.5, class: "f-paper s-ink" }),
+          el("circle", { cx: 92, cy: 34, r: 2.5, class: "f-paper s-ink" }),
+          el("path", { d: "M60 12 V30 M54 18 H66", class: "s-ink o" }),
+        ],
+      },
+      {
+        id: "fire-altar",
+        title: "სასანური ცეცხლის საკურთხეველი",
+        fact: "სასანურ ირანში სახელმწიფო რელიგია ზოროასტრიზმი იყო — ცეცხლის ტაძრებში წმინდა ცეცხლი დღედაღამ ენთო და ქურუმები მას არასოდეს აქრობდნენ.",
+        shapes: [
+          ground(92),
+          el("rect", { x: 38, y: 82, width: 44, height: 10, class: "f-sand s-ink" }),
+          el("rect", { x: 44, y: 76, width: 32, height: 6, class: "f-sand s-ink" }),
+          el("rect", { x: 52, y: 52, width: 16, height: 24, class: "f-sand s-ink" }),
+          el("rect", { x: 44, y: 46, width: 32, height: 6, class: "f-sand s-ink" }),
+          el("rect", { x: 38, y: 40, width: 44, height: 6, class: "f-sand s-ink" }),
+          el("path", { d: "M42 46 Q34 56 38 66 M78 46 Q86 56 82 66", class: "s-terra o" }),
+          el("g", { class: "a-flame" }, [
+            el("path", { d: "M60 40 C48 32 50 20 56 10 C58 20 64 20 62 8 C74 20 74 32 60 40 Z", class: "f-terra" }),
+            el("path", { d: "M60 38 C54 34 55 27 58 23 C60 28 64 28 63 23 C68 30 66 35 60 38 Z", class: "f-ochre" }),
+          ]),
+        ],
+      },
+      {
+        id: "hagia-sophia",
+        title: "აია-სოფია",
+        fact: "აია-სოფია 537 წელს აკურთხეს; მისი 30 მეტრზე მეტი დიამეტრის გუმბათი, ფანჯრების რიგის წყალობით, თითქოს ჰაერში ეკიდა.",
+        shapes: [
+          ground(90),
+          el("rect", { x: 10, y: 66, width: 14, height: 24, class: "f-sand s-ink" }),
+          el("rect", { x: 96, y: 66, width: 14, height: 24, class: "f-sand s-ink" }),
+          el("path", { d: "M10 66 A7 7 0 0 1 24 66 Z M96 66 A7 7 0 0 1 110 66 Z", class: "f-terra s-ink" }),
+          el("rect", { x: 24, y: 58, width: 72, height: 32, class: "f-sand s-ink" }),
+          el("rect", { x: 34, y: 46, width: 52, height: 12, class: "f-sand s-ink" }),
+          el("path", { d: "M40 49 V55 M46 49 V55 M52 49 V55 M58 49 V55 M64 49 V55 M70 49 V55 M76 49 V55 M82 49 V55", class: "s-thin o" }),
+          el("path", { d: "M36 46 A24 22 0 0 1 84 46 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M60 12 V24 M56 16 H64", class: "s-ink o" }),
+        ].concat(arches(46, 72, 3, 8, 18)),
+      },
+      {
+        id: "justinian-code",
+        title: "იუსტინიანეს კოდექსი",
+        fact: "529–534 წლებში იუსტინიანეს იურისტებმა რომაული სამართალი ერთ კრებულად შეკრიბეს — მის საფუძველზე ევროპის მრავალი ქვეყნის სამართალი დღემდე დგას.",
+        shapes: [
+          el("rect", { x: 86, y: 20, width: 5, height: 66, class: "f-paper s-ink" }),
+          el("rect", { x: 32, y: 16, width: 56, height: 74, rx: 3, class: "f-terra s-ink" }),
+          el("rect", { x: 28, y: 16, width: 9, height: 74, rx: 2, class: "f-ochre s-ink" }),
+          el("rect", { x: 45, y: 26, width: 34, height: 54, class: "s-ochre o" }),
+          el("path", { d: "M62 36 V66 M50 44 H74 M55 70 H69", class: "s-ochre o" }),
+          el("path", { d: "M50 44 L46 54 M50 44 L54 54 M74 44 L70 54 M74 44 L78 54", class: "s-thin o" }),
+          el("path", { d: "M45 54 A5 4 0 0 0 55 54 Z M69 54 A5 4 0 0 0 79 54 Z", class: "f-ochre s-ink" }),
+        ],
+      },
+    ],
+
+    /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
+    "g9-c1": [
+      {
+        id: "caravel",
+        title: "კარაველა",
+        fact: "კარაველა მსუბუქი და სწრაფი ხომალდი იყო, რომელსაც ქარის საწინააღმდეგოდაც შეეძლო ცურვა; კოლუმბის „ნინია“ და „პინტა“ სწორედ კარაველები იყო.",
+        shapes: [
+          el("path", { d: "M50 64 V8 M78 64 V24", class: "s-ink o" }),
+          el("path", { d: "M50 8 L60 11 L50 14 Z", class: "f-ochre" }),
+          el("path", { d: "M50 18 Q68 36 70 58 H50 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M78 28 Q92 42 94 58 H78 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M58 38 V48 M53 43 H63", class: "s-terra o" }),
+          el("path", { d: "M18 64 V54 H36 V64 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M14 64 H104 L92 80 H28 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M30 70 H96", class: "s-thin o" }),
+          el("path", { d: "M8 88 q8 -6 16 0 t16 0 t16 0 t16 0 t16 0 t16 0 t16 0", class: "s-ochre o" }),
+        ],
+      },
+    ],
+
+    /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
+    "g10-c1": [
+      {
+        id: "bastille",
+        title: "ბასტილიის ციხე",
+        fact: "1789 წლის 14 ივლისს პარიზელებმა ბასტილიის ციხე-სიმაგრე აიღეს — ეს დღე დღემდე საფრანგეთის ეროვნული დღესასწაულია.",
+        shapes: [
+          ground(90),
+          el("rect", { x: 30, y: 40, width: 60, height: 50, class: "f-sand s-ink" }),
+          el("rect", { x: 18, y: 28, width: 20, height: 62, class: "f-sand s-ink" }),
+          el("rect", { x: 82, y: 28, width: 20, height: 62, class: "f-sand s-ink" }),
+          el("path", { d: "M18 28 V22 H23 V28 M33 28 V22 H38 V28 M82 28 V22 H87 V28 M97 28 V22 H102 V28", class: "s-ink o" }),
+          el("path", { d: "M44 40 V35 H49 V40 M58 40 V35 H63 V40 M72 40 V35 H77 V40", class: "s-ink o" }),
+          el("path", { d: "M28 44 V52 M92 44 V52 M28 64 V72 M92 64 V72", class: "s-ink o" }),
+          el("path", { d: "M52 90 V72 A8 8 0 0 1 68 72 V90 Z", class: "f-ink" }),
+          el("path", { d: "M28 22 V4", class: "s-ink o" }),
+          el("path", { d: "M28 4 H44 L40 8 L44 12 H28 Z", class: "f-terra" }),
+        ],
+      },
+    ],
+
+    /* ===== მე-11 კლასი — პირველი მსოფლიო ომი ===== */
+    "g11-c1": [
+      {
+        id: "trench-helmet",
+        title: "ფოლადის ჩაფხუტი",
+        fact: "ფოლადის ჩაფხუტი მასობრივად პირველ მსოფლიო ომში, 1915 წლიდან გავრცელდა — ჯარისკაცები თვეობით სანგრებში იბრძოდნენ და ჭურვის ნამსხვრევებისგან თავს იცავდნენ.",
+        shapes: [
+          el("path", { d: "M30 60 C30 36 44 26 60 26 C76 26 90 36 90 60 Z", class: "f-emerald s-ink" }),
+          el("path", { d: "M14 62 C30 56 90 56 106 62 C96 68 24 68 14 62 Z", class: "f-emerald s-ink" }),
+          el("circle", { cx: 60, cy: 30, r: 2, class: "f-ink" }),
+          el("path", { d: "M34 64 Q60 88 86 64", class: "s-ochre o" }),
+          el("path", { d: "M8 90 H112", class: "s-thin o" }),
+        ].concat([16, 36, 56, 76, 96].map((x) =>
+          el("path", { d: "M" + x + " 86 l8 8 M" + (x + 8) + " 86 l-8 8", class: "s-ink o" }))),
+      },
+    ],
+
+    /* ===== მე-12 კლასი — ცივი ომი ===== */
+    "g12-c1": [
+      {
+        id: "sputnik",
+        title: "„სპუტნიკ-1“",
+        fact: "1957 წელს საბჭოთა კავშირმა დედამიწის პირველი ხელოვნური თანამგზავრი „სპუტნიკ-1“ გაუშვა — ასე დაიწყო ცივი ომის „კოსმოსური რბოლა“ აშშ-სთან.",
+        shapes: [
+          el("path", { d: "M58 52 L108 70 M60 46 L110 54 M56 56 L100 86 M50 58 L86 94", class: "s-ink o" }),
+          el("circle", { cx: 46, cy: 44, r: 16, class: "f-sand s-ink" }),
+          el("path", { d: "M30 44 H62", class: "s-thin o" }),
+          el("path", { d: "M37 36 A11 11 0 0 1 47 31", class: "s-thin o" }),
+          el("circle", { cx: 20, cy: 18, r: 1.8, class: "f-ochre" }),
+          el("circle", { cx: 96, cy: 18, r: 1.8, class: "f-ochre" }),
+          el("circle", { cx: 16, cy: 80, r: 1.8, class: "f-ochre" }),
+          el("circle", { cx: 104, cy: 34, r: 1.8, class: "f-ochre" }),
+          el("circle", { cx: 80, cy: 12, r: 1.4, class: "f-ochre" }),
+        ],
+      },
+    ],
+
+    /* ===== აბიტურიენტები — წყაროებთან მუშაობა ===== */
+    "ne-c1": [
+      {
+        id: "magnifier",
+        title: "წყაროს კვლევა",
+        fact: "ისტორიკოსი წყაროს ყოველთვის კრიტიკულად კითხულობს: ვინ შექმნა, როდის, ვისთვის და რა მიზნით — და ადარებს მას სხვა წყაროებს.",
+        shapes: [
+          el("path", { d: "M14 14 H62 L74 26 V88 H14 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M62 14 V26 H74", class: "s-ink o" }),
+          el("path", { d: "M22 28 H54 M22 36 H62 M22 44 H66 M22 52 H50 M22 60 H56 M22 68 H46", class: "s-thin o" }),
+          el("circle", { cx: 30, cy: 79, r: 5, class: "f-terra s-ink" }),
+          el("line", { x1: 89, y1: 69, x2: 106, y2: 88, class: "s-ink o w8" }),
+          el("line", { x1: 89, y1: 69, x2: 106, y2: 88, class: "s-terra o w5" }),
+          el("circle", { cx: 76, cy: 56, r: 18, class: "f-paper s-ochre w6" }),
+          el("circle", { cx: 76, cy: 56, r: 18, class: "s-ink o" }),
+          el("path", { d: "M66 52 H88 M66 60 H84", class: "s-ink o" }),
         ],
       },
     ],
