@@ -273,21 +273,25 @@
     const decor = window.IMS_ILLUSTRATIONS ? window.IMS_ILLUSTRATIONS.forChapter(chapter.id) : [];
     const plan = planDecor(chapter.lessons.length, decor.length);
     let decorIndex = 0;
-    // ქვეთავები (თუ აქვს): ზოლი პირველი გაკვეთილის წინ, ბეჭედი — ბოლოს შემდეგ
-    const sectionByStart = new Map((chapter.sections || []).map((sec) => [sec.start, sec]));
-    const sectionByEnd = new Map((chapter.sections || [])
-      .filter((sec) => sec.lessons && sec.lessons.length)
-      .map((sec) => [sec.lessons[sec.lessons.length - 1].id, sec]));
+    // ქვეთავები (თუ აქვს): ზოლი პირველი გაკვეთილის წინ; ქვეთავის გაკვეთილები
+    // და ილუსტრაციები data-section-ით ინიშნება, რომ ზოლიდან დაიკეცოს.
+    const sections = chapter.sections || [];
+    const sectionByStart = new Map(sections.map((sec, k) => [sec.start, { sec: sec, k: k }]));
+    let group = null; // { sec, k, open }
     chapter.lessons.forEach((lesson, i) => {
       if (sectionByStart.has(lesson.id)) {
-        path.append(buildSectionBanner(course, sectionByStart.get(lesson.id), done, currentIndex));
+        const { sec, k } = sectionByStart.get(lesson.id);
+        const banner = buildSectionBanner(course, sec, k, done, currentIndex);
+        group = { sec: sec, k: k, open: banner.dataset.open === "true" };
+        path.append(banner);
       }
-      path.append(buildLessonNode(course, lesson, i, lessonStatus(course, lesson, done, currentIndex)));
-      if (sectionByEnd.has(lesson.id)) {
-        path.append(buildSectionSeal(sectionByEnd.get(lesson.id), done));
-      }
+      const node = buildLessonNode(course, lesson, i, lessonStatus(course, lesson, done, currentIndex));
+      if (group) markSectionItem(node, group);
+      path.append(node);
       if (plan.has(i)) {
-        path.append(buildDecor(decor[plan.get(i)], decorIndex));
+        const card = buildDecor(decor[plan.get(i)], decorIndex);
+        if (group) markSectionItem(card, group);
+        path.append(card);
         decorIndex += 1;
       }
     });
@@ -296,9 +300,37 @@
     return section;
   }
 
-  /* ---------- ქვეთავები: ზოლი ბილიკზე + დასრულების ბეჭედი ---------- */
+  /* ---------- ქვეთავები: ფერადი ზოლი, დაკეცვა, „თემები“ ---------- */
 
-  function buildSectionBanner(course, section, done, currentIndex) {
+  // ქვეთავების ფერები რიგრიგობით (css/dashboard.css → .sec-0 … .sec-4)
+  const SECTION_COLORS = 5;
+
+  function readFolds() {
+    try {
+      const value = JSON.parse(store.readString(store.KEYS.sectionFold) || "{}");
+      return value && typeof value === "object" ? value : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveFold(sectionId, open) {
+    const folds = readFolds();
+    folds[sectionId] = open;
+    store.writeString(store.KEYS.sectionFold, JSON.stringify(folds));
+  }
+
+  function markSectionItem(item, group) {
+    item.dataset.section = group.sec.id;
+    item.classList.add("sec-" + (group.k % SECTION_COLORS));
+    item.hidden = !group.open;
+  }
+
+  /**
+   * ქვეთავის ზოლი: ფერადი ნომერი, სათაური, პროგრესი, 🏅 დასრულებისას.
+   * დასრულებული ქვეთავი თავიდან დაკეცილია; მოსწავლის არჩევანი ინახება.
+   */
+  function buildSectionBanner(course, section, k, done, currentIndex) {
     const total = section.lessons.length;
     const completed = section.lessons.filter((l) => done.has(l.id)).length;
     const firstIndex = total ? course.lessons.indexOf(section.lessons[0]) : -1;
@@ -306,13 +338,46 @@
     if (total && completed === total) state = "completed";
     else if (!total || (currentIndex !== -1 && firstIndex > currentIndex)) state = "locked";
 
-    const item = createEl("li", "path__section path__section--" + state);
-    item.append(createEl("p", "path__section-eyebrow", "ქვეთავი " + section.number));
-    item.append(createEl("h3", "path__section-title", section.title));
-    if (section.description) item.append(createEl("p", "path__section-desc", section.description));
+    const saved = readFolds()[section.id];
+    const open = typeof saved === "boolean" ? saved : state !== "completed";
+
+    const item = createEl("li", "path__section path__section--" + state + " sec-" + (k % SECTION_COLORS));
+    item.dataset.open = String(open);
+
+    const head = createEl("button", "path__section-head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", String(open));
+
+    const badge = createEl("span", "path__section-badge", section.number);
+    badge.setAttribute("aria-hidden", "true");
+
+    const text = createEl("span", "path__section-text");
+    text.append(createEl("span", "path__section-eyebrow", "ქვეთავი " + section.number));
+    text.append(createEl("span", "path__section-title", section.title));
+
+    const side = createEl("span", "path__section-side");
+    if (state === "completed") side.append(createEl("span", "path__section-medal", "🏅"));
+    if (state === "locked") side.append(createEl("span", "path__section-lock", "🔒"));
+    const chevron = createEl("span", "path__section-chevron", "▾");
+    chevron.setAttribute("aria-hidden", "true");
+    side.append(chevron);
+
+    head.append(badge, text, side);
+    head.setAttribute("aria-label", "ქვეთავი " + section.number + ": " + section.title + " — " +
+      completed + " / " + total + " გაკვეთილი" + (state === "completed" ? ", დასრულებული" : ""));
+    head.addEventListener("click", () => {
+      const next = item.dataset.open !== "true";
+      item.dataset.open = String(next);
+      head.setAttribute("aria-expanded", String(next));
+      item.parentElement.querySelectorAll('[data-section="' + section.id + '"]').forEach((node) => {
+        node.hidden = !next;
+      });
+      saveFold(section.id, next);
+      scheduleRoutes();
+    });
+    item.append(head);
 
     const meta = createEl("div", "path__section-meta");
-    meta.append(createEl("span", "", (state === "completed" ? "✓ " : state === "locked" ? "🔒 " : "") + completed + " / " + total + " გაკვეთილი"));
     const bar = createEl("div", "chapter-progress path__section-progress");
     bar.setAttribute("role", "progressbar");
     bar.setAttribute("aria-label", "ქვეთავი " + section.number + " — პროგრესი");
@@ -322,20 +387,16 @@
     const fill = createEl("div", "chapter-progress__fill");
     fill.style.width = (total ? Math.round((completed / total) * 100) : 0) + "%";
     bar.append(fill);
-    meta.append(bar);
+    meta.append(bar, createEl("span", "path__section-count", completed + " / " + total));
     item.append(meta);
-    return item;
-  }
 
-  function buildSectionSeal(section, done) {
-    const finished = section.lessons.every((l) => done.has(l.id));
-    const item = createEl("li", "path__seal" + (finished ? " path__seal--done" : ""));
-    const medal = createEl("span", "path__seal-medal", finished ? "🏅" : "🔒");
-    medal.setAttribute("aria-hidden", "true");
-    item.append(medal);
-    item.append(createEl("span", "path__seal-text", finished
-      ? "ქვეთავი " + section.number + " დასრულდა!"
-      : "ქვეთავი " + section.number + " — დაასრულე ყველა გაკვეთილი"));
+    if (section.description) {
+      const topics = createEl("details", "path__section-topics");
+      topics.append(createEl("summary", "", "თემები"));
+      topics.append(createEl("p", "", section.description));
+      topics.addEventListener("toggle", scheduleRoutes);
+      item.append(topics);
+    }
     return item;
   }
 
@@ -493,7 +554,7 @@
     if (!svg) return;
     svg.replaceChildren();
 
-    const items = Array.from(path.querySelectorAll(".path__item"));
+    const items = Array.from(path.querySelectorAll(".path__item")).filter((item) => !item.hidden);
     if (items.length < 2) return;
 
     const box = path.getBoundingClientRect();
@@ -506,6 +567,7 @@
         x: r.left + r.width / 2 - box.left,
         y: r.top + r.height / 2 - box.top,
         reached: item.dataset.status !== "locked",
+        color: getComputedStyle(item).getPropertyValue("--sec").trim(),
       };
     });
 
@@ -524,6 +586,8 @@
       const line = document.createElementNS(SVG_NS, "path");
       line.setAttribute("d", d);
       line.setAttribute("class", "path__route-line" + (b.reached ? " path__route-line--done" : ""));
+      // ქვეთავის შიგნით გავლილი გზა ქვეთავის ფერისაა
+      if (b.reached && b.color && a.color === b.color) line.style.stroke = b.color;
       svg.append(line);
     }
   }

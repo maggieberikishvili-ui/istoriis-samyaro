@@ -887,98 +887,173 @@
 }
 
 /* ----------------------------------------------------------
-   ქვეთავები ბილიკზე — ზოლი და დასრულების ბეჭედი
+   ქვეთავები ბილიკზე — ფერადი ზოლი (დაკეცვა + „თემები“)
    ---------------------------------------------------------- */
+
+/* ქვეთავის ფერი რიგრიგობით: ზოლი, ნომერი, გავლილი მედალიონები და გზა */
+.sec-0 { --sec: var(--color-primary); --sec-dark: var(--color-primary-dark); }
+.sec-1 { --sec: var(--color-slate);   --sec-dark: var(--color-slate-dark); }
+.sec-2 { --sec: var(--color-purple);  --sec-dark: var(--color-purple-dark); }
+.sec-3 { --sec: var(--color-teal);    --sec-dark: var(--color-teal-dark); }
+.sec-4 { --sec: var(--color-accent);  --sec-dark: var(--color-accent-dark); }
+
+.path__item[data-section] .medallion--completed {
+  --fill: var(--sec);
+}
+
+.path__item[data-section] .medallion--completed:hover {
+  background-color: var(--sec-dark);
+}
+
 .path__section {
   position: relative;
   z-index: 2;                        /* მარშრუტის ხაზს ფარავს */
   align-self: stretch;
   margin-inline: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  text-align: center;
-  background-color: var(--parchment);
-  border: 1px solid var(--color-border);
-  border-top: 4px solid var(--c, var(--color-primary));
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--sec) 12%, transparent), transparent 70%);
+  border: 1px solid color-mix(in srgb, var(--sec) 35%, var(--color-border));
+  border-left: 6px solid var(--sec);
   border-radius: var(--radius-md);
   list-style: none;
 }
 
+.path__section-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.path__section-badge {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  font-family: var(--font-serif);
+  font-size: var(--fs-md, 1rem);
+  font-weight: var(--fw-heavy);
+  color: #fffdf9;
+  background-color: var(--sec);
+  border-radius: 50%;
+}
+
+.path__section-text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
 .path__section-eyebrow {
-  margin: 0;
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-secondary);
+  color: var(--sec);
 }
 
 .path__section-title {
-  margin: var(--space-1) 0 0;
   font-family: var(--font-serif);
-  font-size: var(--fs-lg);
+  font-size: var(--fs-md, 1rem);
+  font-weight: var(--fw-bold);
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
-.path__section-desc {
-  margin: var(--space-2) 0 0;
-  font-size: var(--fs-sm);
+.path__section-side {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.path__section-medal {
+  font-size: 1.3rem;
+}
+
+.path__section-chevron {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
   color: var(--color-text-muted);
+  transition: transform var(--transition-fast);
+}
+
+.path__section[data-open="false"] .path__section-chevron {
+  transform: rotate(-90deg);
 }
 
 .path__section-meta {
-  max-width: 220px;
-  margin: var(--space-3) auto 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-left: calc(44px + var(--space-3));
   font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
   color: var(--color-text-muted);
 }
 
-.path__section--completed .path__section-meta {
-  color: var(--color-primary);
+.path__section-progress {
+  flex: 1;
+  margin-top: 0;
+}
+
+.path__section-progress .chapter-progress__fill {
+  background-color: var(--sec);
+}
+
+.path__section-topics {
+  margin-top: var(--space-2);
+  padding-left: calc(44px + var(--space-3));
+  font-size: var(--fs-sm);
+}
+
+.path__section-topics summary {
+  width: max-content;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--sec);
+  cursor: pointer;
+}
+
+.path__section-topics p {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
 }
 
 .path__section--locked {
-  border-top-color: var(--color-border-strong);
+  border-left-color: var(--color-border-strong);
+  background-image: none;
 }
 
-.path__section--locked .path__section-title,
-.path__section--locked .path__section-eyebrow {
+.path__section--locked .path__section-badge {
+  background-color: var(--color-border-strong);
+}
+
+.path__section--locked .path__section-title {
   color: var(--color-text-muted);
 }
 
-.path__seal {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  max-width: calc(100% - 2 * var(--space-2));
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
-  color: var(--color-text-muted);
-  background-color: var(--color-surface);
-  border: 2px dashed var(--color-border-strong);
-  border-radius: var(--radius-pill);
-  list-style: none;
+@media (max-width: 420px) {
+  .path__section-meta,
+  .path__section-topics {
+    padding-left: 0;
+  }
 }
 
-.path__seal-medal {
-  flex: none;
-  font-size: 1.4rem;
-  filter: grayscale(1);
-  opacity: 0.6;
-}
-
-.path__seal--done {
-  color: var(--color-primary);
-  background-color: var(--color-primary-light);
-  border-style: solid;
-  border-color: var(--color-primary);
-}
-
-.path__seal--done .path__seal-medal {
-  filter: none;
-  opacity: 1;
+/* დაკეცილი ქვეთავის შემდეგ ბილიკის დიდი დაშორება არ სჭირდება */
+.path__section[data-open="false"] {
+  margin-bottom: -2.75rem;
 }
