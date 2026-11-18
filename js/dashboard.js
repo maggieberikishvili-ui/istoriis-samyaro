@@ -271,7 +271,7 @@
     // თემატური ილუსტრაციები: თითო ფირფიტა = ერთი არტეფაქტი საკუთარი tooltip-ით.
     // ერთ თავში ბარათი არასოდეს მეორდება (იხ. planDecor), მხარეები მონაცვლეობს.
     const decor = window.IMS_ILLUSTRATIONS ? window.IMS_ILLUSTRATIONS.forChapter(chapter.id) : [];
-    const plan = planDecor(chapter.lessons.length, decor.length);
+    const plan = anchoredDecor(chapter.lessons, decor) || planDecor(chapter.lessons.length, decor.length);
     let decorIndex = 0;
     // ქვეთავები (თუ აქვს): ზოლი პირველი გაკვეთილის წინ; ქვეთავის გაკვეთილები
     // და ილუსტრაციები data-section-ით ინიშნება, რომ ზოლიდან დაიკეცოს.
@@ -468,6 +468,21 @@
     const used = Math.min(slots.length, cardCount);
     const pick = (k, from) => (used === 1 ? 0 : Math.round((k * (from - 1)) / (used - 1)));
     for (let k = 0; k < used; k++) plan.set(slots[pick(k, slots.length)], pick(k, cardCount));
+    return plan;
+  }
+
+  /**
+   * თუ ბარათებს აქვთ `after` (გაკვეთილის id), ბარათი ზუსტად იმ გაკვეთილის
+   * შემდეგ ჯდება — თემატური დამთხვევისთვის. უცნობი id-ის ბარათი გამოიტოვება.
+   * თუ არცერთ ბარათს არ აქვს `after`, გამოიყენება planDecor (თანაბარი განაწილება).
+   */
+  function anchoredDecor(lessons, cards) {
+    if (!cards.some((card) => card.after)) return null;
+    const plan = new Map();
+    cards.forEach((card, k) => {
+      const i = lessons.findIndex((lesson) => lesson.id === card.after);
+      if (i !== -1 && !plan.has(i)) plan.set(i, k);
+    });
     return plan;
   }
 
