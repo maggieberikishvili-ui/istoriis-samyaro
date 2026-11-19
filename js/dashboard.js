@@ -8,6 +8,8 @@
 (function () {
   "use strict";
 
+  const { createEl, toRoman } = window.IMS_UTILS; // js/utils.js
+
   const store = window.IMS_STORE;
   const data = window.IMS_DATA;
 
@@ -42,13 +44,6 @@
     chapterList: document.getElementById("chapterList"),
     toast: document.getElementById("toast"),
   };
-
-  function createEl(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-  }
 
   /* ---------- Toast ---------- */
 
@@ -179,18 +174,6 @@
   }
 
   const SVG_NS = "http://www.w3.org/2000/svg";
-
-  function toRoman(n) {
-    const map = [[10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]];
-    let out = "";
-    map.forEach(([value, glyph]) => {
-      while (n >= value) {
-        out += glyph;
-        n -= value;
-      }
-    });
-    return out || String(n);
-  }
 
   /** ბილიკის რენდერი: კურსის ყოველ თავს — ბანერი + მედალიონების ბილიკი. */
   function renderPath() {

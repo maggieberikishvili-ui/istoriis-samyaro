@@ -52,8 +52,26 @@
         </ul>
       </section>
 
+      <!-- ვინ ხარ? -->
+      <section class="card auth-card role-card" id="roleCard" aria-labelledby="roleTitle">
+        <h2 class="auth-form__title" id="roleTitle">ვინ ხარ?</h2>
+        <div class="role-card__options">
+          <button type="button" class="role-option" id="roleStudent">
+            <span class="role-option__icon" aria-hidden="true">🎒</span>
+            <span class="role-option__title">მოსწავლე</span>
+            <span class="role-option__text">გაკვეთილები, თამაშები და შენი პროგრესი</span>
+          </button>
+          <a class="role-option" href="teacher.html">
+            <span class="role-option__icon" aria-hidden="true">👩‍🏫</span>
+            <span class="role-option__title">მასწავლებელი</span>
+            <span class="role-option__text">გუნდური ვიქტორინა კლასისთვის, პროექტორზე</span>
+          </a>
+        </div>
+      </section>
+
       <!-- ავტორიზაცია -->
-      <section class="card auth-card" aria-label="ავტორიზაცია">
+      <section class="card auth-card" id="authCard" aria-label="ავტორიზაცია" hidden>
+        <button type="button" class="btn btn--ghost role-back" id="roleBack">← ვინ ხარ? (შეცვლა)</button>
         <div class="tabs" role="tablist" aria-label="ავტორიზაციის რეჟიმი">
           <button type="button" class="tab" role="tab" id="tabLogin"
                   aria-selected="true" aria-controls="authForm" data-mode="login">შესვლა</button>

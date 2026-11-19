@@ -25,6 +25,8 @@
 (function () {
   "use strict";
 
+  const { createEl, shuffle, toRoman } = window.IMS_UTILS; // js/utils.js
+
   const store = window.IMS_STORE;
   const data = window.IMS_DATA;
 
@@ -168,29 +170,6 @@
     resultAgain: $("resultAgain"),
     resultMenu: $("resultMenu"),
   };
-
-  function createEl(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-  }
-
-  function shuffle(list) {
-    const a = list.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
-  function toRoman(n) {
-    const map = [[10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]];
-    let out = "";
-    map.forEach(([v, g]) => { while (n >= v) { out += g; n -= v; } });
-    return out;
-  }
 
   function formatTime(seconds) {
     const s = Math.max(0, Math.floor(seconds));

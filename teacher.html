@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ისტორიის სამყარო — მასწავლებლის რეჟიმი: გუნდური ვიქტორინა კლასისთვის.">
+  <title>მასწავლებლის რეჟიმი — ისტორიის სამყარო</title>
+
+  <!-- საერთო საცავი: მხოლოდ თემა (ავტორიზაცია არ სჭირდება) -->
+  <script src="js/storage.js"></script>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e6f5e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ისტორიის სამყარო">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&family=Noto+Serif+Georgian:wght@700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/teacher.css">
+
+  <script src="js/utils.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/quiz-engine.js" defer></script>
+  <script src="js/teacher.js" defer></script>
+</head>
+<body>
+  <div class="teacher-app">
+
+    <!-- ============ პარამეტრები ============ -->
+    <section class="t-setup" id="setup" aria-labelledby="setupTitle">
+      <header class="t-top">
+        <a class="t-top__back btn btn--outline btn--icon" href="index.html" aria-label="მთავარ გვერდზე დაბრუნება">←</a>
+        <div class="t-top__text">
+          <p class="t-top__eyebrow">👩‍🏫 მასწავლებლის რეჟიმი</p>
+          <h1 class="t-top__title" id="setupTitle">გუნდური ვიქტორინა</h1>
+        </div>
+        <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
+          <span aria-hidden="true" id="themeIcon">🌙</span>
+        </button>
+      </header>
+
+      <p class="t-intro">
+        ჩართე ეკრანი პროექტორზე. კითხვა ეკრანზე გამოჩნდება, გუნდები პასუხს ხმამაღლა ან ბარათებით ამბობენ,
+        შენ კი სწორად მოპასუხე გუნდებს ქულას ერთი დაჭერით უწერ. მოსწავლეებს არაფრის შეყვანა არ სჭირდებათ.
+      </p>
+
+      <form class="t-form" id="setupForm" novalidate>
+        <fieldset class="card t-block">
+          <legend class="t-block__title">1. კლასი</legend>
+          <div class="t-chips" id="courseChips" role="radiogroup" aria-label="კლასი"></div>
+        </fieldset>
+
+        <fieldset class="card t-block">
+          <legend class="t-block__title">2. მასალა</legend>
+          <p class="t-block__hint">აირჩიე თავები ან ცალკეული გაკვეთილები.</p>
+          <div class="t-chapters" id="chapterList"></div>
+          <p class="t-pool" id="poolInfo" aria-live="polite"></p>
+        </fieldset>
+
+        <fieldset class="card t-block">
+          <legend class="t-block__title">3. გუნდები</legend>
+          <div class="t-chips" id="teamCountChips" role="radiogroup" aria-label="გუნდების რაოდენობა"></div>
+          <div class="t-teams" id="teamNames"></div>
+        </fieldset>
+
+        <fieldset class="card t-block">
+          <legend class="t-block__title">4. თამაში</legend>
+          <p class="t-block__label" id="countLabel">კითხვების რაოდენობა</p>
+          <div class="t-chips" id="countChips" role="radiogroup" aria-labelledby="countLabel"></div>
+          <p class="t-block__label" id="timeLabel">დრო ერთ კითხვაზე</p>
+          <div class="t-chips" id="timeChips" role="radiogroup" aria-labelledby="timeLabel"></div>
+        </fieldset>
+
+        <div class="alert alert--error" id="setupError" role="alert" hidden></div>
+        <button type="submit" class="btn btn--block t-start" id="startBtn">▶ თამაშის დაწყება</button>
+      </form>
+    </section>
+
+    <!-- ============ თამაში (პროექტორი) ============ -->
+    <section class="t-play" id="play" hidden aria-label="ვიქტორინა">
+      <header class="t-play__bar">
+        <span class="t-play__counter" id="qCounter"></span>
+        <span class="t-play__source" id="qSource"></span>
+        <span class="t-timer" id="timer" hidden>
+          <span class="t-timer__value" id="timerValue"></span>
+        </span>
+        <button type="button" class="btn btn--outline btn--icon" id="fullscreenBtn" aria-label="მთელ ეკრანზე">⛶</button>
+        <button type="button" class="btn btn--outline btn--icon" id="exitBtn" aria-label="თამაშის დასრულება">✕</button>
+      </header>
+      <progress class="t-timebar" id="timebar" max="100" value="100" hidden aria-label="დარჩენილი დრო"></progress>
+
+      <h2 class="t-question" id="qPrompt"></h2>
+      <ol class="t-options" id="qOptions"></ol>
+
+      <div class="t-explain" id="qExplain" hidden></div>
+
+      <div class="t-award" id="award" hidden>
+        <p class="t-award__label">რომელმა გუნდებმა უპასუხეს სწორად? <span class="t-award__keys">(კლავიშები 1–4)</span></p>
+        <div class="t-award__list" id="awardList"></div>
+      </div>
+
+      <footer class="t-play__footer">
+        <ol class="t-score" id="scoreboard" aria-label="ქულები"></ol>
+        <button type="button" class="btn t-play__main" id="mainBtn"></button>
+      </footer>
+    </section>
+
+    <!-- ============ შედეგები ============ -->
+    <section class="t-results" id="results" hidden aria-labelledby="resultsTitle">
+      <h2 class="t-results__title" id="resultsTitle">🏆 შედეგები</h2>
+      <ol class="t-podium" id="podium"></ol>
+      <div class="t-results__actions">
+        <button type="button" class="btn" id="againBtn">↻ კიდევ ერთხელ (ახალი კითხვები)</button>
+        <button type="button" class="btn btn--outline" id="setupBtn">⚙ პარამეტრების შეცვლა</button>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

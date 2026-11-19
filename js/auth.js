@@ -257,6 +257,20 @@
     if (!sessionStarted) setBusy(false);
   });
 
+  /* ---------- ვინ ხარ? (მოსწავლე → ავტორიზაცია; მასწავლებელი → teacher.html ბმულით) ---------- */
+
+  const roleCard = document.getElementById("roleCard");
+  const authCard = document.getElementById("authCard");
+
+  function showAuth(visible) {
+    roleCard.hidden = visible;
+    authCard.hidden = !visible;
+    if (visible) emailInput.focus();
+  }
+
+  document.getElementById("roleStudent").addEventListener("click", () => showAuth(true));
+  document.getElementById("roleBack").addEventListener("click", () => showAuth(false));
+
   /* ---------- ინიციალიზაცია ---------- */
 
   store.bindThemeToggle(

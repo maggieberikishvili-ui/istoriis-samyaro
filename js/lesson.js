@@ -18,6 +18,8 @@
 (function () {
   "use strict";
 
+  const { createEl, shuffle } = window.IMS_UTILS; // js/utils.js
+
   const store = window.IMS_STORE;
 
   const REPEAT_XP = 5;
@@ -157,22 +159,6 @@
     victoryHearts: document.getElementById("victoryHearts"),
     gameOver: document.getElementById("gameOverScreen"),
   };
-
-  function createEl(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-  }
-
-  function shuffle(list) {
-    const arr = list.slice();
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
 
   /* ==========================================================
      ზედა პანელი: პროგრესი და სიცოცხლეები

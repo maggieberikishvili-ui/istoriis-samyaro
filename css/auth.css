@@ -219,3 +219,61 @@
   text-align: center;
   color: var(--color-text-muted);
 }
+
+/* ---------- ვინ ხარ? (მოსწავლე / მასწავლებელი) ---------- */
+.role-card__options {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.role-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0 var(--space-3);
+  width: 100%;
+  padding: var(--space-4);
+  font: inherit;
+  color: var(--color-text);
+  text-align: left;
+  text-decoration: none;
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-bottom-width: calc(var(--border-width) + var(--shadow-depth));
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.role-option:hover {
+  border-color: var(--color-primary);
+}
+
+.role-option:active {
+  transform: translateY(var(--shadow-depth));
+  border-bottom-width: var(--border-width);
+}
+
+.role-option__icon {
+  grid-row: span 2;
+  font-size: var(--fs-xl);
+}
+
+.role-option__title {
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+}
+
+.role-option__text {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.role-back {
+  min-height: 36px;
+  margin-bottom: var(--space-2);
+  padding: 0;
+  text-transform: none;
+  letter-spacing: 0;
+}

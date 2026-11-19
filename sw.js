@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v22";
+const VERSION = "v23";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -27,6 +27,7 @@ const CORE_FILES = [
   "./dashboard.html",
   "./lesson.html",
   "./games.html",
+  "./teacher.html",
   "./manifest.json",
   "./css/variables.css",
   "./css/global.css",
@@ -34,7 +35,9 @@ const CORE_FILES = [
   "./css/dashboard.css",
   "./css/lesson.css",
   "./css/games.css",
+  "./css/teacher.css",
   "./js/storage.js",
+  "./js/utils.js",
   "./js/data.js",
   "./js/timeline-data.js",
   "./js/whoami-data.js",
@@ -43,6 +46,8 @@ const CORE_FILES = [
   "./js/dashboard.js",
   "./js/lesson.js",
   "./js/games.js",
+  "./js/quiz-engine.js",
+  "./js/teacher.js",
   "./icons/icon.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png",

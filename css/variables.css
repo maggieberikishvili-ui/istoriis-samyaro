@@ -61,6 +61,9 @@
   --fs-lg: 1.25rem;
   --fs-xl: 1.75rem;
   --fs-xxl: 2.5rem;
+  /* პროექტორის ეკრანი (მასწავლებლის რეჟიმი): ეკრანის სიგანეს მიჰყვება */
+  --fs-display: clamp(1.4rem, 0.9rem + 2.4vw, 3rem);
+  --fs-option: clamp(1.05rem, 0.85rem + 1.1vw, 1.75rem);
   --fw-regular: 500;
   --fw-bold: 700;
   --fw-heavy: 800;
