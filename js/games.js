@@ -22,7 +22,8 @@
    - ტექსტი DOM-ში მხოლოდ textContent-ით.
    ========================================================== */
 
-(function () {
+// ჯერ იტვირთება საჭირო კლასის მასალა (js/data/), შემდეგ — გვერდი
+window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   "use strict";
 
   const { createEl, shuffle, toRoman } = window.IMS_UTILS; // js/utils.js
@@ -1473,4 +1474,4 @@
 
   renderHub();
   show("hub");
-})();
+}, window.IMS_DATA.showLoadError);

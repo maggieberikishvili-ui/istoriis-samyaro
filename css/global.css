@@ -63,10 +63,6 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
-}
-
 [hidden] {
   display: none !important;
 }
@@ -271,6 +267,10 @@ a:hover {
   color: var(--color-danger);
   background-color: var(--color-danger-light);
   border-color: var(--color-danger);
+}
+
+.load-error {
+  margin: var(--space-4);
 }
 
 .alert--success {

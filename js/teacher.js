@@ -7,7 +7,8 @@
    სერვერი არ სჭირდება: ქულებს მასწავლებელი უწერს გუნდებს.
    ========================================================== */
 
-(function () {
+// ჯერ იტვირთება საჭირო კლასის მასალა (js/data/), შემდეგ — გვერდი
+window.IMS_DATA.loadAll().then(function () {
   "use strict";
 
   const { createEl, toRoman } = window.IMS_UTILS;
@@ -412,4 +413,4 @@
 
   selectDefaultLessons();
   renderSetup();
-})();
+}, window.IMS_DATA.showLoadError);

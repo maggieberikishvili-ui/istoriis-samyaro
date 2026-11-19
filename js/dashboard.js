@@ -5,7 +5,8 @@
    DOM-ში ტექსტი გამოდის მხოლოდ textContent-ით.
    ========================================================== */
 
-(function () {
+// ჯერ იტვირთება საჭირო კლასის მასალა (js/data/), შემდეგ — გვერდი
+window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   "use strict";
 
   const { createEl, toRoman } = window.IMS_UTILS; // js/utils.js
@@ -103,6 +104,11 @@
 
   function courseProgress(course) {
     const done = new Set(state.profile.completedLessons);
+    if (!course.loaded) {
+      // კურსის ფაილი ჯერ არ ჩატვირთულა — ვითვლით id-ის პრეფიქსით (g8-l…)
+      const completed = Array.from(done).filter((id) => id.indexOf(course.lessonPrefix) === 0).length;
+      return { completed: Math.min(completed, course.lessonCount), total: course.lessonCount };
+    }
     const completed = course.lessons.filter((l) => done.has(l.id)).length;
     return { completed: completed, total: course.lessons.length };
   }
@@ -163,7 +169,14 @@
     // თამაშები — არჩეული კურსის მასალით
     el.gamesLink.href = store.URLS.games + "?" + new URLSearchParams({ course: courseId }).toString();
     renderCourses();
-    renderPath();
+    // არჩეული კლასის მასალა იტვირთება მხოლოდ საჭიროებისას (js/data/<id>.js)
+    el.pathSection.setAttribute("aria-busy", "true");
+    data.load([courseId]).then(() => {
+      if (state.courseId !== courseId) return; // სანამ იტვირთებოდა, სხვა კლასი აირჩიეს
+      el.pathSection.removeAttribute("aria-busy");
+      renderCourses();
+      renderPath();
+    }, data.showLoadError);
   }
 
   /* ---------- გაკვეთილების ბილიკი ---------- */
@@ -712,6 +725,6 @@
     document.getElementById("themeToggle"),
     document.getElementById("themeIcon")
   );
-  selectCourse(store.readString(store.KEYS.selectedCourse));
+  selectCourse(data.currentCourseId());
   setupInstallBanner();
-})();
+}, window.IMS_DATA.showLoadError);
