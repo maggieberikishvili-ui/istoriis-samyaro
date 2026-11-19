@@ -329,6 +329,10 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.who.hidden = screen !== "who";
     el.daily.hidden = screen !== "daily";
     el.result.hidden = screen !== "result";
+    // ცალკე ფაილებში დაწერილი თამაშების ეკრანები (<section data-game-screen="…">)
+    document.querySelectorAll("[data-game-screen]").forEach((section) => {
+      section.hidden = section.dataset.gameScreen !== screen;
+    });
     window.scrollTo(0, 0);
   }
 
@@ -346,6 +350,10 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     else if (state.lastGame === "timeline") startTimeline();
     else if (state.lastGame === "who") startWho();
     else if (state.lastGame === "daily") startDaily();
+    else {
+      const plugin = plugins.find((p) => p.id === state.lastGame);
+      if (plugin) plugin.start();
+    }
   });
 
   /* ==========================================================
@@ -432,6 +440,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       whoRec ? "🏅 რეკორდი: " + whoRec.score + " / " + WHO_ROUNDS * WHO_CLUES + " · " + "★".repeat(whoRec.stars) : "რეკორდი ჯერ არ გაქვს — დაამყარე პირველი!",
       "🔒 ჯერ გაიარე მეტი გაკვეთილი — გმირები ჯერ არ ჰყოფნის"
     );
+
+    plugins.forEach((p) => p.renderCard());
 
     const earned = xpEarnedToday();
     el.xpNote.textContent = earned >= GAMES_XP_DAILY_CAP
@@ -1364,6 +1374,34 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     if (state.screen === "daily" && !daily.locked) buttons = el.dailyStage.querySelectorAll(".option");
     if (buttons && buttons[n - 1]) buttons[n - 1].click();
   });
+
+  /* ==========================================================
+     ცალკე ფაილებში დაწერილი თამაშები (მაგ. js/detective-game.js)
+     ----------------------------------------------------------
+     ახალი თამაში games.js-ში არ იწერება: ის თავს არეგისტრირებს
+     window.IMS_GAME_PLUGINS-ში და აქედან იღებს საერთო ფუნქციებს
+     (მასალა, რეკორდი, XP, შედეგის ეკრანი).
+       { id, init(host) → { renderCard(), start() } }
+     ========================================================== */
+
+  const host = Object.freeze({
+    course: course,
+    scopeLessons: scopeLessons,
+    getRecord: getRecord,
+    saveRecord: saveRecord,
+    awardXp: awardXp,
+    setCardState: setCardState,
+    statBox: statBox,
+    showResult: showResult,
+    goHub: goHub,
+    /** თამაშის ეკრანის ჩვენება; „თავიდან“ ღილაკი ამ თამაშს გაუშვებს. */
+    open: (id) => {
+      state.lastGame = id;
+      show(id);
+    },
+  });
+
+  const plugins = (window.IMS_GAME_PLUGINS || []).map((p) => Object.assign({ id: p.id }, p.init(host)));
 
   /* ---------- სტარტი ---------- */
 

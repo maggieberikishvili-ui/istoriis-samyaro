@@ -16,6 +16,7 @@
     { id: "decide", icon: "⚖️", title: "ისტორიული არჩევანი", href: "decide.html" },
     { id: "whoami", icon: "🎭", title: "ვინ ვარ მე?", href: "whoami.html" },
     { id: "architect", icon: "🧱", title: "დროის ხაზის არქიტექტორი", href: "architect.html" },
+    { id: "detective", icon: "🔍", title: "დროში მოგზაურის დეტექტივი", href: "detective.html" },
   ];
 
   /** ჩანართების აწყობა ყველა <nav data-activities>-ში. */

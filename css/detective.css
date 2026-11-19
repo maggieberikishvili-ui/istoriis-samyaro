@@ -1,0 +1,68 @@
+/* ==========================================================
+   ისტორიის სამყარო — „დროში მოგზაურის დეტექტივი“ (მასწავლებლის რეჟიმი)
+   დოკუმენტი — css/detective-board.css (საერთოა მოსწავლის თამაშთან).
+   საერთო განლაგება (t-top, t-chips, t-play) — teacher.css.
+   ფერები, ზომები — მხოლოდ variables.css-ის ცვლადებით.
+   ========================================================== */
+
+/* ---------------- საქმეების სია ---------------- */
+
+.dc-cases {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: var(--space-3);
+}
+
+.dc-case {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  padding: var(--space-4);
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border);
+  border-left: var(--space-2) solid var(--color-slate);
+  border-radius: var(--radius-lg);
+}
+
+.dc-case__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+}
+
+.dc-case__meta {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.dc-case__start {
+  justify-self: start;
+  margin-top: var(--space-2);
+}
+
+/* ---------------- გამოძიება (პროექტორი) ---------------- */
+
+.dc-board {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.dc-task {
+  margin: 0;
+  font-size: var(--fs-option);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+.dc-board .dt-evidence {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  margin-top: 0;
+}
+
+.dc-spacer {
+  flex: 1;
+}

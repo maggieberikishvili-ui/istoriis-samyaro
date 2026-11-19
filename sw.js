@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v31";
+const VERSION = "v32";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -31,6 +31,7 @@ const CORE_FILES = [
   "./decide.html",
   "./whoami.html",
   "./architect.html",
+  "./detective.html",
   "./manifest.json",
   "./css/variables.css",
   "./css/global.css",
@@ -43,6 +44,8 @@ const CORE_FILES = [
   "./css/decide.css",
   "./css/whoami.css",
   "./css/architect.css",
+  "./css/detective.css",
+  "./css/detective-board.css",
   "./js/storage.js",
   "./js/utils.js",
   "./js/activities.js",
@@ -68,6 +71,10 @@ const CORE_FILES = [
   "./js/decide.js",
   "./js/whoami.js",
   "./js/architect.js",
+  "./js/detective.js",
+  "./js/detective-data.js",
+  "./js/detective-board.js",
+  "./js/detective-game.js",
   "./js/lesson-picker.js",
   "./icons/icon.svg",
   "./icons/icon-192.png",

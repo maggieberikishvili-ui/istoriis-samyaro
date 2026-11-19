@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ისტორიის სამყარო — მასწავლებლის რეჟიმი: „დროში მოგზაურის დეტექტივი“, ყალბი დეტალების ძებნა ისტორიულ დოკუმენტში.">
+  <title>დროში მოგზაურის დეტექტივი — ისტორიის სამყარო</title>
+
+  <!-- საერთო საცავი: მხოლოდ თემა (ავტორიზაცია არ სჭირდება) -->
+  <script src="js/storage.js"></script>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e6f5e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ისტორიის სამყარო">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&family=Noto+Serif+Georgian:wght@700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/teacher.css">
+  <link rel="stylesheet" href="css/detective-board.css">
+  <link rel="stylesheet" href="css/detective.css">
+
+  <script src="js/utils.js" defer></script>
+  <script src="js/activities.js" defer></script>
+  <script src="js/lesson-picker.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/detective-data.js" defer></script>
+  <script src="js/detective-board.js" defer></script>
+  <script src="js/detective.js" defer></script>
+</head>
+<body>
+  <div class="teacher-app">
+
+    <!-- ============ საქმის არჩევა ============ -->
+    <section class="t-setup" id="setup" aria-labelledby="setupTitle">
+      <header class="t-top">
+        <a class="t-top__back btn btn--outline btn--icon" href="index.html" aria-label="მთავარ გვერდზე დაბრუნება">←</a>
+        <div class="t-top__text">
+          <p class="t-top__eyebrow">👩‍🏫 მასწავლებლის რეჟიმი</p>
+          <h1 class="t-top__title" id="setupTitle">დროში მოგზაურის დეტექტივი</h1>
+        </div>
+        <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
+          <span aria-hidden="true" id="themeIcon">🌙</span>
+        </button>
+      </header>
+
+      <nav class="t-activities" aria-label="აქტივობა" data-activities="detective"></nav>
+
+      <p class="t-intro">
+        ეკრანზე „ძველი დოკუმენტია“, რომელშიც დროში მოგზაურმა ყალბი დეტალები გააპარა — ფაქტობრივი შეცდომები
+        და ანაქრონიზმები. კლასი მსჯელობს, რომელი დეტალია საეჭვო და რატომ; შენ მათ ეკრანზე ნიშნავ.
+        „შემოწმება“ აჩვენებს სიმართლეს და განმარტებებს.
+      </p>
+
+      <div class="t-form">
+        <fieldset class="card t-block">
+          <legend class="t-block__title">1. კლასი</legend>
+          <div class="t-chips" id="courseChips" role="radiogroup" aria-label="კლასი"></div>
+        </fieldset>
+
+        <fieldset class="card t-block">
+          <legend class="t-block__title">2. მასალა</legend>
+          <p class="t-block__hint">აირჩიე გავლილი თავები ან გაკვეთილები — ქვემოთ მათი საქმეები გამოჩნდება.</p>
+          <div class="t-chapters" id="chapterList"></div>
+        </fieldset>
+
+        <fieldset class="card t-block">
+          <legend class="t-block__title">3. საქმე</legend>
+          <div class="dc-cases" id="caseList"></div>
+        </fieldset>
+      </div>
+    </section>
+
+    <!-- ============ გამოძიება (პროექტორი) ============ -->
+    <section class="t-play" id="play" hidden aria-label="გამოძიება">
+      <header class="t-play__bar">
+        <span class="t-play__counter" id="dcCounter"></span>
+        <span class="t-play__source" id="dcLesson"></span>
+        <button type="button" class="btn btn--outline btn--icon" id="fullscreenBtn" aria-label="მთელ ეკრანზე">⛶</button>
+        <button type="button" class="btn btn--outline btn--icon" id="exitBtn" aria-label="საქმეების სიაზე დაბრუნება">✕</button>
+      </header>
+
+      <div class="dc-board dt-board--projector">
+        <p class="dc-task" id="dcTask" aria-live="polite"></p>
+        <article id="dcDoc"></article>
+        <ol class="dt-evidence" id="dcEvidence" hidden></ol>
+      </div>
+
+      <footer class="t-play__footer">
+        <button type="button" class="btn btn--outline" id="listBtn" hidden>☰ სხვა საქმე</button>
+        <span class="dc-spacer"></span>
+        <button type="button" class="btn t-play__main" id="mainBtn"></button>
+      </footer>
+    </section>
+
+  </div>
+</body>
+</html>

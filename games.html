@@ -27,12 +27,16 @@
   <link rel="stylesheet" href="css/lesson.css">
   <link rel="stylesheet" href="css/games.css">
   <link rel="stylesheet" href="css/timeline-board.css">
+  <link rel="stylesheet" href="css/detective-board.css">
 
   <script src="js/utils.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/timeline-data.js" defer></script>
   <script src="js/whoami-data.js" defer></script>
   <script src="js/timeline-board.js" defer></script>
+  <script src="js/detective-data.js" defer></script>
+  <script src="js/detective-board.js" defer></script>
+  <script src="js/detective-game.js" defer></script>
   <script src="js/games.js" defer></script>
 </head>
 <body>
@@ -111,6 +115,16 @@
             <p class="game-card__record" id="whoRecord"></p>
           </div>
           <button type="button" class="btn btn--purple game-card__btn" id="whoStart">თამაში</button>
+        </article>
+
+        <article class="game-card" id="detectiveCard">
+          <div class="game-card__icon" aria-hidden="true">🔍</div>
+          <div class="game-card__body">
+            <h2 class="game-card__title">დროში მოგზაურის დეტექტივი</h2>
+            <p class="game-card__text">ძველ დოკუმენტში ყალბი დეტალებია გაპარული — შეცდომები და ანაქრონიზმები. იპოვე ისინი! 3 საქმე.</p>
+            <p class="game-card__record" id="detectiveRecord"></p>
+          </div>
+          <button type="button" class="btn btn--secondary game-card__btn" id="detectiveStart">თამაში</button>
         </article>
       </div>
 
@@ -244,6 +258,35 @@
     </section>
 
     <!-- ============ შედეგი ============ -->
+    <!-- ============ დროში მოგზაურის დეტექტივი (js/detective-game.js) ============ -->
+    <section class="game-screen" id="detective" data-game-screen="detective" hidden>
+      <header class="lesson-top">
+        <button type="button" class="lesson-top__close games-exit" aria-label="თამაშის შეწყვეტა">✕</button>
+        <p class="dt-top__title">🔍 საქმე</p>
+        <span class="race-clock tl-round" id="detectiveRound">1 / 3</span>
+      </header>
+
+      <main class="lesson-stage dt-stage">
+        <p class="exercise__label">იპოვე ყალბი დეტალები</p>
+        <p class="dt-task" id="detectiveTask" aria-live="polite"></p>
+        <article id="detectiveDoc"></article>
+        <ol class="dt-evidence" id="detectiveEvidence" hidden></ol>
+      </main>
+
+      <footer class="lesson-footer" id="detectiveFooter" data-state="idle">
+        <div class="lesson-footer__inner">
+          <div class="feedback" id="detectiveFeedback" role="status" hidden>
+            <span class="feedback__icon" id="detectiveFeedbackIcon" aria-hidden="true"></span>
+            <div class="feedback__body">
+              <p class="feedback__title" id="detectiveFeedbackTitle"></p>
+              <p class="feedback__text" id="detectiveFeedbackText"></p>
+            </div>
+          </div>
+          <button type="button" class="btn lesson-footer__btn" id="detectiveBtn" disabled>შემოწმება</button>
+        </div>
+      </footer>
+    </section>
+
     <section class="result game-result" id="result" aria-labelledby="resultTitle" hidden>
       <div class="result__emblem result__emblem--win" id="resultEmblem" aria-hidden="true">🏆</div>
       <h1 class="result__title" id="resultTitle"></h1>

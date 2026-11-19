@@ -10,12 +10,13 @@
   ქვეყნდება GitHub Pages-ზე — ყველა ბმული ფარდობითია (`./`).
 - გვერდები: `index.html` (შესვლა), `dashboard.html`, `lesson.html`, `games.html`;
   მასწავლებელი: `teacher.html` (გუნდური ვიქტორინა), `decide.html` („ისტორიული არჩევანი“),
-  `whoami.html` („ვინ ვარ მე?“), `architect.html` („დროის ხაზის არქიტექტორი“).
+  `whoami.html` („ვინ ვარ მე?“), `architect.html` („დროის ხაზის არქიტექტორი“),
+  `detective.html` („დროში მოგზაურის დეტექტივი“).
 - სტილები: `css/variables.css` (დიზაინის ცვლადები) + თითო გვერდის CSS.
 - მასწავლებლის აქტივობების სია: `js/activities.js`.
 - მონაცემები: `js/data.js` (კურსების სია + ჩამტვირთავი), `js/data/<კურსის id>.js`
   (თითო კლასის თავები და გაკვეთილები — გვერდი ტვირთავს მხოლოდ საჭიროს), `js/timeline-data.js`,
-  `js/whoami-data.js` (თამაშები), `js/decide-data.js` („ისტორიული არჩევანის“ სცენარები). ლოგიკა: `js/lesson.js`, `js/games.js`,
+  `js/whoami-data.js`, `js/detective-data.js` (თამაშები), `js/decide-data.js` („ისტორიული არჩევანის“ სცენარები). ლოგიკა: `js/lesson.js`, `js/games.js`,
   `js/dashboard.js`, `js/auth.js`, `js/storage.js`.
 - მომხმარებლის მონაცემები (ანგარიში, XP, პროგრესი) ინახება მხოლოდ ბრაუზერში
   (`localStorage`, `window.IMS_STORE`). სერვერი არ არის.
@@ -59,7 +60,15 @@
   `distractors`) → `games.js` და `whoami.js`. „დროის ხაზის არქიტექტორი“:
   `timeline-data.js` + აგურის კედელი `js/timeline-board.js` / `css/timeline-board.css`
   (`create`, `pickRound`, `maxDisjoint`, `sortedEvents`) → `games.js` და `architect.js`.
+  „დეტექტივი“: `detective-data.js` (`parse`, `forCourse`) + დოკუმენტი
+  `js/detective-board.js` / `css/detective-board.css` → `detective-game.js` და `detective.js`.
   შეცვლისას ორივე გვერდი შეამოწმე.
+- **მოსწავლის ახალი თამაში `games.html`-ში — პლაგინით:** ცალკე ფაილი
+  (`js/<სახელი>-game.js`) `window.IMS_GAME_PLUGINS`-ში ამატებს `{ id, init(host) }`-ს;
+  `init` აბრუნებს `{ renderCard(), start() }`. `host` იძლევა `course`, `scopeLessons`,
+  `getRecord`, `saveRecord`, `awardXp`, `setCardState`, `statBox`, `showResult`,
+  `goHub`, `open(id)`. HTML-ში — ბარათი + `<section data-game-screen="<id>">`;
+  სკრიპტი ჩაერთოს `games.js`-მდე. ნიმუში — `js/detective-game.js`.
 - თამაშის მონაცემები კურსის გასაღებით (`"grade-8"`) და გაკვეთილის `lesson`
   ველით — თამაში მოსწავლეს მხოლოდ გავლილი გაკვეთილების მასალას აჩვენებს.
   თუ მონაცემთა ფაილი ~300 KB-ს გადააჭარბებს, დაყავი კლასებად (როგორც `js/data/`).
@@ -79,6 +88,11 @@
   თარიღი წყაროშია (`from`/`to` — წელი რიცხვით, ძვ. წ. უარყოფითი).
 - **„ვინ ვარ მე?“** (`js/whoami-data.js`): 1–2 პიროვნება/ადგილი/ნივთი, თუ
   გაკვეთილში ასეთი მთავარი გმირია; 4 მინიშნება — რთულიდან მარტივისკენ.
+- **„დროში მოგზაურის დეტექტივი“** (`js/detective-data.js`): გაკვეთილზე, სადაც
+  მთავარი მოვლენის მოყოლაა, 1 საქმე (ფორმატი ფაილის თავში): 2–3 ყალბი დეტალი,
+  მათ შორის მაქსიმუმ 1 ანაქრონიზმი; 4+ სწორი დასაჭერი დეტალი; ყალბი ფაქტი —
+  მეზობელი ცნება/თარიღი/პირი იმავე ან წინა გაკვეთილიდან (არა აბსურდი); ყოველ
+  ყალბს — სწორი პასუხი და მოკლე განმარტება. ფაილის `validate()` კონსოლში აფრთხილებს.
 - **„ისტორიული არჩევანი“** (`js/decide-data.js`) — ავტომატურად არა: როცა თავი
   ან პერიოდი დასრულდება, **შესთავაზე** სცენარი (ან არსებულის გაფართოება).
 
@@ -127,7 +141,7 @@
    დაყენებული):
    ```bash
    JSC=/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc
-   for f in js/data.js js/data/*.js js/timeline-data.js js/whoami-data.js js/decide-data.js; do $JSC -e 'var window={IMS_DATA:{register:function(){}}};var document={};' "$f" || echo "ERROR: $f"; done
+   for f in js/data.js js/data/*.js js/timeline-data.js js/whoami-data.js js/decide-data.js js/detective-data.js; do $JSC -e 'var window={IMS_DATA:{register:function(){}}};var document={};' "$f" || echo "ERROR: $f"; done
    ```
    გამოსავალი ცარიელია = რიგზეა; `SyntaxError` = შეცდომა, push არ გააკეთო.
    ერთი გამოტოვებული მძიმე კლასის ფაილში მთელი ამ კლასის გაკვეთილებს აფუჭებს.

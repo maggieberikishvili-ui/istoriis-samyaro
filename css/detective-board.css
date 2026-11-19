@@ -1,0 +1,204 @@
+/* ==========================================================
+   ისტორიის სამყარო — „დროში მოგზაურის დეტექტივი“: დოკუმენტი
+   საერთო სტილი: games.html (მოსწავლე) და detective.html (მასწავლებელი).
+   ლოგიკა — js/detective-board.js. ფერები — მხოლოდ variables.css-დან.
+   ========================================================== */
+
+/* ---------------- „ძველი დოკუმენტი“ ---------------- */
+
+.dt-doc {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-bottom-width: calc(var(--border-width) + var(--shadow-depth));
+  border-radius: var(--radius-sm);
+}
+
+.dt-doc__source {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.04em;
+  color: var(--color-accent-dark);
+}
+
+.dt-doc__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+}
+
+.dt-doc__text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-md);
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------- დასაჭერი დეტალი ---------------- */
+
+.dt-detail {
+  padding: 0.1em 0;
+  border-bottom: var(--border-width) dotted var(--color-accent-dark);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  cursor: pointer;
+}
+
+.dt-detail:hover:not([aria-disabled="true"]) {
+  background-color: var(--color-bg-soft);
+}
+
+.dt-detail:focus-visible {
+  outline: var(--border-width) solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+.dt-detail[aria-disabled="true"] {
+  cursor: default;
+}
+
+.dt-detail.is-marked {
+  color: var(--color-secondary-dark);
+  background-color: var(--color-secondary-light);
+  border-bottom: var(--border-width) solid var(--color-secondary);
+}
+
+.dt-detail.is-marked::before {
+  content: "🔍 ";
+}
+
+.dt-detail.is-caught {
+  background-color: var(--color-primary-light);
+  border-bottom: var(--border-width) solid var(--color-primary);
+}
+
+.dt-detail.is-missed {
+  background-color: var(--color-danger-light);
+  border-bottom: var(--border-width) solid var(--color-danger);
+}
+
+.dt-detail.is-caught .dt-detail__text,
+.dt-detail.is-missed .dt-detail__text {
+  text-decoration: line-through;
+}
+
+.dt-detail.is-false-alarm {
+  border-bottom: var(--border-width) dashed var(--color-danger);
+}
+
+.dt-detail__fix {
+  margin-left: var(--space-1);
+  font-family: var(--font-main);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  color: var(--color-primary-dark);
+}
+
+/* ---------------- განმარტებები (შემოწმების შემდეგ) ---------------- */
+
+.dt-evidence {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dt-clue {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  font-size: var(--fs-sm);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-left: var(--space-1) solid var(--color-primary);
+  border-radius: var(--radius-md);
+}
+
+.dt-clue.is-missed {
+  border-left-color: var(--color-danger);
+}
+
+.dt-clue.is-false-alarm {
+  border-left-color: var(--color-accent);
+}
+
+.dt-clue__status {
+  font-weight: var(--fw-heavy);
+  color: var(--color-primary-dark);
+}
+
+.dt-clue.is-missed .dt-clue__status {
+  color: var(--color-danger-dark);
+}
+
+.dt-clue.is-false-alarm .dt-clue__status {
+  color: var(--color-accent-dark);
+}
+
+.dt-clue__kind {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+.dt-clue__fake {
+  font-family: var(--font-serif);
+  font-weight: var(--fw-bold);
+}
+
+/* ---------------- მოსწავლის ეკრანი (games.html) ---------------- */
+
+#detectiveCard {
+  border-left-color: var(--color-slate);
+}
+
+.dt-top__title {
+  flex: 1;
+  margin: 0;
+  font-weight: var(--fw-heavy);
+  color: var(--color-secondary-dark);
+}
+
+.dt-stage {
+  animation: none;
+}
+
+.dt-task {
+  margin: 0 0 var(--space-4);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+/* ---------------- პროექტორი (მასწავლებელი) ---------------- */
+
+.dt-board--projector .dt-doc__title {
+  font-size: var(--fs-display);
+}
+
+.dt-board--projector .dt-doc__source {
+  font-size: var(--fs-md);
+}
+
+.dt-board--projector .dt-doc__text {
+  font-size: var(--fs-option);
+}
+
+.dt-board--projector .dt-clue {
+  font-size: var(--fs-md);
+}
+
+.dt-board--projector .dt-detail__fix {
+  font-size: var(--fs-md);
+}
+
+@media (max-width: 600px) {
+  .dt-doc {
+    padding: var(--space-4);
+  }
+}
