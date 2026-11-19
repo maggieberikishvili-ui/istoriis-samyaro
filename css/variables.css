@@ -51,6 +51,10 @@
   --stone-ink: #8c8273;
   --route-done: #b85d3b;             /* გავლილი მარშრუტი */
   --route-ahead: #c9bda6;            /* წინ მდებარე მარშრუტი */
+  --brick: #ecd5c4;                  /* „დროის ხაზის არქიტექტორი“: აგური */
+  --brick-edge: #c08f73;
+  --mortar: #ddd2c1;                 /* აგურებს შორის ხსნარი */
+  --ground: #8c8273;                 /* საძირკვლის ხაზი */
 
   /* --- ტიპოგრაფია --- */
   --font-main: "Noto Sans Georgian", "FiraGO", "BPG Arial", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -125,6 +129,10 @@
     --stone-ink: #9c9284;
     --route-done: #cf7a55;
     --route-ahead: #4c463e;
+    --brick: #4a3a30;
+    --brick-edge: #7d5c48;
+    --mortar: #2f2b26;
+    --ground: #9c9284;
 
     color-scheme: dark;
   }
@@ -163,6 +171,10 @@
   --stone-ink: #9c9284;
   --route-done: #cf7a55;
   --route-ahead: #4c463e;
+  --brick: #4a3a30;
+  --brick-edge: #7d5c48;
+  --mortar: #2f2b26;
+  --ground: #9c9284;
 
   color-scheme: dark;
 }

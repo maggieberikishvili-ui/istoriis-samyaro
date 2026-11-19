@@ -1,0 +1,263 @@
+/* ==========================================================
+   ისტორიის სამყარო — „დროის ხაზის არქიტექტორი“: აგურის კედელი
+   საერთო სტილი: games.html (მოსწავლე) და architect.html (მასწავლებელი).
+   ლოგიკა — js/timeline-board.js. ფერები — მხოლოდ variables.css-დან.
+   ========================================================== */
+
+.tl-edge {
+  margin: var(--space-1) 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.04em;
+  color: var(--color-accent-dark);
+}
+
+/* ---------------- კედელი (ქვემოდან ზემოთ: index 0 = საძირკველი) ---------------- */
+
+.tl-wall {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-2);
+  min-height: 72px;
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+  background-color: var(--mortar);
+  border-bottom: calc(var(--space-2) + var(--border-width)) solid var(--ground);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.tl-wall__empty {
+  display: grid;
+  place-items: center;
+  min-height: 56px;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  text-align: center;
+  color: var(--color-text-muted);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+/* ---------------- აგური ---------------- */
+
+.tl-brick {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  text-align: left;
+  color: var(--color-text);
+  background-color: var(--brick);
+  border: var(--border-width) solid var(--brick-edge);
+  border-bottom-width: calc(var(--border-width) + var(--shadow-depth));
+  border-radius: var(--radius-sm);
+  touch-action: none;           /* აგურზე თითი = გადათრევა (სქროლი — აგურს გარეთ) */
+  user-select: none;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+/* აგურები ჭადრაკულად — როგორც ნამდვილ კედელში */
+.tl-wall:not(.is-picking) > .tl-brick:nth-child(even) {
+  margin-left: var(--space-5);
+}
+
+.tl-wall:not(.is-picking) > .tl-brick:nth-child(odd) {
+  margin-right: var(--space-5);
+}
+
+.tl-brick__main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  min-height: 52px;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  text-align: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: grab;
+}
+
+.tl-brick__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tl-brick__remove {
+  flex-shrink: 0;
+  width: 44px;
+  font: inherit;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  background: none;
+  border: 0;
+  border-left: var(--border-width) solid var(--brick-edge);
+  cursor: pointer;
+}
+
+.tl-brick__remove:hover {
+  color: var(--color-danger);
+}
+
+.tl-brick.is-selected {
+  outline: var(--space-1) solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* გადათრევისას კედლიდან აყვანილი აგური არ ჩანს — მის ადგილს „მოჩვენება“ აჩვენებს */
+.tl-wall > .tl-brick.is-dragging {
+  display: none;
+}
+
+.tl-brick--ghost {
+  align-items: center;
+  min-height: 52px;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface);
+  border-style: dashed;
+  border-color: var(--color-secondary);
+  opacity: 0.85;
+}
+
+body.is-tl-dragging,
+body.is-tl-dragging * {
+  cursor: grabbing;
+}
+
+/* ---------------- „＋ აქ“ ადგილები (შეხებით ჩადება) ---------------- */
+
+.tl-gap {
+  display: flex;
+}
+
+.tl-gap__btn {
+  flex: 1;
+  min-height: 40px;
+  padding: var(--space-1) var(--space-3);
+  font: inherit;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  color: var(--color-secondary-dark);
+  background-color: var(--color-secondary-light);
+  border: var(--border-width) dashed var(--color-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.tl-gap__btn:hover,
+.tl-gap__btn:focus-visible {
+  color: var(--color-text-inverse);
+  background-color: var(--color-secondary);
+}
+
+/* ---------------- შემოწმების შემდეგ ---------------- */
+
+.tl-brick__body {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+}
+
+.tl-brick__date {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+}
+
+.tl-brick.is-correct {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.tl-brick.is-correct .tl-brick__date {
+  color: var(--color-primary-dark);
+}
+
+.tl-brick.is-wrong {
+  background-color: var(--color-danger-light);
+  border-color: var(--color-danger);
+  animation: tl-crack 400ms ease;
+}
+
+.tl-brick.is-wrong .tl-brick__date {
+  color: var(--color-danger-dark);
+}
+
+@keyframes tl-crack {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(calc(-1 * var(--space-1))) rotate(-1deg); }
+  75% { transform: translateX(var(--space-1)) rotate(1deg); }
+}
+
+/* ---------------- ეზო: ჯერ დაუწყობელი აგურები ---------------- */
+
+.tl-yard {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.tl-brick--loose {
+  align-items: center;
+  min-height: 52px;
+  padding: var(--space-2) var(--space-3);
+  cursor: grab;
+}
+
+.tl-brick--loose:hover {
+  filter: brightness(1.04);
+}
+
+.tl-brick--loose.is-dragging {
+  opacity: 0.35;
+}
+
+/* ---------------- პროექტორი (მასწავლებელი) ---------------- */
+
+.tl-board--projector .tl-brick,
+.tl-board--projector .tl-wall__empty {
+  font-size: var(--fs-option);
+}
+
+.tl-board--projector .tl-brick__main,
+.tl-board--projector .tl-brick--loose,
+.tl-board--projector .tl-brick--ghost {
+  min-height: 72px;
+}
+
+.tl-board--projector .tl-gap__btn {
+  font-size: var(--fs-md);
+}
+
+.tl-board--projector .tl-edge {
+  font-size: var(--fs-md);
+}
+
+/* ---------------- ტელეფონი ---------------- */
+
+@media (max-width: 600px) {
+  .tl-wall:not(.is-picking) > .tl-brick:nth-child(even) {
+    margin-left: var(--space-3);
+  }
+
+  .tl-wall:not(.is-picking) > .tl-brick:nth-child(odd) {
+    margin-right: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-brick {
+    transition: none;
+  }
+
+  .tl-brick.is-wrong {
+    animation: none;
+  }
+}

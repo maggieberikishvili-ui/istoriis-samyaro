@@ -26,11 +26,13 @@
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/lesson.css">
   <link rel="stylesheet" href="css/games.css">
+  <link rel="stylesheet" href="css/timeline-board.css">
 
   <script src="js/utils.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/timeline-data.js" defer></script>
   <script src="js/whoami-data.js" defer></script>
+  <script src="js/timeline-board.js" defer></script>
   <script src="js/games.js" defer></script>
 </head>
 <body>
@@ -92,10 +94,10 @@
           <button type="button" class="btn btn--secondary game-card__btn" id="memoryStart">თამაში</button>
         </article>
         <article class="game-card" id="timelineCard">
-          <div class="game-card__icon" aria-hidden="true">📜</div>
+          <div class="game-card__icon" aria-hidden="true">🧱</div>
           <div class="game-card__body">
-            <h2 class="game-card__title">დროის ხაზი</h2>
-            <p class="game-card__text">დაალაგე მოვლენები ყველაზე ადრეულიდან ყველაზე გვიანდელამდე. 3 რაუნდი, თითოში — 5 მოვლენა.</p>
+            <h2 class="game-card__title">დროის ხაზის არქიტექტორი</h2>
+            <p class="game-card__text">ააშენე დროის კედელი: საძირკველში — ყველაზე ძველი მოვლენა, ზემოთ — უფრო გვიანდელი. 3 რაუნდი, თითოში — 5 აგური.</p>
             <p class="game-card__record" id="timelineRecord"></p>
           </div>
           <button type="button" class="btn btn--accent game-card__btn" id="timelineStart">თამაში</button>
@@ -160,17 +162,17 @@
       </header>
 
       <main class="lesson-stage tl-stage">
-        <p class="exercise__label">დაალაგე ქრონოლოგიურად</p>
-        <p class="tl-instruction" id="timelineInstruction">შეეხე მოვლენებს იმ თანმიმდევრობით, როგორც მოხდა — ჯერ ყველაზე ადრეული.</p>
+        <p class="exercise__label">ააშენე დროის კედელი</p>
+        <p class="tl-instruction" id="timelineInstruction">ყველაზე ძველი მოვლენა — საძირკველში (ქვემოთ), ყველაზე ახალი — ზემოთ. აგური გადაათრიე კედელზე ან ჯერ შეეხე მას, მერე — „＋ აქ“ ადგილს.</p>
 
-        <p class="tl-edge">⬆ ყველაზე ადრე</p>
-        <ol class="tl-slots" id="timelineSlots"></ol>
-        <p class="tl-edge">⬇ ყველაზე გვიან</p>
+        <p class="tl-edge">⬆ უფრო გვიან</p>
+        <ol id="timelineWall" aria-label="დროის კედელი — ძველიდან ახლისკენ"></ol>
+        <p class="tl-edge">⬇ საძირკველი — ყველაზე ადრე</p>
 
-        <div class="tl-pool" id="timelinePool" aria-label="დასალაგებელი მოვლენები"></div>
+        <div id="timelinePool" aria-label="დასაწყობი აგურები"></div>
 
         <div class="tl-answer" id="timelineAnswer" hidden>
-          <h2 class="tl-answer__title">სწორი თანმიმდევრობა</h2>
+          <h2 class="tl-answer__title">სწორი თანმიმდევრობა — ძველიდან ახლისკენ</h2>
           <ol class="tl-answer__list" id="timelineAnswerList"></ol>
         </div>
       </main>

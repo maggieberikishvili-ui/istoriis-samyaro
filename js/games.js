@@ -5,7 +5,8 @@
       ზედიზედ სწორი პასუხები ამრავლებს ქულას (×2 / ×3).
    2. „მეხსიერების ბარათები“ — 6 წყვილი (ცნება ↔ განმარტება)
       გაკვეთილების match-სავარჯიშოებიდან; ვარსკვლავები სვლების მიხედვით.
-   3. „დროის ხაზი“ — 3 რაუნდი × 5 მოვლენა (js/timeline-data.js);
+   3. „დროის ხაზის არქიტექტორი“ — 3 რაუნდი × 5 აგური (js/timeline-data.js,
+      კედელი — js/timeline-board.js);
       ერთ რაუნდში მოვლენების თარიღები ერთმანეთს არასოდეს ფარავს.
    4. „ვინ ვარ მე?“ — 5 გმირი (js/whoami-data.js), თითოს 4 მინიშნება;
       ქულა: 4 → 1, ყოველი დამატებითი მინიშნება ან შეცდომა −1.
@@ -136,7 +137,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     timelineProgress: $("timelineProgress"),
     timelineProgressFill: $("timelineProgressFill"),
     timelineInstruction: $("timelineInstruction"),
-    timelineSlots: $("timelineSlots"),
+    timelineWall: $("timelineWall"),
     timelinePool: $("timelinePool"),
     timelineAnswer: $("timelineAnswer"),
     timelineAnswerList: $("timelineAnswerList"),
@@ -818,7 +819,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   /* ==========================================================
-     3. დროის ხაზი
+     3. დროის ხაზის არქიტექტორი
      ========================================================== */
 
   const tl = {
@@ -826,7 +827,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     used: new Set(),
     round: 0,
     events: [],      // ამ რაუნდის 5 მოვლენა (შემთხვევითი რიგით)
-    placed: [],      // მოთამაშის მიერ დალაგებული
+    board: null,     // აგურის კედელი (IMS_TL_BOARD) — მოთამაშის დალაგება აქ ინახება
     checked: false,
     score: 0,
     mistakes: [],
@@ -885,7 +886,6 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     events.forEach((e) => tl.used.add(e));
     tl.round += 1;
     tl.events = shuffle(events);
-    tl.placed = [];
     tl.checked = false;
 
     el.timelineRound.textContent = tl.round + " / " + TIMELINE_ROUNDS;
@@ -895,67 +895,26 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.timelineFeedback.hidden = true;
     el.timelineFooter.dataset.state = "idle";
     el.timelineBtn.textContent = "შემოწმება";
-    renderTimeline();
-    window.scrollTo(0, 0);
-  }
-
-  function renderTimeline() {
-    const correct = tl.checked ? sortedEvents(tl.events) : null;
-
-    el.timelineSlots.replaceChildren();
-    for (let i = 0; i < TIMELINE_SIZE; i++) {
-      const ev = tl.placed[i];
-      const li = createEl("li", "tl-slot");
-      li.append(createEl("span", "tl-slot__num", String(i + 1)));
-
-      if (!ev) {
-        li.classList.add("is-empty");
-        li.append(createEl("span", "tl-slot__empty", i === tl.placed.length ? "შემდეგი მოვლენა აქ ჩაჯდება" : "—"));
-      } else if (tl.checked) {
-        const ok = ev === correct[i];
-        li.classList.add(ok ? "is-correct" : "is-wrong");
-        const body = createEl("span", "tl-slot__body");
-        body.append(createEl("span", "tl-slot__text", ev.text), createEl("span", "tl-slot__date", (ok ? "✓ " : "✗ ") + ev.date));
-        li.append(body);
-      } else {
-        const btn = createEl("button", "tl-slot__event");
-        btn.type = "button";
-        btn.setAttribute("aria-label", (i + 1) + ". " + ev.text + " — შეეხე, რომ ამოიღო");
-        btn.append(createEl("span", "tl-slot__text", ev.text), createEl("span", "tl-slot__remove", "✕"));
-        btn.addEventListener("click", () => {
-          tl.placed.splice(i, 1);
-          renderTimeline();
-        });
-        li.append(btn);
-      }
-      el.timelineSlots.append(li);
-    }
-
-    el.timelinePool.replaceChildren();
-    el.timelinePool.hidden = tl.checked;
-    tl.events.filter((e) => !tl.placed.includes(e)).forEach((ev) => {
-      const btn = createEl("button", "option tl-card");
-      btn.type = "button";
-      btn.append(createEl("span", "option__text", ev.text));
-      btn.addEventListener("click", () => {
-        if (tl.checked || tl.placed.length >= TIMELINE_SIZE) return;
-        tl.placed.push(ev);
-        renderTimeline();
-      });
-      el.timelinePool.append(btn);
+    el.timelineInstruction.hidden = false;
+    el.timelineBtn.disabled = true;
+    // აგურის კედელი — js/timeline-board.js (საერთოა მასწავლებლის „არქიტექტორთან“)
+    tl.board = window.IMS_TL_BOARD.create({
+      wall: el.timelineWall,
+      pool: el.timelinePool,
+      events: tl.events,
+      onChange: (placed, total) => {
+        el.timelineBtn.disabled = placed < total;
+      },
     });
-
-    el.timelineInstruction.hidden = tl.checked;
-    el.timelineBtn.disabled = !tl.checked && tl.placed.length < TIMELINE_SIZE;
+    window.scrollTo(0, 0);
   }
 
   function checkTimeline() {
     tl.checked = true;
     const correct = sortedEvents(tl.events);
-    const right = tl.placed.filter((ev, i) => ev === correct[i]).length;
+    const right = tl.board.reveal(correct);
     tl.score += right;
-
-    renderTimeline();
+    el.timelineInstruction.hidden = true;
 
     const perfect = right === TIMELINE_SIZE;
     if (!perfect) {
@@ -1009,7 +968,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   el.timelineBtn.addEventListener("click", () => {
     if (!tl.checked) {
-      if (tl.placed.length === TIMELINE_SIZE) checkTimeline();
+      if (tl.board.placed().length === TIMELINE_SIZE) checkTimeline();
     } else if (tl.round < TIMELINE_ROUNDS) {
       nextTimelineRound();
     } else {

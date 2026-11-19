@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v28";
+const VERSION = "v29";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -36,6 +36,7 @@ const CORE_FILES = [
   "./css/dashboard.css",
   "./css/lesson.css",
   "./css/games.css",
+  "./css/timeline-board.css",
   "./css/teacher.css",
   "./css/decide.css",
   "./js/storage.js",
@@ -51,6 +52,7 @@ const CORE_FILES = [
   "./js/data/national-exams.js",
   "./js/timeline-data.js",
   "./js/whoami-data.js",
+  "./js/timeline-board.js",
   "./js/illustrations.js",
   "./js/auth.js",
   "./js/dashboard.js",
