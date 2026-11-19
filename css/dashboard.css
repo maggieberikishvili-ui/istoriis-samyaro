@@ -418,11 +418,45 @@
   border: 1px solid var(--color-border);
   border-left: 6px solid var(--c);
   border-radius: var(--radius-md);
+  cursor: pointer;
+  position: relative;
+}
+
+/* თავის დაკეცვის ღილაკი (ყველა კლასში) — ბანერის ზედა მარჯვენა კუთხეში */
+.chapter-banner__toggle {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: grid;
+  place-items: center;
+  width: var(--space-7);
+  height: var(--space-7);
+  padding: 0;
+  font: inherit;
+  color: var(--color-text-muted);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.chapter-banner__toggle:hover {
+  background-color: var(--stone);
+}
+
+.chapter-banner__chevron {
+  font-size: var(--fs-lg);
+  transition: transform var(--transition-fast);
+}
+
+.chapter[data-open="false"] .chapter-banner__chevron {
+  transform: rotate(-90deg);
 }
 
 .chapter-banner__body {
   flex: 1 1 260px;
   min-width: 0;
+  padding-right: var(--space-6); /* ადგილი დაკეცვის ღილაკისთვის */
 }
 
 .chapter-banner__eyebrow {

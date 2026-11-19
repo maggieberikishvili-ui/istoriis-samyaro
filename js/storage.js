@@ -30,7 +30,7 @@
     selectedCourse: "ims_selectedCourse",
     installDismissed: "ims_installDismissed",
     games: "ims_games",             // თამაშების რეკორდები და დღიური XP (თითო მომხმარებელზე)
-    sectionFold: "ims_sectionFold", // ქვეთავების დაკეცვა დაფაზე: { sectionId: true(გაშლილი)/false }
+    sectionFold: "ims_sectionFold", // თავებისა და ქვეთავების დაკეცვა დაფაზე: { chapterId/sectionId: true(გაშლილი)/false }
   });
 
   const URLS = Object.freeze({

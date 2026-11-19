@@ -255,12 +255,44 @@
     bar.append(fill);
     progressBox.append(bar);
 
-    banner.append(body, progressBox);
+    // --- დაკეცვა: ბანერზე დაჭერა თავის ბილიკს მალავს/აჩენს (ყველა კლასში) ---
+    // დასრულებული თავი თავიდან დაკეცილია; მოსწავლის არჩევანი ინახება.
+    const savedFold = readFolds()[chapter.id];
+    let open = typeof savedFold === "boolean" ? savedFold : chapterState !== "completed";
+    section.dataset.open = String(open);
+
+    const pathId = "chapter-path-" + chapter.id;
+    const toggle = createEl("button", "chapter-banner__toggle");
+    toggle.type = "button";
+    toggle.setAttribute("aria-controls", pathId);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", "თავი " + toRoman(chapter.number) + ": " + chapter.title + " — გაკვეთილების ჩვენება");
+    const chevron = createEl("span", "chapter-banner__chevron", "▾");
+    chevron.setAttribute("aria-hidden", "true");
+    toggle.append(chevron);
+
+    banner.append(body, progressBox, toggle);
     section.append(banner);
 
     // --- მედალიონების ბილიკი + რუკის მარშრუტი ---
     const path = createEl("ol", "path");
+    path.id = pathId;
+    path.hidden = !open;
     path.setAttribute("aria-label", "თავი " + chapter.number + " — გაკვეთილები");
+
+    function setOpen(next) {
+      open = next;
+      section.dataset.open = String(next);
+      toggle.setAttribute("aria-expanded", String(next));
+      path.hidden = !next;
+      saveFold(chapter.id, next);
+      scheduleRoutes();
+    }
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setOpen(!open);
+    });
+    banner.addEventListener("click", () => setOpen(!open));
 
     const route = document.createElementNS(SVG_NS, "svg");
     route.setAttribute("class", "path__route");
