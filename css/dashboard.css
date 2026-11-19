@@ -440,18 +440,6 @@
   cursor: pointer;
 }
 
-.chapter-banner__toggle:hover {
-  background-color: var(--stone);
-}
-
-.chapter-banner__chevron {
-  font-size: var(--fs-lg);
-  transition: transform var(--transition-fast);
-}
-
-.chapter[data-open="false"] .chapter-banner__chevron {
-  transform: rotate(-90deg);
-}
 
 .chapter-banner__body {
   flex: 1 1 260px;
@@ -1014,17 +1002,27 @@
   font-size: 1.3rem;
 }
 
-.path__section-chevron {
+/* დაკეცვის ისარი — ერთი სტილი თავისა და ქვეთავის ზოლისთვის, ყველა კლასში */
+.fold-chevron {
   display: grid;
+  flex: none;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
+  width: var(--space-6);
+  height: var(--space-6);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
   transition: transform var(--transition-fast);
 }
 
-.path__section[data-open="false"] .path__section-chevron {
+.fold-chevron svg {
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
+.path__section[data-open="false"] .fold-chevron,
+.chapter[data-open="false"] > .chapter-banner .fold-chevron {
   transform: rotate(-90deg);
 }
 

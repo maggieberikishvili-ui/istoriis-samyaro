@@ -267,9 +267,7 @@
     toggle.setAttribute("aria-controls", pathId);
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", "თავი " + toRoman(chapter.number) + ": " + chapter.title + " — გაკვეთილების ჩვენება");
-    const chevron = createEl("span", "chapter-banner__chevron", "▾");
-    chevron.setAttribute("aria-hidden", "true");
-    toggle.append(chevron);
+    toggle.append(foldChevron());
 
     banner.append(body, progressBox, toggle);
     section.append(banner);
@@ -390,9 +388,7 @@
     const side = createEl("span", "path__section-side");
     if (state === "completed") side.append(createEl("span", "path__section-medal", "🏅"));
     if (state === "locked") side.append(createEl("span", "path__section-lock", "🔒"));
-    const chevron = createEl("span", "path__section-chevron", "▾");
-    chevron.setAttribute("aria-hidden", "true");
-    side.append(chevron);
+    side.append(foldChevron());
 
     head.append(badge, text, side);
     head.setAttribute("aria-label", "ქვეთავი " + section.number + ": " + section.title + " — " +
@@ -572,6 +568,25 @@
   });
 
   /** ბრტყელი ბოქლომის ხატულა (SVG) დაბლოკილი ნიშნისთვის. */
+  /** დაკეცვის ისარი — ერთნაირი თავისა და ქვეთავის ზოლზე (css: .fold-chevron). */
+  function foldChevron() {
+    const wrap = createEl("span", "fold-chevron");
+    wrap.setAttribute("aria-hidden", "true");
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("focusable", "false");
+    const line = document.createElementNS(SVG_NS, "path");
+    line.setAttribute("d", "M6 9l6 6 6-6");
+    line.setAttribute("fill", "none");
+    line.setAttribute("stroke", "currentColor");
+    line.setAttribute("stroke-width", "2.6");
+    line.setAttribute("stroke-linecap", "round");
+    line.setAttribute("stroke-linejoin", "round");
+    svg.append(line);
+    wrap.append(svg);
+    return wrap;
+  }
+
   function lockIcon() {
     const svg = document.createElementNS(SVG_NS, "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
