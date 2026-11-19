@@ -833,41 +833,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     mistakes: [],
   };
 
-  function overlaps(a, b) {
-    return a.from <= b.to && b.from <= a.to;
-  }
-
-  /** რამდენი ურთიერთგადაუფარავი მოვლენის არჩევა შეიძლება (ხარბი ალგორითმი „to“-ს მიხედვით). */
-  function maxDisjoint(events) {
-    let count = 0;
-    let lastTo = -Infinity;
-    events.slice().sort((a, b) => a.to - b.to).forEach((e) => {
-      if (e.from > lastTo) {
-        count += 1;
-        lastTo = e.to;
-      }
-    });
-    return count;
-  }
-
-  /** 5 მოვლენა, რომელთა თარიღები ერთმანეთს არ ფარავს; ჯერ — ამ თამაშში ჯერ არნაჩვენები. */
-  function pickRoundEvents() {
-    for (let attempt = 0; attempt < 60; attempt++) {
-      const fresh = tl.pool.filter((e) => !tl.used.has(e));
-      const seen = tl.pool.filter((e) => tl.used.has(e));
-      const order = attempt < 30 ? shuffle(fresh).concat(shuffle(seen)) : shuffle(tl.pool);
-      const chosen = [];
-      for (const e of order) {
-        if (chosen.every((c) => !overlaps(c, e))) chosen.push(e);
-        if (chosen.length === TIMELINE_SIZE) return chosen;
-      }
-    }
-    return null;
-  }
-
-  function sortedEvents(events) {
-    return events.slice().sort((a, b) => a.from - b.from);
-  }
+  // რაუნდის შერჩევა და დალაგება — js/timeline-board.js (საერთოა მასწავლებლის „არქიტექტორთან“)
+  const { maxDisjoint, pickRound, sortedEvents } = window.IMS_TL_BOARD;
 
   function startTimeline() {
     const lessons = new Set(scopeLessons().map((l) => l.id));
@@ -881,7 +848,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   function nextTimelineRound() {
-    const events = pickRoundEvents();
+    const events = pickRound(tl.pool, tl.used, TIMELINE_SIZE);
     if (!events) return goHub();
     events.forEach((e) => tl.used.add(e));
     tl.round += 1;

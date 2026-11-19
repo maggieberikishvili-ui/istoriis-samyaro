@@ -289,5 +289,50 @@
     };
   }
 
-  window.IMS_TL_BOARD = Object.freeze({ create: create });
+  /* ---------- რაუნდის მოვლენები (თარიღები ერთმანეთს არ უნდა ფარავდეს) ---------- */
+
+  function overlaps(a, b) {
+    return a.from <= b.to && b.from <= a.to;
+  }
+
+  /** რამდენი ურთიერთგადაუფარავი მოვლენის არჩევა შეიძლება (ხარბი ალგორითმი „to“-ს მიხედვით). */
+  function maxDisjoint(events) {
+    let count = 0;
+    let lastTo = -Infinity;
+    events.slice().sort((a, b) => a.to - b.to).forEach((e) => {
+      if (e.from > lastTo) {
+        count += 1;
+        lastTo = e.to;
+      }
+    });
+    return count;
+  }
+
+  /** size მოვლენა, რომელთა თარიღები ერთმანეთს არ ფარავს; ჯერ — used-ში ჯერ არმყოფი. */
+  function pickRound(pool, used, size) {
+    const shuffle = window.IMS_UTILS.shuffle;
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const fresh = pool.filter((e) => !used.has(e));
+      const seen = pool.filter((e) => used.has(e));
+      const order = attempt < 30 ? shuffle(fresh).concat(shuffle(seen)) : shuffle(pool);
+      const chosen = [];
+      for (const e of order) {
+        if (chosen.every((c) => !overlaps(c, e))) chosen.push(e);
+        if (chosen.length === size) return chosen;
+      }
+    }
+    return null;
+  }
+
+  /** ძველიდან ახლისკენ. */
+  function sortedEvents(events) {
+    return events.slice().sort((a, b) => a.from - b.from);
+  }
+
+  window.IMS_TL_BOARD = Object.freeze({
+    create: create,
+    maxDisjoint: maxDisjoint,
+    pickRound: pickRound,
+    sortedEvents: sortedEvents,
+  });
 })();

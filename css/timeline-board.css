@@ -236,6 +236,10 @@ body.is-tl-dragging * {
   font-size: var(--fs-md);
 }
 
+.tl-board--projector .tl-brick__date {
+  font-size: var(--fs-md);
+}
+
 .tl-board--projector .tl-edge {
   font-size: var(--fs-md);
 }

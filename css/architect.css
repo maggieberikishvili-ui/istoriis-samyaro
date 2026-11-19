@@ -1,0 +1,100 @@
+/* ==========================================================
+   ისტორიის სამყარო — „დროის ხაზის არქიტექტორი“ (მასწავლებლის რეჟიმი)
+   აგურის კედელი — css/timeline-board.css (საერთოა მოსწავლის თამაშთან).
+   საერთო განლაგება (t-top, t-chips, t-play, t-results) — teacher.css.
+   ფერები, ზომები — მხოლოდ variables.css-ის ცვლადებით.
+   ========================================================== */
+
+/* პროექტორზე: მარცხნივ კედელი, მარჯვნივ „ეზო“ აგურებით */
+.a-board {
+  display: grid;
+  gap: var(--space-5);
+  align-items: start;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+  .a-board {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+
+  /* ეზოში აგურები ერთმანეთის ქვეშ, კედელთან ახლოს */
+  .a-board .tl-yard {
+    margin-top: 0;
+  }
+}
+
+.a-board__wall,
+.a-board__yard {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.a-board__label {
+  margin: 0;
+  font-weight: var(--fw-heavy);
+  color: var(--color-secondary-dark);
+}
+
+/* ---------------- შემოწმების შედეგი ---------------- */
+
+.a-verdict {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-danger);
+  border-radius: var(--radius-md);
+}
+
+.a-verdict.is-perfect {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.a-verdict__title {
+  margin: 0;
+  font-size: var(--fs-option);
+  font-weight: var(--fw-heavy);
+}
+
+.a-verdict__list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-5);
+  font-size: var(--fs-md);
+}
+
+.a-verdict__item {
+  overflow-wrap: anywhere;
+}
+
+.a-verdict__date {
+  display: block;
+  font-weight: var(--fw-heavy);
+  color: var(--color-primary-dark);
+}
+
+.a-hint {
+  flex: 1;
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* ---------------- დასასრული ---------------- */
+
+.a-end__icon {
+  margin: 0;
+  font-size: var(--fs-xxl);
+}
+
+.a-end__text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-option);
+  text-align: center;
+}
