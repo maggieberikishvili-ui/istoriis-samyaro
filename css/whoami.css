@@ -1,0 +1,181 @@
+/* ==========================================================
+   ისტორიის სამყარო — „ვინ ვარ მე?“ (მასწავლებლის რეჟიმი)
+   საერთო განლაგება (t-top, t-chips, t-play, t-options, t-results) — teacher.css.
+   ფერები, ზომები — მხოლოდ variables.css-ის ცვლადებით.
+   ========================================================== */
+
+.w-kind {
+  flex: 1;
+  min-width: 0;
+  font-weight: var(--fw-bold);
+  color: var(--color-purple-dark);
+}
+
+.w-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-display);
+  text-align: center;
+  color: var(--color-purple-dark);
+}
+
+/* ---------------- მინიშნებები ---------------- */
+
+.w-clues {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.w-clue {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-serif);
+  font-size: var(--fs-option);
+  line-height: 1.4;
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-left: var(--space-2) solid var(--color-purple);
+  border-radius: var(--radius-md);
+}
+
+.w-clue.is-new {
+  animation: w-clue-in 300ms ease;
+}
+
+.w-clue.is-locked {
+  font-family: var(--font-main);
+  font-size: var(--fs-md);
+  color: var(--stone-ink);
+  background-color: var(--stone);
+  border-color: var(--stone);
+  border-left-color: var(--stone-ink);
+}
+
+.w-clue__num {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  font-family: var(--font-main);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-inverse);
+  background-color: var(--color-purple);
+  border-radius: 50%;
+}
+
+.w-clue.is-locked .w-clue__num {
+  background-color: var(--stone-ink);
+}
+
+.w-clue__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@keyframes w-clue-in {
+  from { opacity: 0; transform: translateY(var(--space-2)); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------------- პასუხი ---------------- */
+
+.w-answer {
+  display: grid;
+  gap: var(--space-1);
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--space-4);
+  text-align: center;
+  background-color: var(--color-primary-light);
+  border: var(--border-width) solid var(--color-primary);
+  border-radius: var(--radius-lg);
+}
+
+.w-answer__label {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.06em;
+  color: var(--color-primary-dark);
+}
+
+.w-answer__name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-display);
+  font-weight: var(--fw-heavy);
+  overflow-wrap: anywhere;
+}
+
+.w-answer__source {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.w-answer__source:empty {
+  display: none;
+}
+
+.w-options {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ---------------- ქვედა ზოლი ---------------- */
+
+.w-tools {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---------------- დასასრული ---------------- */
+
+.w-summary {
+  display: grid;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 640px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.w-summary__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.w-summary__name {
+  font-weight: var(--fw-heavy);
+}
+
+.w-summary__meta {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .w-clue.is-new {
+    animation: none;
+  }
+}

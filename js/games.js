@@ -980,15 +980,6 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
      4. ვინ ვარ მე?
      ========================================================== */
 
-  const WHO_KIND = {
-    person: "👤 პიროვნება",
-    ancient: "🦴 უძველესი ადამიანი",
-    place: "📍 ადგილი",
-    state: "🏛️ სახელმწიფო",
-    object: "🏺 ნივთი",
-    people: "👥 ხალხი",
-  };
-
   const who = {
     rounds: [],
     round: 0,
@@ -1005,28 +996,6 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   function heroesInScope() {
     const ids = new Set(scopeLessons().map((l) => l.id));
     return whoHeroes().filter((h) => ids.has(h.lesson));
-  }
-
-  /** 3 არასწორი ვარიანტი: ჯერ იმავე ტიპის ღია გმირები, მერე იმავე ტიპის სხვები, ბოლოს — ნებისმიერი. */
-  function pickDistractors(hero, scopePool) {
-    const all = whoHeroes();
-    const groups = [
-      scopePool.filter((h) => h.kind === hero.kind),
-      all.filter((h) => h.kind === hero.kind),
-      scopePool,
-      all,
-    ];
-    const picked = [];
-    const names = new Set([hero.answer]);
-    groups.forEach((group) => {
-      shuffle(group).forEach((h) => {
-        if (picked.length < 3 && !names.has(h.answer)) {
-          names.add(h.answer);
-          picked.push(h);
-        }
-      });
-    });
-    return picked;
   }
 
   function whoPoints() {
@@ -1053,7 +1022,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.whoRound.textContent = who.round + " / " + WHO_ROUNDS;
     el.whoProgress.setAttribute("aria-valuenow", String(who.round - 1));
     el.whoProgressFill.style.width = ((who.round - 1) / WHO_ROUNDS) * 100 + "%";
-    el.whoKind.textContent = WHO_KIND[who.hero.kind] || "";
+    el.whoKind.textContent = window.IMS_WHOAMI.kinds[who.hero.kind] || "";
     el.whoHint.textContent = "";
     el.whoFeedback.hidden = true;
     el.whoFooter.dataset.state = "idle";
@@ -1062,7 +1031,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
     // ვარიანტები — ერთხელ რაუნდზე
     el.whoOptions.replaceChildren();
-    const options = shuffle([who.hero].concat(pickDistractors(who.hero, who.pool)));
+    const options = shuffle([who.hero].concat(window.IMS_WHOAMI.distractors(who.hero, who.pool, whoHeroes())));
     who.buttons = options.map((h, i) => {
       const btn = createEl("button", "option");
       btn.type = "button";

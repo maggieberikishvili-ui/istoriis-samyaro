@@ -705,7 +705,45 @@
     ],
   };
 
+  /** ტიპის წარწერა ბარათზე. */
+  const KINDS = Object.freeze({
+    person: "👤 პიროვნება",
+    ancient: "🦴 უძველესი ადამიანი",
+    place: "📍 ადგილი",
+    state: "🏛️ სახელმწიფო",
+    object: "🏺 ნივთი",
+    people: "👥 ხალხი",
+  });
+
+  /**
+   * 3 არასწორი ვარიანტი: ჯერ იმავე ტიპის გმირები არჩეული მასალიდან (scopePool),
+   * მერე იმავე ტიპის სხვები კურსიდან (all), ბოლოს — ნებისმიერი.
+   * საერთოა მოსწავლის თამაშისთვის (games.js) და მასწავლებლის აქტივობისთვის (whoami.js).
+   */
+  function distractors(hero, scopePool, all) {
+    const shuffle = window.IMS_UTILS.shuffle;
+    const groups = [
+      scopePool.filter((h) => h.kind === hero.kind),
+      all.filter((h) => h.kind === hero.kind),
+      scopePool,
+      all,
+    ];
+    const picked = [];
+    const names = new Set([hero.answer]);
+    groups.forEach((group) => {
+      shuffle(group).forEach((h) => {
+        if (picked.length < 3 && !names.has(h.answer)) {
+          names.add(h.answer);
+          picked.push(h);
+        }
+      });
+    });
+    return picked;
+  }
+
   window.IMS_WHOAMI = Object.freeze({
+    kinds: KINDS,
+    distractors: distractors,
     /** მოცემული კურსის ყველა გმირი (ცარიელი სია, თუ კურსისთვის ჯერ არ არსებობს). */
     forCourse: function (courseId) {
       return (HEROES[courseId] || []).slice();

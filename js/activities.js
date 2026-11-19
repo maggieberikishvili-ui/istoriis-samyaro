@@ -14,6 +14,7 @@
   const ACTIVITIES = [
     { id: "quiz", icon: "❓", title: "გუნდური ვიქტორინა", href: "teacher.html" },
     { id: "decide", icon: "⚖️", title: "ისტორიული არჩევანი", href: "decide.html" },
+    { id: "whoami", icon: "🎭", title: "ვინ ვარ მე?", href: "whoami.html" },
   ];
 
   /** ჩანართების აწყობა ყველა <nav data-activities>-ში. */

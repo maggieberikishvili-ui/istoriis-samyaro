@@ -11,7 +11,7 @@
 window.IMS_DATA.loadAll().then(function () {
   "use strict";
 
-  const { createEl, toRoman, toggleFullscreen } = window.IMS_UTILS;
+  const { createEl, toggleFullscreen } = window.IMS_UTILS;
   const data = window.IMS_DATA;
   const quiz = window.IMS_QUIZ;
   const store = window.IMS_STORE;
@@ -106,52 +106,7 @@ window.IMS_DATA.loadAll().then(function () {
   }
 
   function renderChapters() {
-    el.chapterList.replaceChildren();
-    currentCourse().chapters.forEach((chapter) => {
-      if (!chapter.lessons.length) return;
-      const box = createEl("div", "t-chapter");
-
-      const head = createEl("label", "t-check t-check--chapter");
-      const all = createEl("input");
-      all.type = "checkbox";
-      const picked = chapter.lessons.filter((l) => settings.lessonIds.has(l.id)).length;
-      all.checked = picked === chapter.lessons.length;
-      all.indeterminate = picked > 0 && picked < chapter.lessons.length;
-      all.addEventListener("change", () => {
-        chapter.lessons.forEach((l) => (all.checked ? settings.lessonIds.add(l.id) : settings.lessonIds.delete(l.id)));
-        renderChapters();
-        renderPoolInfo();
-      });
-      head.append(all, createEl("span", "", "თავი " + toRoman(chapter.number) + ". " + chapter.title));
-      head.append(createEl("span", "t-check__count", picked + " / " + chapter.lessons.length));
-      box.append(head);
-
-      const details = createEl("details", "t-chapter__lessons");
-      details.open = picked > 0 && picked < chapter.lessons.length;
-      details.append(createEl("summary", "", "გაკვეთილები"));
-      const list = createEl("div", "t-chapter__list");
-      chapter.lessons.forEach((lesson, i) => {
-        const row = createEl("label", "t-check");
-        const box2 = createEl("input");
-        box2.type = "checkbox";
-        box2.checked = settings.lessonIds.has(lesson.id);
-        box2.addEventListener("change", () => {
-          if (box2.checked) settings.lessonIds.add(lesson.id);
-          else settings.lessonIds.delete(lesson.id);
-          // სათაურის მდგომარეობა განახლდეს, details კი გაშლილი დარჩეს
-          const n = chapter.lessons.filter((l) => settings.lessonIds.has(l.id)).length;
-          all.checked = n === chapter.lessons.length;
-          all.indeterminate = n > 0 && n < chapter.lessons.length;
-          head.querySelector(".t-check__count").textContent = n + " / " + chapter.lessons.length;
-          renderPoolInfo();
-        });
-        row.append(box2, createEl("span", "", (i + 1) + ". " + lesson.title));
-        list.append(row);
-      });
-      details.append(list);
-      box.append(details);
-      el.chapterList.append(box);
-    });
+    window.IMS_LESSON_PICKER.render(el.chapterList, currentCourse(), settings.lessonIds, renderPoolInfo);
   }
 
   function renderPoolInfo() {
