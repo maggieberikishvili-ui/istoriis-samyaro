@@ -2,7 +2,7 @@
    ისტორიის სამყარო — საერთო დამხმარე ფუნქციები
    ----------------------------------------------------------
    ერთი ადგილი ფუნქციებისთვის, რომლებიც რამდენიმე გვერდს
-   სჭირდება (lesson, games, dashboard, teacher). ახალი ასლები
+   სჭირდება (lesson, games, dashboard, teacher, decide). ახალი ასლები
    სხვა ფაილებში ნუ დაემატება — აქ დაამატე.
    ჩატვირთვა: <script src="js/utils.js" defer></script> გვერდის
    სკრიპტამდე.
@@ -42,5 +42,11 @@
     return out || String(n);
   }
 
-  window.IMS_UTILS = Object.freeze({ createEl, shuffle, toRoman });
+  /** მთელ ეკრანზე გადართვა / დაბრუნება (პროექტორი). */
+  function toggleFullscreen() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+  }
+
+  window.IMS_UTILS = Object.freeze({ createEl, shuffle, toRoman, toggleFullscreen });
 })();

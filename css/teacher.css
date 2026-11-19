@@ -46,6 +46,36 @@
   font-size: var(--fs-xl);
 }
 
+/* აქტივობის ჩანართები: ვიქტორინა / ისტორიული არჩევანი */
+.t-activities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.t-activity {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.t-activity:hover {
+  background-color: var(--color-bg-soft);
+}
+
+.t-activity[aria-current="page"] {
+  color: var(--color-text-inverse);
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
 .t-intro {
   margin: 0 0 var(--space-5);
   color: var(--color-text-muted);

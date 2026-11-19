@@ -11,7 +11,7 @@
 window.IMS_DATA.loadAll().then(function () {
   "use strict";
 
-  const { createEl, toRoman } = window.IMS_UTILS;
+  const { createEl, toRoman, toggleFullscreen } = window.IMS_UTILS;
   const data = window.IMS_DATA;
   const quiz = window.IMS_QUIZ;
   const store = window.IMS_STORE;
@@ -390,10 +390,7 @@ window.IMS_DATA.loadAll().then(function () {
     show("setup");
   });
 
-  el.fullscreenBtn.addEventListener("click", () => {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-  });
+  el.fullscreenBtn.addEventListener("click", toggleFullscreen);
 
   // კლავიატურა (პროექტორთან მუშაობისას): Space/Enter/→ — შემდეგი ნაბიჯი, 1–4 — გუნდის ქულა
   document.addEventListener("keydown", (e) => {

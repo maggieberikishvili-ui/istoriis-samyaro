@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ისტორიის სამყარო — მასწავლებლის რეჟიმი: „ისტორიული არჩევანი“, საკლასო აქტივობა გადაწყვეტილებებით.">
+  <title>ისტორიული არჩევანი — ისტორიის სამყარო</title>
+
+  <!-- საერთო საცავი: მხოლოდ თემა (ავტორიზაცია არ სჭირდება) -->
+  <script src="js/storage.js"></script>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e6f5e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ისტორიის სამყარო">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&family=Noto+Serif+Georgian:wght@700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/teacher.css">
+  <link rel="stylesheet" href="css/decide.css">
+
+  <script src="js/utils.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/decide-data.js" defer></script>
+  <script src="js/decide.js" defer></script>
+</head>
+<body>
+  <div class="teacher-app">
+
+    <!-- ============ სცენარის არჩევა ============ -->
+    <section class="t-setup" id="setup" aria-labelledby="setupTitle">
+      <header class="t-top">
+        <a class="t-top__back btn btn--outline btn--icon" href="index.html" aria-label="მთავარ გვერდზე დაბრუნება">←</a>
+        <div class="t-top__text">
+          <p class="t-top__eyebrow">👩‍🏫 მასწავლებლის რეჟიმი</p>
+          <h1 class="t-top__title" id="setupTitle">ისტორიული არჩევანი</h1>
+        </div>
+        <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
+          <span aria-hidden="true" id="themeIcon">🌙</span>
+        </button>
+      </header>
+
+      <nav class="t-activities" aria-label="აქტივობა">
+        <a class="t-activity" href="teacher.html">❓ გუნდური ვიქტორინა</a>
+        <a class="t-activity" href="decide.html" aria-current="page">⚖️ ისტორიული არჩევანი</a>
+      </nav>
+
+      <p class="t-intro">
+        კლასი ისტორიული პერსონაჟის როლშია და რთულ არჩევანს აკეთებს. ბარათი ეკრანზე ჩანს — მოსწავლეები მსჯელობენ
+        და ხმას აძლევენ, შენ კი არჩეულ გზას აჭერ (ან ← / → კლავიშს). ყოველი გადაწყვეტილება ცვლის ხაზინას,
+        ლაშქარსა და ნდობას, ბოლოს კი ჩანს, რა მოხდა სინამდვილეში.
+      </p>
+
+      <div class="t-form">
+        <fieldset class="card t-block">
+          <legend class="t-block__title">1. კლასი</legend>
+          <div class="t-chips" id="courseChips" role="radiogroup" aria-label="კლასი"></div>
+        </fieldset>
+
+        <fieldset class="card t-block">
+          <legend class="t-block__title">2. სცენარი</legend>
+          <div class="d-scenarios" id="scenarioList"></div>
+        </fieldset>
+      </div>
+    </section>
+
+    <!-- ============ თამაში (პროექტორი) ============ -->
+    <section class="t-play d-play" id="play" hidden aria-labelledby="dCharacter">
+      <header class="t-play__bar">
+        <span class="t-play__counter" id="dCounter"></span>
+        <span class="t-play__source" id="dSource"></span>
+        <button type="button" class="btn btn--outline btn--icon" id="fullscreenBtn" aria-label="მთელ ეკრანზე">⛶</button>
+        <button type="button" class="btn btn--outline btn--icon" id="exitBtn" aria-label="თამაშის დასრულება">✕</button>
+      </header>
+
+      <ul class="d-scales" id="scales" aria-label="სამეფოს მდგომარეობა"></ul>
+
+      <!-- შესავალი -->
+      <article class="d-card d-card--intro" id="introCard" hidden>
+        <p class="d-card__who" id="dCharacter"></p>
+        <p class="d-card__years" id="dYears"></p>
+        <p class="d-card__text" id="dIntro"></p>
+      </article>
+
+      <!-- გადაწყვეტილების ბარათი -->
+      <article class="d-card" id="card" hidden aria-live="polite">
+        <p class="d-card__tag" id="cardTag" hidden>🔀 ალტერნატიული ისტორია</p>
+        <p class="d-card__who" id="cardWho"></p>
+        <p class="d-card__text" id="cardSituation"></p>
+      </article>
+
+      <div class="d-choices" id="choices" hidden>
+        <button type="button" class="d-choice d-choice--left" id="leftBtn">
+          <span class="d-choice__arrow" aria-hidden="true">←</span>
+          <span class="d-choice__label" id="leftLabel"></span>
+        </button>
+        <button type="button" class="d-choice d-choice--right" id="rightBtn">
+          <span class="d-choice__label" id="rightLabel"></span>
+          <span class="d-choice__arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <!-- არჩევანის შედეგი -->
+      <div class="d-result" id="result" hidden>
+        <p class="d-result__choice" id="resultChoice"></p>
+        <p class="d-result__outcome" id="resultOutcome"></p>
+        <div class="d-history" id="history">
+          <p class="d-history__title">📜 სინამდვილეში <span class="d-history__badge" id="historyBadge"></span></p>
+          <p class="d-history__text" id="historyText"></p>
+        </div>
+      </div>
+
+      <footer class="t-play__footer d-play__footer">
+        <p class="d-hint" id="hint"></p>
+        <button type="button" class="btn t-play__main" id="mainBtn"></button>
+      </footer>
+    </section>
+
+    <!-- ============ დასასრული ============ -->
+    <section class="t-results d-end" id="end" hidden aria-labelledby="endTitle">
+      <p class="d-end__icon" id="endIcon" aria-hidden="true"></p>
+      <h2 class="t-results__title" id="endTitle"></h2>
+      <p class="d-end__text" id="endText"></p>
+      <ul class="d-scales d-scales--end" id="endScales" aria-label="საბოლოო მდგომარეობა"></ul>
+      <p class="d-end__match" id="endMatch"></p>
+      <div class="d-history d-end__reality">
+        <p class="d-history__title">📜 რით დასრულდა სინამდვილეში</p>
+        <p class="d-history__text" id="endReality"></p>
+      </div>
+      <div class="d-discuss">
+        <p class="d-discuss__title">💬 განვიხილოთ</p>
+        <ol class="d-discuss__list" id="endDiscussion"></ol>
+      </div>
+      <div class="t-results__actions">
+        <button type="button" class="btn" id="againBtn">↻ თავიდან</button>
+        <button type="button" class="btn btn--outline" id="setupBtn">☰ სხვა სცენარი</button>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

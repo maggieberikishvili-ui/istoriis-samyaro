@@ -8,11 +8,12 @@
 
 - სუფთა HTML / CSS / JavaScript, build-ის გარეშე; PWA (`sw.js`, `manifest.json`).
   ქვეყნდება GitHub Pages-ზე — ყველა ბმული ფარდობითია (`./`).
-- გვერდები: `index.html` (შესვლა), `dashboard.html`, `lesson.html`, `games.html`.
+- გვერდები: `index.html` (შესვლა), `dashboard.html`, `lesson.html`, `games.html`;
+  მასწავლებელი: `teacher.html` (გუნდური ვიქტორინა), `decide.html` („ისტორიული არჩევანი“).
 - სტილები: `css/variables.css` (დიზაინის ცვლადები) + თითო გვერდის CSS.
 - მონაცემები: `js/data.js` (კურსების სია + ჩამტვირთავი), `js/data/<კურსის id>.js`
   (თითო კლასის თავები და გაკვეთილები — გვერდი ტვირთავს მხოლოდ საჭიროს), `js/timeline-data.js`,
-  `js/whoami-data.js` (თამაშები). ლოგიკა: `js/lesson.js`, `js/games.js`,
+  `js/whoami-data.js` (თამაშები), `js/decide-data.js` („ისტორიული არჩევანის“ სცენარები). ლოგიკა: `js/lesson.js`, `js/games.js`,
   `js/dashboard.js`, `js/auth.js`, `js/storage.js`.
 - მომხმარებლის მონაცემები (ანგარიში, XP, პროგრესი) ინახება მხოლოდ ბრაუზერში
   (`localStorage`, `window.IMS_STORE`). სერვერი არ არის.
@@ -67,6 +68,13 @@
 `lessonCount` (თორემ კონსოლში გაფრთხილება გამოჩნდება). ახალი კურსი — ახალი
 ფაილი `js/data/`-ში + ჩანაწერი `COURSES`-ში + `sw.js`-ის `CORE_FILES`.
 
+**„ისტორიული არჩევანი“ (`js/decide-data.js`):** ახალი თავის/პერიოდის მასალის
+დამატების შემდეგ შესთავაზე ავტორს სცენარის შექმნა ან არსებულის გაფართოება
+(ბარათები ამ გაკვეთილებიდან). ფაქტები (`history`, `reality`) — მხოლოდ წყაროდან;
+`outcome` თამაშის შედეგია. ახალი სცენარის შემდეგ შეამოწმე ბალანსი: ყველა
+გზის სიმულაცია — დამარცხება ~15–30%, ისტორიული გზა არ უნდა კვდებოდეს, თუ
+სინამდვილეში სახელმწიფო გადარჩა. ფორმატი — ფაილის თავში.
+
 ნაბიჯების ფორმატი აღწერილია `data.js`-ის თავში (`theory`, `choice`,
 `truefalse`, `fill`, `match`). აპი ვარიანტებს თვითონ ურევს, ამიტომ `answer`
 ინდექსი უბრალოდ სწორ ვარიანტზე უნდა მიუთითებდეს. სურათები — მხოლოდ
@@ -78,7 +86,7 @@
    დაყენებული):
    ```bash
    JSC=/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc
-   for f in js/data.js js/data/*.js js/timeline-data.js js/whoami-data.js; do $JSC -e 'var window={IMS_DATA:{register:function(){}}};var document={};' "$f" || echo "ERROR: $f"; done
+   for f in js/data.js js/data/*.js js/timeline-data.js js/whoami-data.js js/decide-data.js; do $JSC -e 'var window={IMS_DATA:{register:function(){}}};var document={};' "$f" || echo "ERROR: $f"; done
    ```
    გამოსავალი ცარიელია = რიგზეა; `SyntaxError` = შეცდომა, push არ გააკეთო.
    ერთი გამოტოვებული მძიმე კლასის ფაილში მთელი ამ კლასის გაკვეთილებს აფუჭებს.

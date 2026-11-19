@@ -1,0 +1,478 @@
+/* ==========================================================
+   ისტორიის სამყარო — „ისტორიული არჩევანი“ (მასწავლებლის რეჟიმი)
+   საერთო განლაგება (t-top, t-chips, t-play, t-results) — teacher.css.
+   ფერები, ზომები — მხოლოდ variables.css-ის ცვლადებით.
+   ========================================================== */
+
+/* სკალების ფერები */
+.d-scale--economy { --scale: var(--color-accent); }
+.d-scale--army { --scale: var(--color-slate); }
+.d-scale--legitimacy { --scale: var(--color-purple); }
+
+/* ---------------- სცენარების სია ---------------- */
+
+.d-scenarios {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.d-scenario {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border);
+  border-left: var(--space-2) solid var(--color-secondary);
+  border-radius: var(--radius-lg);
+}
+
+.d-scenario__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+}
+
+.d-scenario__who {
+  margin: 0;
+  font-weight: var(--fw-bold);
+  color: var(--color-secondary);
+}
+
+.d-scenario__meta,
+.d-scenario__lessons {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.d-scenario__start {
+  justify-self: start;
+  margin-top: var(--space-2);
+}
+
+/* ---------------- სკალები ---------------- */
+
+.d-scales {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.d-scale {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.d-scale.is-low {
+  border-color: var(--color-danger);
+}
+
+.d-scale__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  font-weight: var(--fw-bold);
+}
+
+.d-scale__label {
+  flex: 1;
+  min-width: 0;
+}
+
+.d-scale__value {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-heavy);
+  font-variant-numeric: tabular-nums;
+}
+
+.d-scale.is-low .d-scale__value {
+  color: var(--color-danger);
+}
+
+.d-scale__delta {
+  padding: 0 var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-pill);
+}
+
+.d-scale__delta.is-up {
+  background-color: var(--color-primary);
+}
+
+.d-scale__delta.is-down {
+  background-color: var(--color-danger);
+}
+
+.d-scale__bar {
+  appearance: none;
+  width: 100%;
+  height: var(--space-3);
+  overflow: hidden;
+  background-color: var(--stone);
+  border: 0;
+  border-radius: var(--radius-pill);
+}
+
+.d-scale__bar::-webkit-progress-bar {
+  background-color: var(--stone);
+}
+
+.d-scale__bar::-webkit-progress-value {
+  background-color: var(--scale);
+  transition: width var(--transition);
+}
+
+.d-scale__bar::-moz-progress-bar {
+  background-color: var(--scale);
+}
+
+.d-scale.is-low .d-scale__bar::-webkit-progress-value {
+  background-color: var(--color-danger);
+}
+
+.d-scale.is-low .d-scale__bar::-moz-progress-bar {
+  background-color: var(--color-danger);
+}
+
+/* ---------------- ბარათი ---------------- */
+
+/* გადახრილი ბარათი ეკრანს არ აფართოებს (ჰორიზონტალური სქროლის გარეშე) */
+.d-play {
+  overflow-x: clip;
+}
+
+.d-card {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-6);
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-bottom-width: calc(var(--border-width) + var(--shadow-depth));
+  border-radius: var(--radius-lg);
+  touch-action: pan-y;          /* ვერტიკალური სქროლი რჩება, ჰორიზონტალური — გადასმაა */
+  user-select: none;
+  cursor: grab;
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+.d-card--intro {
+  cursor: default;
+  user-select: text;
+}
+
+.d-card.is-leaning-left {
+  transform: translateX(calc(-1 * var(--space-5))) rotate(-3deg);
+}
+
+.d-card.is-leaning-right {
+  transform: translateX(var(--space-5)) rotate(3deg);
+}
+
+/* არჩევანის შემდეგ ბარათი გვერდზე გადადის, მაგრამ ჩანს (კონტექსტისთვის) */
+.d-card.is-gone-left {
+  transform: translateX(calc(-1 * var(--space-6))) rotate(-2deg);
+  opacity: 0.55;
+  cursor: default;
+}
+
+.d-card.is-gone-right {
+  transform: translateX(var(--space-6)) rotate(2deg);
+  opacity: 0.55;
+  cursor: default;
+}
+
+.d-card__tag {
+  justify-self: start;
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-purple-dark);
+  background-color: var(--color-surface);
+  border: var(--border-width) dashed var(--color-purple);
+  border-radius: var(--radius-pill);
+}
+
+.d-card__who {
+  margin: 0;
+  font-weight: var(--fw-heavy);
+  color: var(--color-secondary);
+}
+
+.d-card__years {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.d-card__text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-option);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------- არჩევანის ღილაკები ---------------- */
+
+.d-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.d-choice {
+  --choice: var(--color-slate);
+  --choice-dark: var(--color-slate-dark);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 72px;
+  padding: var(--space-3) var(--space-4);
+  font: inherit;
+  font-size: var(--fs-option);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-inverse);
+  background-color: var(--choice);
+  border: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 var(--shadow-depth) 0 var(--choice-dark);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition);
+}
+
+.d-choice--right {
+  --choice: var(--color-secondary);
+  --choice-dark: var(--color-secondary-dark);
+}
+
+.d-choice:hover {
+  filter: brightness(1.06);
+}
+
+.d-choice:active {
+  transform: translateY(var(--shadow-depth));
+  box-shadow: 0 0 0 var(--choice-dark);
+}
+
+.d-choice:disabled {
+  cursor: default;
+  opacity: 0.35;
+  filter: none;
+}
+
+.d-choice:disabled:active {
+  transform: none;
+  box-shadow: 0 var(--shadow-depth) 0 var(--choice-dark);
+}
+
+.d-choice.is-picked {
+  opacity: 1;
+  outline: var(--space-1) solid var(--color-accent);
+  outline-offset: var(--space-1);
+}
+
+.d-choice__arrow {
+  flex: none;
+  font-size: var(--fs-xl);
+}
+
+.d-choice__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------- შედეგი ---------------- */
+
+.d-result {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.d-result__choice {
+  margin: 0;
+  font-weight: var(--fw-heavy);
+  color: var(--color-secondary);
+}
+
+.d-result__outcome {
+  margin: 0;
+  font-size: var(--fs-option);
+  overflow-wrap: anywhere;
+}
+
+.d-history {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-primary-light);
+  border-left: var(--space-1) solid var(--color-primary);
+  border-radius: var(--radius-md);
+}
+
+.d-history__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-weight: var(--fw-heavy);
+}
+
+.d-history__badge:empty {
+  display: none;
+}
+
+.d-history__badge {
+  padding: 0 var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-text-inverse);
+  border-radius: var(--radius-pill);
+}
+
+.d-history__badge.is-match {
+  background-color: var(--color-primary);
+}
+
+.d-history__badge.is-miss {
+  background-color: var(--color-slate);
+}
+
+.d-history__text {
+  margin: 0;
+  font-size: var(--fs-md);
+  overflow-wrap: anywhere;
+}
+
+.d-play__footer {
+  justify-content: flex-end;
+}
+
+.d-hint {
+  flex: 1;
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* ---------------- დასასრული ---------------- */
+
+.d-end {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.d-end__icon {
+  margin: 0;
+  font-size: var(--fs-xxl);
+}
+
+.d-end__text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-option);
+  text-align: center;
+}
+
+.d-end[data-ending="fail"] .t-results__title {
+  color: var(--color-danger);
+}
+
+.d-end[data-ending="triumph"] .t-results__title {
+  color: var(--color-accent-dark);
+}
+
+.d-scales--end {
+  width: 100%;
+}
+
+.d-end__match {
+  margin: 0;
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.d-end__reality {
+  width: 100%;
+}
+
+.d-discuss {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.d-discuss__title {
+  margin: 0 0 var(--space-2);
+  font-weight: var(--fw-heavy);
+}
+
+.d-discuss__list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+/* ---------------- ტელეფონი ---------------- */
+
+@media (max-width: 600px) {
+  .d-scales {
+    gap: var(--space-2);
+  }
+
+  .d-scale {
+    padding: var(--space-2);
+  }
+
+  .d-scale__label {
+    display: none;
+  }
+
+  .d-card {
+    padding: var(--space-4);
+  }
+
+  .d-choice {
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3);
+  }
+
+  .d-choice--right .d-choice__arrow {
+    order: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .d-card,
+  .d-choice,
+  .d-scale__bar::-webkit-progress-value {
+    transition: none;
+  }
+}
