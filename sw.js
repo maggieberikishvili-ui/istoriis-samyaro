@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v26";
+const VERSION = "v27";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -40,6 +40,7 @@ const CORE_FILES = [
   "./css/decide.css",
   "./js/storage.js",
   "./js/utils.js",
+  "./js/activities.js",
   "./js/data.js",
   "./js/data/grade-7.js",
   "./js/data/grade-8.js",
