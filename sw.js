@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v45";
+const VERSION = "v46";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -53,6 +53,7 @@ const CORE_FILES = [
   "./js/utils.js",
   "./js/activities.js",
   "./js/data.js",
+  "./js/audio-manifest.js",
   "./js/data/grade-7.js",
   "./js/data/grade-8.js",
   "./js/data/grade-9.js",
@@ -128,6 +129,10 @@ self.addEventListener("fetch", (event) => {
   if (request.cache === "only-if-cached" && request.mode !== "same-origin") return;
 
   const url = new URL(request.url);
+
+  // აუდიო (assets/audio/) — ბრაუზერი პირდაპირ ტვირთავს (ნაწილ-ნაწილ, Range მოთხოვნებით);
+  // ოფლაინისთვის წინასწარ არ ინახება — ფაილები დიდია
+  if (url.origin === self.location.origin && url.pathname.includes("/assets/audio/")) return;
 
   if (url.origin === self.location.origin && url.pathname.includes("/assets/images/")) {
     event.respondWith(staleWhileRevalidate(request, IMAGE_CACHE, MAX_IMAGES));

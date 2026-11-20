@@ -13,6 +13,8 @@
    - „ჩემი შეცდომები“ (lesson.html?mode=mistakes&course=…): ბოლო
      შეცდომები ამ კურსიდან (profile.mistakes), სიცოცხლე არ აკლდება;
      სწორი პასუხი კითხვას სიიდან შლის; +2 XP თითო კითხვაზე
+   - 🔊 თეორიის ბარათის მოსმენა: აუდიო js/audio-manifest.js-დან
+     (ამზადებს tools/make-audio.py; ღილაკი ჩანს მხოლოდ თუ ფაილი არსებობს)
    - ყოველი პასუხი აღირიცხება (store.recordAnswer): დღიური
      სტატისტიკა (progress.html) და შეცდომების სია
    - Pro (isPro: true): ∞ სიცოცხლე, შეცდომაზე არ აკლდება
@@ -321,6 +323,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   function renderStep() {
+    stopAudio();
     const step = steps[state.index];
     el.stage.replaceChildren();
     // ახალი ნაბიჯის ანიმაცია
@@ -432,6 +435,9 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     wrap.firstChild.setAttribute("aria-hidden", "true");
     wrap.append(createEl("h1", "theory__title", step.title || ""));
 
+    const listen = buildListenButton(step);
+    if (listen) wrap.append(listen);
+
     const figure = buildFigure(step.image);
     if (figure) wrap.append(figure);
 
@@ -449,6 +455,55 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
     el.stage.append(wrap);
     setFooter({ label: "გასაგებია, გავაგრძელოთ", enabled: true, onPrimary: nextStep });
+  }
+
+  /* ---------- 🔊 მოსმენა (ხელოვნური ხმა) ---------- */
+
+  let audio = null;
+
+  function stopAudio() {
+    if (!audio) return;
+    audio.pause();
+    audio = null;
+  }
+
+  /** ღილაკი მხოლოდ მაშინ, თუ ამ ბარათს აუდიო აქვს (js/audio-manifest.js). */
+  function buildListenButton(step) {
+    const files = lesson && window.IMS_AUDIO ? window.IMS_AUDIO[lesson.id] : null;
+    const src = files ? files[String(lesson.steps.indexOf(step))] : null;
+    if (!src) return null;
+
+    const btn = createEl("button", "theory__listen");
+    btn.type = "button";
+    const icon = createEl("span", "theory__listen-icon", "🔊");
+    icon.setAttribute("aria-hidden", "true");
+    const label = createEl("span", "theory__listen-label", "მოუსმინე");
+    btn.append(icon, label, createEl("span", "theory__listen-note", "ხელოვნური ხმა"));
+    btn.setAttribute("aria-pressed", "false");
+
+    function render(playing) {
+      icon.textContent = playing ? "⏸️" : "🔊";
+      label.textContent = playing ? "პაუზა" : "მოუსმინე";
+      btn.setAttribute("aria-pressed", String(playing));
+      btn.classList.toggle("is-playing", playing);
+    }
+
+    btn.addEventListener("click", () => {
+      if (audio && !audio.paused) {
+        audio.pause();
+        return;
+      }
+      if (!audio) {
+        audio = new Audio(src);
+        const current = audio;
+        current.addEventListener("play", () => { if (audio === current) render(true); });
+        current.addEventListener("pause", () => { if (audio === current) render(false); });
+        current.addEventListener("ended", () => { if (audio === current) { audio = null; render(false); } });
+        current.addEventListener("error", () => { btn.disabled = true; label.textContent = "ვერ ჩაიტვირთა"; });
+      }
+      audio.play().catch(() => render(false));
+    });
+    return btn;
   }
 
   /**
@@ -684,6 +739,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
      ========================================================== */
 
   function hideLesson() {
+    stopAudio();
     el.stage.hidden = true;
     el.footer.hidden = true;
   }
