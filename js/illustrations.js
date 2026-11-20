@@ -946,6 +946,21 @@
           el("path", { d: "M54 74 H66 M54 80 H66", class: "s-ochre o" }),
         ],
       },
+      {
+        id: "metekhi-bridge",
+        after: "g8-l41",
+        title: "მეტეხის ხიდი",
+        fact: "1226 წელს ჯალალ ად-დინის ბრძანებით სიონის ტაძრის ხატები მეტეხის ხიდზე დადეს — ვინც მათზე გადაბიჯებაზე უარს ამბობდა, თავს კვეთდნენ.",
+        shapes: [
+          el("path", { d: "M8 92 Q60 84 112 92", class: "s-thin o" }),
+          el("path", { d: "M10 64 H110 V72 H10 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M22 72 V92 M98 72 V92", class: "s-ink o w4" }),
+          el("path", { d: "M28 92 Q60 56 92 92", class: "f-paper s-ink" }),
+          el("path", { d: "M74 64 V44 L84 34 L94 44 V64 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M84 34 V24 M80 28 H88", class: "s-ochre o" }),
+          el("path", { d: "M38 60 h6 v4 h-6 z M52 60 h6 v4 h-6 z", class: "f-ochre s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
