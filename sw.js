@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v42";
+const VERSION = "v43";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -32,6 +32,7 @@ const CORE_FILES = [
   "./whoami.html",
   "./architect.html",
   "./detective.html",
+  "./progress.html",
   "./manifest.json",
   "./css/variables.css",
   "./css/global.css",
@@ -46,7 +47,9 @@ const CORE_FILES = [
   "./css/architect.css",
   "./css/detective.css",
   "./css/detective-board.css",
+  "./css/progress.css",
   "./js/storage.js",
+  "./js/progress.js",
   "./js/utils.js",
   "./js/activities.js",
   "./js/data.js",

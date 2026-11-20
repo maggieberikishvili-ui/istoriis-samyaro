@@ -39,6 +39,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     refillItem: document.getElementById("refillItem"),
     refillBtn: document.getElementById("refillBtn"),
     gamesLink: document.getElementById("gamesLink"),
+    mistakesLink: document.getElementById("mistakesLink"),
+    mistakesText: document.getElementById("mistakesText"),
     logoutBtn: document.getElementById("logoutBtn"),
     courseList: document.getElementById("courseList"),
     pathSection: document.getElementById("pathSection"),
@@ -176,7 +178,20 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       el.pathSection.removeAttribute("aria-busy");
       renderCourses();
       renderPath();
+      renderMistakes();
     }, data.showLoadError);
+  }
+
+  /* ---------- ჩემი შეცდომები (არჩეული კურსი) ---------- */
+
+  function renderMistakes() {
+    const courseId = state.courseId;
+    const count = state.profile.mistakes.filter((m) =>
+      m.c === courseId && data.findStep(m.c, m.l, m.i, m.q)).length;
+    el.mistakesLink.hidden = count === 0;
+    el.mistakesLink.href = store.URLS.lesson + "?" +
+      new URLSearchParams({ mode: "mistakes", course: courseId }).toString();
+    el.mistakesText.textContent = count + " კითხვა · სიცოცხლე არ აკლდება";
   }
 
   /* ---------- გაკვეთილების ბილიკი ---------- */
@@ -715,6 +730,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     renderStats();
     renderCourses();
     renderPath();
+    renderMistakes();
   });
 
   /* ---------- ინიციალიზაცია ---------- */

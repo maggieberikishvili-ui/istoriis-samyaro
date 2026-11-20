@@ -10,6 +10,11 @@
      3 შემთხვევითი კითხვა გავლილი/საბაზისო თემებიდან, შეცდომაზე
      სიცოცხლე არ აკლდება (არასწორი კითხვა ბოლოს მეორდება);
      3-ვე სწორად → +1 ❤️, +5 XP → dashboard.html
+   - „ჩემი შეცდომები“ (lesson.html?mode=mistakes&course=…): ბოლო
+     შეცდომები ამ კურსიდან (profile.mistakes), სიცოცხლე არ აკლდება;
+     სწორი პასუხი კითხვას სიიდან შლის; +2 XP თითო კითხვაზე
+   - ყოველი პასუხი აღირიცხება (store.recordAnswer): დღიური
+     სტატისტიკა (progress.html) და შეცდომების სია
    - Pro (isPro: true): ∞ სიცოცხლე, შეცდომაზე არ აკლდება
    - საცავი და სინქრონიზაცია — js/storage.js (window.IMS_STORE)
    - ტექსტი DOM-ში მხოლოდ textContent-ით
@@ -31,6 +36,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   const PRACTICE_XP = 5;
   const PRACTICE_REDIRECT_MS = 3500;
   const PRACTICE_TYPES = ["choice", "truefalse", "fill"];
+  const MISTAKES_SIZE = 10;  // „ჩემი შეცდომები“ — ერთ ჯერზე მაქსიმუმ 10 კითხვა
+  const MISTAKES_XP = 2;     // თითო გამეორებულ კითხვაზე
 
   /* ==========================================================
      გაკვეთილის ჩატვირთვა და შემოწმება
@@ -48,13 +55,35 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   const params = new URLSearchParams(window.location.search);
   const isPractice = params.get("mode") === "practice";
+  const isMistakes = params.get("mode") === "mistakes";
+  // გამეორების რეჟიმი: სიცოცხლე არ აკლდება, არასწორი კითხვა ბოლოს მეორდება
+  const isReview = isPractice || isMistakes;
 
   let lesson = null;
   let steps;
   let practiceCourse = null;
   let practiceTarget = PRACTICE_SIZE; // რამდენი სწორი პასუხი სჭირდება სავარჯიშოს
+  // კითხვა → { c, l, i, q }: რომელი გაკვეთილის რომელი კითხვაა (შეცდომების აღრიცხვისთვის)
+  const stepInfo = new Map();
 
-  if (isPractice) {
+  function rememberStep(courseId, lessonId, step, index) {
+    if (!window.IMS_DATA.isQuestion(step)) return;
+    stepInfo.set(step, { c: courseId, l: lessonId, i: index, q: window.IMS_DATA.stepFingerprint(step) });
+  }
+
+  if (isMistakes) {
+    practiceCourse =
+      window.IMS_DATA.getCourse(params.get("course")) ||
+      window.IMS_DATA.getCourse(store.readString(store.KEYS.selectedCourse)) ||
+      window.IMS_DATA.courses[0];
+    steps = buildMistakeSteps(initialProfile, practiceCourse);
+    if (steps.length === 0) {
+      store.redirect(DASHBOARD_URL);
+      return;
+    }
+    practiceTarget = steps.length;
+    document.title = "ჩემი შეცდომები — ისტორიის სამყარო";
+  } else if (isPractice) {
     // სავარჯიშო საჭიროა მხოლოდ მაშინ, როცა სიცოცხლე 5-ზე ნაკლებია (და არა Pro)
     if (unlimited || initialProfile.hearts >= store.MAX_HEARTS) {
       store.redirect(DASHBOARD_URL);
@@ -94,7 +123,21 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     }
 
     steps = lesson.steps.slice();
+    steps.forEach((s, i) => rememberStep(course.id, lesson.id, s, i));
     document.title = lesson.title + " — ისტორიის სამყარო";
+  }
+
+  /** „ჩემი შეცდომები“: ამ კურსის ბოლო შეცდომები (უახლესი — პირველი), არეული. */
+  function buildMistakeSteps(profile, course) {
+    const list = [];
+    profile.mistakes.slice().reverse().forEach((m) => {
+      if (m.c !== course.id || list.length >= MISTAKES_SIZE) return;
+      const step = window.IMS_DATA.findStep(m.c, m.l, m.i, m.q);
+      if (!step || stepInfo.has(step)) return;
+      rememberStep(m.c, m.l, step, m.i);
+      list.push(step);
+    });
+    return shuffle(list);
   }
 
   /**
@@ -110,12 +153,15 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     course.lessons.forEach((l, i) => {
       const unlocked = done.has(l.id) || i === currentIndex;
       if (!unlocked) return;
-      (l.steps || []).forEach((s) => {
-        if (PRACTICE_TYPES.includes(s.type)) pool.push(s);
+      (l.steps || []).forEach((s, k) => {
+        if (PRACTICE_TYPES.includes(s.type)) pool.push({ step: s, lessonId: l.id, index: k });
       });
     });
 
-    return shuffle(pool).slice(0, PRACTICE_SIZE);
+    return shuffle(pool).slice(0, PRACTICE_SIZE).map((item) => {
+      rememberStep(course.id, item.lessonId, item.step, item.index);
+      return item.step;
+    });
   }
 
   /* ==========================================================
@@ -135,7 +181,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   /** სიცოცხლეები ამოიწურა? (Pro-სა და სავარჯიშოში — არასდროს) */
   function isOutOfHearts() {
-    return !unlimited && !isPractice && state.hearts <= 0;
+    return !unlimited && !isReview && state.hearts <= 0;
   }
 
   const el = {
@@ -166,7 +212,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
      ========================================================== */
 
   function renderProgress() {
-    const ratio = isPractice ? state.correct / practiceTarget : state.index / steps.length;
+    const ratio = isReview ? state.correct / practiceTarget : state.index / steps.length;
     const pct = Math.min(100, Math.round(ratio * 100));
     el.progressFill.style.width = pct + "%";
     el.progressBar.setAttribute("aria-valuenow", String(pct));
@@ -183,7 +229,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   function loseHeart() {
-    if (unlimited || isPractice) return; // Pro და სავარჯიშო — სიცოცხლე არ აკლდება
+    if (unlimited || isReview) return; // Pro და გამეორება — სიცოცხლე არ აკლდება
     const profile = store.updateProfile((p) => {
       p.hearts = Math.max(0, p.hearts - 1);
     });
@@ -222,20 +268,22 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   function showResult(isCorrect, explanation, heartAlreadyLost) {
     state.attempts += 1;
     let text = explanation || "";
+    // სტატისტიკა + „ჩემი შეცდომები“ (სწორი პასუხი კითხვას სიიდან შლის)
+    store.recordAnswer(stepInfo.get(steps[state.index]) || null, isCorrect);
 
     if (isCorrect) {
       state.correct += 1;
       renderProgress();
     } else {
       if (!heartAlreadyLost) loseHeart();
-      if (isPractice) {
+      if (isReview) {
         // სავარჯიშოში არასწორი კითხვა ბოლოს კიდევ ერთხელ შეგხვდება
         steps.push(steps[state.index]);
         text += " სიცოცხლე არ დაგაკლდა — ეს კითხვა ბოლოს კიდევ ერთხელ შეგხვდება.";
       }
     }
 
-    const practiceDone = isPractice && state.correct >= practiceTarget;
+    const practiceDone = isReview && state.correct >= practiceTarget;
 
     setFooter({
       state: isCorrect ? "correct" : "wrong",
@@ -264,7 +312,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     state.index += 1;
     renderProgress();
     // სავარჯიშო მთავრდება ზუსტად 3 სწორ პასუხზე — ზედმეტი კითხვა აღარ გამოდის
-    const practiceDone = isPractice && state.correct >= practiceTarget;
+    const practiceDone = isReview && state.correct >= practiceTarget;
     if (practiceDone || state.index >= steps.length) {
       finishLesson();
     } else {
@@ -466,7 +514,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   function exerciseHeader(label, question, image) {
-    el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " + practiceCourse.title + " · " : "") + label));
+    el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " + practiceCourse.title + " · " : isMistakes ? "🔁 ჩემი შეცდომები · " + practiceCourse.title + " · " : "") + label));
     if (question) el.stage.append(createEl("h1", "exercise__question", question));
     const figure = buildFigure(image);
     if (figure) el.stage.append(figure);
@@ -647,6 +695,10 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       finishPractice();
       return;
     }
+    if (isMistakes) {
+      finishMistakes();
+      return;
+    }
 
     let xpGain = 0;
     let heartGain = 0;
@@ -713,6 +765,30 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.victory.querySelector(".result__btn").focus();
 
     setTimeout(() => store.redirect(DASHBOARD_URL), PRACTICE_REDIRECT_MS);
+  }
+
+  /** „ჩემი შეცდომების“ დასრულება: +2 XP თითო კითხვაზე, სიცოცხლე არ იცვლება. */
+  function finishMistakes() {
+    const xpGain = practiceTarget * MISTAKES_XP;
+    const profile = store.updateProfile((p) => {
+      p.xp += xpGain;
+    });
+    if (!profile) return;
+    renderProgress();
+
+    const left = profile.mistakes.filter((m) => m.c === practiceCourse.id).length;
+    const accuracy = state.attempts ? Math.round((state.correct / state.attempts) * 100) : 100;
+
+    hideLesson();
+    el.victoryEmblem.textContent = "🔁";
+    el.victoryTitle.textContent = "შეცდომები გამოსწორებულია!";
+    el.victorySubtitle.textContent = practiceTarget + " კითხვა გაიმეორე. " +
+      (left ? "სიაში კიდევ " + left + " კითხვა დარჩა." : "სია ცარიელია — ყოჩაღ!");
+    el.victoryXp.textContent = "+" + xpGain;
+    el.victoryAccuracy.textContent = accuracy + "%";
+    el.victoryHeartsStat.hidden = true;
+    el.victory.hidden = false;
+    el.victory.querySelector(".result__btn").focus();
   }
 
   function showGameOver() {

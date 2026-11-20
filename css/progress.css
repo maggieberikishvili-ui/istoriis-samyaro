@@ -1,0 +1,281 @@
+/* ==========================================================
+   ისტორიის სამყარო — პროგრესი მშობლისთვის (progress.html)
+   ========================================================== */
+
+body {
+  background-color: var(--color-bg);
+}
+
+.progress-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  max-width: 720px;
+  margin-inline: auto;
+  padding: var(--space-3) var(--space-4);
+}
+
+.progress-page {
+  max-width: 720px;
+  margin-inline: auto;
+  padding: 0 var(--space-4) var(--space-7);
+}
+
+/* ---------- სათაური ---------- */
+.progress-hero {
+  margin-block: var(--space-3) var(--space-5);
+}
+
+.progress-hero__eyebrow {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  color: var(--color-primary);
+}
+
+.progress-hero__title {
+  margin: var(--space-1) 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-serif);
+  font-size: var(--fs-xl);
+}
+
+.progress-hero__period {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+/* ---------- ბარათები ---------- */
+.progress-card + .progress-card {
+  margin-top: var(--space-4);
+}
+
+.progress-card__title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+}
+
+.progress-card__hint {
+  margin: calc(-1 * var(--space-3)) 0 var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.progress-empty {
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+/* ---------- ციფრები ---------- */
+.progress-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
+  text-align: center;
+  background-color: var(--color-bg-soft);
+  border-radius: var(--radius-md);
+}
+
+.progress-stat__value {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-heavy);
+}
+
+.progress-stat__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+.progress-stat--days .progress-stat__value { color: var(--color-streak); }
+.progress-stat--lessons .progress-stat__value { color: var(--color-primary); }
+.progress-stat--xp .progress-stat__value { color: var(--color-accent-dark); }
+.progress-stat--accuracy .progress-stat__value { color: var(--color-slate); }
+
+@media (max-width: 520px) {
+  .progress-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- XP სვეტები (7 დღე) ---------- */
+.week-chart {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.week-chart__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.week-chart__value {
+  min-height: 1.2em;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+.week-chart__track {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 40px;
+  height: 120px;
+  background-color: var(--color-bg-soft);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.week-chart__bar {
+  width: 100%;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.week-chart__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+.week-chart__day.is-today .week-chart__bar {
+  background-color: var(--color-secondary);
+}
+
+.week-chart__day.is-today .week-chart__label {
+  color: var(--color-text);
+}
+
+.week-chart__bar--h0 { height: 0%; }
+.week-chart__bar--h1 { height: 10%; }
+.week-chart__bar--h2 { height: 20%; }
+.week-chart__bar--h3 { height: 30%; }
+.week-chart__bar--h4 { height: 40%; }
+.week-chart__bar--h5 { height: 50%; }
+.week-chart__bar--h6 { height: 60%; }
+.week-chart__bar--h7 { height: 70%; }
+.week-chart__bar--h8 { height: 80%; }
+.week-chart__bar--h9 { height: 90%; }
+.week-chart__bar--h10 { height: 100%; }
+
+/* ---------- კურსები ---------- */
+.progress-courses,
+.progress-weak {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-course__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  font-weight: var(--fw-bold);
+}
+
+.progress-course__count {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.progress-course__bar {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--color-primary);
+}
+
+/* ---------- სუსტი თემები ---------- */
+.progress-weak {
+  gap: var(--space-3);
+}
+
+.progress-weak__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-danger-light);
+  border-radius: var(--radius-md);
+}
+
+.progress-weak__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.progress-weak__lesson {
+  overflow-wrap: anywhere;
+  font-weight: var(--fw-heavy);
+}
+
+.progress-weak__course {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+.progress-weak__count {
+  flex-shrink: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  color: var(--color-danger);
+}
+
+/* ---------- გაზიარება ---------- */
+.progress-actions {
+  margin-top: var(--space-5);
+}
+
+.progress-actions__status {
+  min-height: 1.4em;
+  margin: var(--space-3) 0 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+}
+
+.progress-actions__text {
+  width: 100%;
+  margin-top: var(--space-3);
+  resize: vertical;
+  font-size: var(--fs-sm);
+}
+
+.progress-actions__text[hidden] {
+  display: none;
+}
+
+.progress-note {
+  margin-top: var(--space-4);
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}

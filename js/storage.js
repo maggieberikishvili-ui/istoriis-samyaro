@@ -42,6 +42,8 @@
   });
 
   const MAX_HEARTS = 5;
+  const MAX_MISTAKES = 60;   // „ჩემი შეცდომები“ — ბოლო 60 კითხვა
+  const ACTIVITY_DAYS = 35;  // დღიური სტატისტიკა (მშობლის გვერდისთვის) — ბოლო 5 კვირა
 
   /* ==========================================================
      localStorage დამხმარეები
@@ -130,7 +132,49 @@
       hearts: MAX_HEARTS,
       completedLessons: [],
       lastActive: todayKey(),
+      mistakes: [],
+      activity: {},
     };
+  }
+
+  /**
+   * „ჩემი შეცდომები“: [{ c: კურსი, l: გაკვეთილი, i: ნაბიჯის ნომერი,
+   *   q: კითხვის ანაბეჭდი (IMS_DATA.stepFingerprint), d: თარიღი }]
+   */
+  function normalizeMistakes(list) {
+    if (!Array.isArray(list)) return [];
+    return list
+      .filter((m) => m && typeof m.c === "string" && typeof m.l === "string" &&
+        typeof m.q === "string" && Number.isInteger(m.i) && m.i >= 0)
+      .map((m) => ({ c: m.c, l: m.l, i: m.i, q: m.q, d: typeof m.d === "string" ? m.d : todayKey() }))
+      .slice(-MAX_MISTAKES);
+  }
+
+  /** დღიური სტატისტიკა: { "YYYY-MM-DD": { xp, lessons, correct, wrong } }, ბოლო ACTIVITY_DAYS დღე. */
+  function normalizeActivity(raw) {
+    const result = {};
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return result;
+    const from = new Date();
+    from.setDate(from.getDate() - ACTIVITY_DAYS + 1);
+    const oldest = toDateKey(from);
+    Object.keys(raw).forEach((day) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || day < oldest) return;
+      const d = raw[day] || {};
+      result[day] = {
+        xp: toCount(d.xp, 0),
+        lessons: toCount(d.lessons, 0),
+        correct: toCount(d.correct, 0),
+        wrong: toCount(d.wrong, 0),
+      };
+    });
+    return result;
+  }
+
+  /** დღევანდელი ჩანაწერი (საჭიროებისას იქმნება). */
+  function todayActivity(profile) {
+    const day = todayKey();
+    if (!profile.activity[day]) profile.activity[day] = { xp: 0, lessons: 0, correct: 0, wrong: 0 };
+    return profile.activity[day];
   }
 
   /** აზღვევს არასწორი ან ძველი ფორმატის მონაცემებისგან. */
@@ -148,6 +192,8 @@
         ? raw.completedLessons.filter((id) => typeof id === "string")
         : [],
       lastActive: typeof raw.lastActive === "string" ? raw.lastActive : todayKey(),
+      mistakes: normalizeMistakes(raw.mistakes),
+      activity: normalizeActivity(raw.activity),
     };
   }
 
@@ -191,9 +237,38 @@
       redirect(URLS.login);
       return null;
     }
+    const xpBefore = profile.xp;
+    const lessonsBefore = profile.completedLessons.length;
     mutator(profile);
+    // დღიური სტატისტიკა ერთ ადგილას — XP-ის ნებისმიერი წყაროდან (გაკვეთილი, თამაში, სავარჯიშო)
+    const xpGain = profile.xp - xpBefore;
+    const lessonGain = profile.completedLessons.length - lessonsBefore;
+    if (xpGain > 0 || lessonGain > 0) {
+      const day = todayActivity(profile);
+      day.xp += Math.max(0, xpGain);
+      day.lessons += Math.max(0, lessonGain);
+    }
     saveProfile(profile);
     return profile;
+  }
+
+  /**
+   * პასუხის აღრიცხვა: დღიური სტატისტიკა + „ჩემი შეცდომები“.
+   *   question: { c, l, i, q } — რომელი კითხვა (IMS_DATA.stepFingerprint)
+   * არასწორი → შეცდომების სიაში (ბოლოში); სწორი → სიიდან ამოიშლება.
+   */
+  function recordAnswer(question, isCorrect) {
+    return updateProfile((p) => {
+      const day = todayActivity(p);
+      if (isCorrect) day.correct += 1;
+      else day.wrong += 1;
+      if (!question) return;
+      p.mistakes = p.mistakes.filter((m) => !(m.c === question.c && m.l === question.l && m.q === question.q));
+      if (!isCorrect) {
+        p.mistakes.push({ c: question.c, l: question.l, i: question.i, q: question.q, d: todayKey() });
+        p.mistakes = p.mistakes.slice(-MAX_MISTAKES);
+      }
+    });
   }
 
   /* ==========================================================
@@ -442,6 +517,7 @@
     KEYS: KEYS,
     URLS: URLS,
     MAX_HEARTS: MAX_HEARTS,
+    ACTIVITY_DAYS: ACTIVITY_DAYS,
 
     // დაბალი დონე
     readString: readString,
@@ -457,6 +533,8 @@
     updateProfile: updateProfile,
     checkDaily: checkDaily,
     hasUnlimitedHearts: hasUnlimitedHearts,
+    recordAnswer: recordAnswer,
+    toDateKey: toDateKey,
 
     // ანგარიშები / სესია
     getUsers: getUsers,

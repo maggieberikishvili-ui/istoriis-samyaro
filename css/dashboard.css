@@ -355,6 +355,31 @@
   transition: transform var(--transition-fast), background-color var(--transition);
 }
 
+/* ჩემი შეცდომები / პროგრესი — იგივე ბარათი, სხვა ფერის ზოლით */
+.games-entry__card + .games-entry__card {
+  margin-top: var(--space-3);
+}
+
+.games-entry__card--mistakes {
+  border-left-color: var(--color-danger);
+}
+
+.games-entry__card--mistakes .games-entry__arrow {
+  color: var(--color-danger);
+}
+
+.games-entry__card--progress {
+  border-left-color: var(--color-primary);
+}
+
+.games-entry__card--progress .games-entry__arrow {
+  color: var(--color-primary);
+}
+
+.games-entry__card[hidden] {
+  display: none;
+}
+
 .games-entry__card:hover {
   text-decoration: none;
   background-color: var(--color-bg-soft);
@@ -384,6 +409,7 @@
 }
 
 .games-entry__text {
+  overflow-wrap: anywhere;
   font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
   color: var(--color-text-muted);

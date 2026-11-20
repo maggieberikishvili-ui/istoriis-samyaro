@@ -210,6 +210,33 @@
     return load(COURSES.map((c) => c.id));
   }
 
+  /* ----------------------------------------------------------
+     კითხვის „ანაბეჭდი“ — „ჩემი შეცდომებისთვის“ (profile.mistakes).
+     კითხვას id არ აქვს, ამიტომ ვინახავთ გაკვეთილს, ნაბიჯის ნომერს
+     და ტექსტის დასაწყისს: თუ გაკვეთილში ნაბიჯები გადაადგილდა,
+     კითხვა ტექსტით მოიძებნება; თუ კითხვა წაიშალა — უბრალოდ გამოტოვდება.
+     ---------------------------------------------------------- */
+  const QUESTION_TYPES = ["choice", "truefalse", "fill", "match"];
+
+  function isQuestion(step) {
+    return Boolean(step) && QUESTION_TYPES.includes(step.type);
+  }
+
+  function stepFingerprint(step) {
+    const text = step.question || step.statement || step.prompt ||
+      ((step.before || "") + " … " + (step.after || ""));
+    return step.type + ":" + String(text).trim().slice(0, 80);
+  }
+
+  /** შენახული შეცდომის კითხვა (ან null, თუ კითხვა აღარ არსებობს). */
+  function findStep(courseId, lessonId, index, fingerprint) {
+    const lesson = getLesson(courseId, lessonId);
+    if (!lesson || !Array.isArray(lesson.steps)) return null;
+    const byIndex = lesson.steps[index];
+    if (isQuestion(byIndex) && stepFingerprint(byIndex) === fingerprint) return byIndex;
+    return lesson.steps.find((s) => isQuestion(s) && stepFingerprint(s) === fingerprint) || null;
+  }
+
   /** მიმდინარე კურსი: ?course=… → დაფაზე ბოლოს არჩეული → პირველი. */
   function currentCourseId() {
     const fromUrl = new URLSearchParams(window.location.search).get("course");
@@ -242,5 +269,8 @@
     loadAll: loadAll,
     currentCourseId: currentCourseId,
     showLoadError: showLoadError,
+    isQuestion: isQuestion,
+    stepFingerprint: stepFingerprint,
+    findStep: findStep,
   });
 })();
