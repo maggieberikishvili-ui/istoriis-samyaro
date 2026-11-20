@@ -18,6 +18,7 @@
 ბარათის ტექსტი თუ შეიცვალა, ახალი ფაილი მზადდება, ძველი იშლება.
 """
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -156,6 +157,14 @@ REPLACE = [
     (r"\bDictatus Papae\b", "დიქტატუს პაპე"),
     (r"\bland\b", "ლანდ"),
     (r"\btag\b", "ტაგ"),
+    (r"(?<![ა-ჰ])ინგლ\.", "ინგლისურად"),
+    # ლათინური/ბერძნული სიტყვები (მე-7 კლასი) — ქართული ასოებით, რომ ქართულმა ხმამ წაიკითხოს
+    (r"\bchronos\b", "ქრონოს"), (r"\blogos\b", "ლოგოს"), (r"\bethnos\b", "ეთნოს"),
+    (r"\bgrapho\b", "გრაფო"), (r"\bmageia\b", "მაგეია"), (r"\banima\b", "ანიმა"),
+    (r"\bglobe\b", "გლოუბ"), (r"\bres publica\b", "რეს პუბლიკა"), (r"\bveto\b", "ვეტო"),
+    (r"\bpublicum\b", "პუბლიკუმ"), (r"\bprivatum\b", "პრივატუმ"), (r"\bcivile\b", "ცივილე"),
+    (r"\bius\b", "იუს"), (r"\bgladius\b", "გლადიუს"), (r"\bimperator\b", "იმპერატორ"),
+    (r"\bMare Nostrum\b", "მარე ნოსტრუმ"), (r"\bPax Romana\b", "პაქს რომანა"),
     (r"\s*/\s*", " ან "),
     (r"\s*\+\s*", " და "),
 ]
@@ -179,6 +188,18 @@ def number_forms(t):
     t = re.sub(r"(\d{1,4})-(წლიან[ა-ჰ]*)", lambda m: short_form(number_words(int(m.group(1)))) + m.group(2), t)
     # „1104-ით“ → „ათას ას ოთხით“
     t = re.sub(r"(\d{1,4})-ით\b", lambda m: stem(number_words(int(m.group(1)))) + "ით", t)
+    # „1100–1200°C-მდე“ → „ათას ასიდან ათას ორას გრადუსამდე“; „1085°C“ → „… გრადუსი“
+    t = re.sub(r"(\d{1,4})\s*[–-]\s*(\d{1,4})\s*°C-მდე",
+               lambda m: ablative(number_words(int(m.group(1)))) + " " + short_form(number_words(int(m.group(2)))) + " გრადუსამდე", t)
+    t = re.sub(r"(\d{1,4})\s*°C-მდე", lambda m: short_form(number_words(int(m.group(1)))) + " გრადუსამდე", t)
+    t = re.sub(r"(\d{1,4})\s*°C", lambda m: number_words(int(m.group(1))) + " გრადუსი", t)
+    # „400-მდე“ → „ოთხასამდე“, „3-დან“ → „სამიდან“, „700-ზე“ → „შვიდასზე“
+    t = re.sub(r"(\d{1,4})-მდე\b", lambda m: terminative(number_words(int(m.group(1)))), t)
+    t = re.sub(r"(\d{1,4})-დან\b", lambda m: ablative(number_words(int(m.group(1)))), t)
+    t = re.sub(r"(\d{1,4})-ზე\b", lambda m: stem(number_words(int(m.group(1)))) + "ზე", t)
+    # „18-მეტრიანი“ → „თვრამეტმეტრიანი“, „8000-წლოვანი“, „365-დღიანი“, „12-მაგ“
+    t = re.sub(r"(\d{1,4})-((?:[ა-ჰ]+(?:იან|ოვან)|მაგ)[ა-ჰ]*)",
+               lambda m: short_form(number_words(int(m.group(1)))) + m.group(2), t)
     return t
 
 
@@ -298,6 +319,12 @@ def synthesize(ssml, key, region):
             wait = int(e.headers.get("Retry-After") or 0) or 15 * (attempt + 1)
             print("… Azure-ის ლიმიტი, ველოდები %d წმ" % wait)
             time.sleep(wait)
+        except (http.client.IncompleteRead, urllib.error.URLError, TimeoutError, ConnectionError) as e:
+            # კავშირი შუა გზაზე გაწყდა — ცოტას ვიცდით და ვიმეორებთ
+            if attempt == 5:
+                raise
+            print("… კავშირი გაწყდა (%s), ვიმეორებ" % type(e).__name__)
+            time.sleep(5 * (attempt + 1))
 
 
 # ---------- მთავარი ----------
@@ -349,6 +376,7 @@ def main():
                 os.remove(os.path.join(folder, f))
                 print("✕ წაიშალა ძველი: %s/%s" % (lesson_id, f))
         manifest[lesson_id] = entries
+        write_manifest(manifest)  # ყოველი გაკვეთილის შემდეგ — შეწყვეტისას ნამუშევარი არ იკარგება
 
     if not only_print:
         write_manifest(manifest)

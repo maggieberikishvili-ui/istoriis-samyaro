@@ -6,6 +6,296 @@
    ========================================================== */
 
 window.IMS_AUDIO = Object.freeze(/* DATA */{
+  "g7-l1": {
+    "0": "assets/audio/g7-l1/0-f32d39c5b8.mp3",
+    "1": "assets/audio/g7-l1/1-50ea0b8c58.mp3",
+    "2": "assets/audio/g7-l1/2-f574350508.mp3",
+    "3": "assets/audio/g7-l1/3-40798b13f7.mp3"
+  },
+  "g7-l10": {
+    "0": "assets/audio/g7-l10/0-2a5bf05fd9.mp3",
+    "1": "assets/audio/g7-l10/1-7c3f778474.mp3",
+    "2": "assets/audio/g7-l10/2-68a25d5108.mp3",
+    "3": "assets/audio/g7-l10/3-296862f9c1.mp3",
+    "4": "assets/audio/g7-l10/4-4ad9f2ad57.mp3"
+  },
+  "g7-l11": {
+    "0": "assets/audio/g7-l11/0-be74cd0cba.mp3",
+    "1": "assets/audio/g7-l11/1-f6b0cbd12c.mp3",
+    "2": "assets/audio/g7-l11/2-d3f7d88bba.mp3",
+    "3": "assets/audio/g7-l11/3-19221ab7a2.mp3"
+  },
+  "g7-l12": {
+    "0": "assets/audio/g7-l12/0-6402c5e419.mp3",
+    "1": "assets/audio/g7-l12/1-c2b6d2fd58.mp3",
+    "2": "assets/audio/g7-l12/2-fc611876fc.mp3",
+    "3": "assets/audio/g7-l12/3-a95bc83600.mp3",
+    "4": "assets/audio/g7-l12/4-a8b9cf38ab.mp3"
+  },
+  "g7-l13": {
+    "0": "assets/audio/g7-l13/0-decf40ccdd.mp3",
+    "1": "assets/audio/g7-l13/1-821d614837.mp3",
+    "2": "assets/audio/g7-l13/2-ae909dc2fb.mp3",
+    "3": "assets/audio/g7-l13/3-46c5664801.mp3",
+    "4": "assets/audio/g7-l13/4-e51b51e5e1.mp3"
+  },
+  "g7-l14": {
+    "0": "assets/audio/g7-l14/0-2213619c0f.mp3",
+    "1": "assets/audio/g7-l14/1-24e52f1998.mp3",
+    "2": "assets/audio/g7-l14/2-ccf92ddb73.mp3",
+    "3": "assets/audio/g7-l14/3-79c0c0809c.mp3",
+    "4": "assets/audio/g7-l14/4-766b2610e6.mp3"
+  },
+  "g7-l15": {
+    "0": "assets/audio/g7-l15/0-73f15386d8.mp3",
+    "1": "assets/audio/g7-l15/1-7e3472016c.mp3",
+    "2": "assets/audio/g7-l15/2-5cca44b3c4.mp3",
+    "3": "assets/audio/g7-l15/3-179d7e9339.mp3",
+    "4": "assets/audio/g7-l15/4-50235b06c3.mp3"
+  },
+  "g7-l16": {
+    "0": "assets/audio/g7-l16/0-0d1efcce40.mp3",
+    "1": "assets/audio/g7-l16/1-4467dae3bf.mp3",
+    "2": "assets/audio/g7-l16/2-b6afa9066d.mp3",
+    "3": "assets/audio/g7-l16/3-a141d34ba4.mp3",
+    "4": "assets/audio/g7-l16/4-eca7734226.mp3"
+  },
+  "g7-l17": {
+    "0": "assets/audio/g7-l17/0-da7b3e451d.mp3",
+    "1": "assets/audio/g7-l17/1-f5de9ae614.mp3",
+    "2": "assets/audio/g7-l17/2-a2660ef59b.mp3",
+    "3": "assets/audio/g7-l17/3-1de1695c31.mp3",
+    "4": "assets/audio/g7-l17/4-d62d879fb8.mp3"
+  },
+  "g7-l18": {
+    "0": "assets/audio/g7-l18/0-74ba51e2b2.mp3",
+    "1": "assets/audio/g7-l18/1-f26e65cc77.mp3",
+    "2": "assets/audio/g7-l18/2-8259c86ce3.mp3",
+    "3": "assets/audio/g7-l18/3-9bdf486b2f.mp3",
+    "4": "assets/audio/g7-l18/4-443419f2a2.mp3"
+  },
+  "g7-l19": {
+    "0": "assets/audio/g7-l19/0-aeed98fa06.mp3",
+    "1": "assets/audio/g7-l19/1-714332f4b8.mp3",
+    "2": "assets/audio/g7-l19/2-7b0f335ba6.mp3",
+    "3": "assets/audio/g7-l19/3-629aabde88.mp3",
+    "4": "assets/audio/g7-l19/4-146fbc3350.mp3"
+  },
+  "g7-l20": {
+    "0": "assets/audio/g7-l20/0-e174e8a3a4.mp3",
+    "1": "assets/audio/g7-l20/1-d7e631b04c.mp3",
+    "2": "assets/audio/g7-l20/2-85c5906a1e.mp3",
+    "3": "assets/audio/g7-l20/3-b75bf2be0a.mp3",
+    "4": "assets/audio/g7-l20/4-d90363f81b.mp3"
+  },
+  "g7-l21": {
+    "0": "assets/audio/g7-l21/0-a118177352.mp3",
+    "1": "assets/audio/g7-l21/1-4df310575d.mp3",
+    "2": "assets/audio/g7-l21/2-bed49b20f6.mp3",
+    "3": "assets/audio/g7-l21/3-5a4914b109.mp3",
+    "4": "assets/audio/g7-l21/4-55d4a6fb62.mp3"
+  },
+  "g7-l22": {
+    "0": "assets/audio/g7-l22/0-58f06b329f.mp3",
+    "1": "assets/audio/g7-l22/1-03f209cbfd.mp3",
+    "2": "assets/audio/g7-l22/2-5247e80a27.mp3",
+    "3": "assets/audio/g7-l22/3-a71d3e767f.mp3",
+    "4": "assets/audio/g7-l22/4-f456b87a25.mp3"
+  },
+  "g7-l23": {
+    "0": "assets/audio/g7-l23/0-394e91389b.mp3",
+    "1": "assets/audio/g7-l23/1-de8bbfc1fc.mp3",
+    "2": "assets/audio/g7-l23/2-8d136bc053.mp3",
+    "3": "assets/audio/g7-l23/3-01dcd49085.mp3",
+    "4": "assets/audio/g7-l23/4-0838bf0c55.mp3"
+  },
+  "g7-l24": {
+    "0": "assets/audio/g7-l24/0-7fb5eba4c2.mp3",
+    "1": "assets/audio/g7-l24/1-6d2936f0c7.mp3",
+    "2": "assets/audio/g7-l24/2-768c69b235.mp3",
+    "3": "assets/audio/g7-l24/3-7eee3b94a3.mp3",
+    "4": "assets/audio/g7-l24/4-0110ec2c63.mp3"
+  },
+  "g7-l25": {
+    "0": "assets/audio/g7-l25/0-88ed1402b2.mp3",
+    "1": "assets/audio/g7-l25/1-923ecb5b4a.mp3",
+    "2": "assets/audio/g7-l25/2-afe5da9c30.mp3",
+    "3": "assets/audio/g7-l25/3-958cc35591.mp3",
+    "4": "assets/audio/g7-l25/4-434f2b5ab5.mp3"
+  },
+  "g7-l26": {
+    "0": "assets/audio/g7-l26/0-4130603ba3.mp3",
+    "1": "assets/audio/g7-l26/1-15d08091ed.mp3",
+    "2": "assets/audio/g7-l26/2-bd88fde51b.mp3",
+    "3": "assets/audio/g7-l26/3-cd36163c7a.mp3"
+  },
+  "g7-l27": {
+    "0": "assets/audio/g7-l27/0-ac49e975d9.mp3",
+    "1": "assets/audio/g7-l27/1-e5029ace94.mp3",
+    "2": "assets/audio/g7-l27/2-ec9c7b1ca3.mp3",
+    "3": "assets/audio/g7-l27/3-5cb1ab5934.mp3"
+  },
+  "g7-l28": {
+    "0": "assets/audio/g7-l28/0-c3cb6b9378.mp3",
+    "1": "assets/audio/g7-l28/1-596ba9d4a5.mp3",
+    "2": "assets/audio/g7-l28/2-33b0ee4ca2.mp3",
+    "3": "assets/audio/g7-l28/3-abc7a11bdb.mp3"
+  },
+  "g7-l29": {
+    "0": "assets/audio/g7-l29/0-973131b7d3.mp3",
+    "1": "assets/audio/g7-l29/1-f260dff8d6.mp3",
+    "2": "assets/audio/g7-l29/2-b9a6daff22.mp3",
+    "3": "assets/audio/g7-l29/3-7237954721.mp3"
+  },
+  "g7-l3": {
+    "0": "assets/audio/g7-l3/0-1803e06ba1.mp3",
+    "1": "assets/audio/g7-l3/1-413a8dacf9.mp3",
+    "2": "assets/audio/g7-l3/2-1313aae2a2.mp3",
+    "3": "assets/audio/g7-l3/3-19293cc1ad.mp3",
+    "4": "assets/audio/g7-l3/4-7a2fd7014d.mp3"
+  },
+  "g7-l30": {
+    "0": "assets/audio/g7-l30/0-cadb377430.mp3",
+    "1": "assets/audio/g7-l30/1-7f0475142c.mp3",
+    "2": "assets/audio/g7-l30/2-d53200e7a3.mp3",
+    "3": "assets/audio/g7-l30/3-2d67c7af1d.mp3"
+  },
+  "g7-l31": {
+    "0": "assets/audio/g7-l31/0-83f12e2fca.mp3",
+    "1": "assets/audio/g7-l31/1-1805ae7d7f.mp3",
+    "2": "assets/audio/g7-l31/2-361f9a770e.mp3",
+    "3": "assets/audio/g7-l31/3-1124aa0690.mp3"
+  },
+  "g7-l32": {
+    "0": "assets/audio/g7-l32/0-0100de110a.mp3",
+    "1": "assets/audio/g7-l32/1-b496d7d9f9.mp3",
+    "2": "assets/audio/g7-l32/2-4fae4bf4ed.mp3"
+  },
+  "g7-l33": {
+    "0": "assets/audio/g7-l33/0-193c0a6b14.mp3",
+    "1": "assets/audio/g7-l33/1-481be5f428.mp3",
+    "2": "assets/audio/g7-l33/2-e7efd7a693.mp3",
+    "3": "assets/audio/g7-l33/3-889a051561.mp3"
+  },
+  "g7-l34": {
+    "0": "assets/audio/g7-l34/0-74f0f97e79.mp3",
+    "1": "assets/audio/g7-l34/1-397fbc8b24.mp3",
+    "2": "assets/audio/g7-l34/2-8c7ffd428b.mp3",
+    "3": "assets/audio/g7-l34/3-eaeb3e5173.mp3"
+  },
+  "g7-l35": {
+    "0": "assets/audio/g7-l35/0-a14f318a3b.mp3",
+    "1": "assets/audio/g7-l35/1-66469486e1.mp3",
+    "2": "assets/audio/g7-l35/2-1d8d314bff.mp3",
+    "3": "assets/audio/g7-l35/3-0db6f2edc6.mp3"
+  },
+  "g7-l36": {
+    "0": "assets/audio/g7-l36/0-79a305451b.mp3",
+    "1": "assets/audio/g7-l36/1-f314317554.mp3",
+    "2": "assets/audio/g7-l36/2-6909a56f70.mp3"
+  },
+  "g7-l37": {
+    "0": "assets/audio/g7-l37/0-700ce60ddb.mp3",
+    "1": "assets/audio/g7-l37/1-8c4e162b3b.mp3",
+    "2": "assets/audio/g7-l37/2-404169208f.mp3"
+  },
+  "g7-l38": {
+    "0": "assets/audio/g7-l38/0-77bbf69b93.mp3",
+    "1": "assets/audio/g7-l38/1-d3a59de1dc.mp3",
+    "2": "assets/audio/g7-l38/2-d7ee941236.mp3"
+  },
+  "g7-l39": {
+    "0": "assets/audio/g7-l39/0-19d7f995d5.mp3",
+    "1": "assets/audio/g7-l39/1-3a78bd7abf.mp3",
+    "2": "assets/audio/g7-l39/2-37fece071e.mp3"
+  },
+  "g7-l4": {
+    "0": "assets/audio/g7-l4/0-11c114cb73.mp3",
+    "1": "assets/audio/g7-l4/1-b6be45c091.mp3",
+    "2": "assets/audio/g7-l4/2-2f7bab2c94.mp3",
+    "3": "assets/audio/g7-l4/3-75ed11a70e.mp3",
+    "4": "assets/audio/g7-l4/4-63b733e698.mp3"
+  },
+  "g7-l40": {
+    "0": "assets/audio/g7-l40/0-11e4a9067f.mp3",
+    "1": "assets/audio/g7-l40/1-c60d3045e8.mp3",
+    "2": "assets/audio/g7-l40/2-936def1993.mp3"
+  },
+  "g7-l41": {
+    "0": "assets/audio/g7-l41/0-6991dd6d5d.mp3",
+    "1": "assets/audio/g7-l41/1-aedf13f09d.mp3",
+    "2": "assets/audio/g7-l41/2-30752846ac.mp3",
+    "3": "assets/audio/g7-l41/3-b93b25b924.mp3"
+  },
+  "g7-l42": {
+    "0": "assets/audio/g7-l42/0-3a8372708f.mp3",
+    "1": "assets/audio/g7-l42/1-32a18fc7cd.mp3",
+    "2": "assets/audio/g7-l42/2-7a0d3483fd.mp3"
+  },
+  "g7-l43": {
+    "0": "assets/audio/g7-l43/0-cc1bb3017c.mp3",
+    "1": "assets/audio/g7-l43/1-7a23fe0dfe.mp3",
+    "2": "assets/audio/g7-l43/2-00b8822196.mp3"
+  },
+  "g7-l44": {
+    "0": "assets/audio/g7-l44/0-cbd126b199.mp3",
+    "1": "assets/audio/g7-l44/1-3a083a4bc1.mp3",
+    "2": "assets/audio/g7-l44/2-245b495883.mp3"
+  },
+  "g7-l45": {
+    "0": "assets/audio/g7-l45/0-0dd17cb102.mp3",
+    "1": "assets/audio/g7-l45/1-a4bfbcc9fc.mp3",
+    "2": "assets/audio/g7-l45/2-9476f23294.mp3"
+  },
+  "g7-l46": {
+    "0": "assets/audio/g7-l46/0-022bb677e7.mp3",
+    "1": "assets/audio/g7-l46/1-e02a4ed618.mp3",
+    "2": "assets/audio/g7-l46/2-5502c83d42.mp3"
+  },
+  "g7-l47": {
+    "0": "assets/audio/g7-l47/0-18224b3845.mp3",
+    "1": "assets/audio/g7-l47/1-18d898e9f6.mp3",
+    "2": "assets/audio/g7-l47/2-ccf58cf922.mp3",
+    "3": "assets/audio/g7-l47/3-0ce0914f6b.mp3"
+  },
+  "g7-l48": {
+    "0": "assets/audio/g7-l48/0-e59c24a7b1.mp3",
+    "1": "assets/audio/g7-l48/1-49ce61834f.mp3",
+    "2": "assets/audio/g7-l48/2-0a2aecc436.mp3"
+  },
+  "g7-l5": {
+    "0": "assets/audio/g7-l5/0-0590b6dbce.mp3",
+    "1": "assets/audio/g7-l5/1-5f08852b03.mp3",
+    "2": "assets/audio/g7-l5/2-2f3009c715.mp3",
+    "3": "assets/audio/g7-l5/3-961b72486c.mp3"
+  },
+  "g7-l6": {
+    "0": "assets/audio/g7-l6/0-835d85dd79.mp3",
+    "1": "assets/audio/g7-l6/1-5e974ac62d.mp3",
+    "2": "assets/audio/g7-l6/2-e580b9ef3c.mp3",
+    "3": "assets/audio/g7-l6/3-00c677ac6f.mp3",
+    "4": "assets/audio/g7-l6/4-d980b673a2.mp3"
+  },
+  "g7-l7": {
+    "0": "assets/audio/g7-l7/0-5948bedc17.mp3",
+    "1": "assets/audio/g7-l7/1-e59f6b3ab9.mp3",
+    "2": "assets/audio/g7-l7/2-cdb8865e59.mp3",
+    "3": "assets/audio/g7-l7/3-72b3efcf89.mp3"
+  },
+  "g7-l8": {
+    "0": "assets/audio/g7-l8/0-a49632affd.mp3",
+    "1": "assets/audio/g7-l8/1-2ff453461f.mp3",
+    "2": "assets/audio/g7-l8/2-708d6a9ebd.mp3",
+    "3": "assets/audio/g7-l8/3-154301e85b.mp3",
+    "4": "assets/audio/g7-l8/4-c7c855aff5.mp3"
+  },
+  "g7-l9": {
+    "0": "assets/audio/g7-l9/0-2ca95dacb8.mp3",
+    "1": "assets/audio/g7-l9/1-23f5f9d751.mp3",
+    "2": "assets/audio/g7-l9/2-31290fdbb1.mp3",
+    "3": "assets/audio/g7-l9/3-c075a173a9.mp3",
+    "4": "assets/audio/g7-l9/4-c2b549b739.mp3"
+  },
   "g8-l1": {
     "0": "assets/audio/g8-l1/0-210cdc2bc8.mp3",
     "1": "assets/audio/g8-l1/1-b909f5870f.mp3",
