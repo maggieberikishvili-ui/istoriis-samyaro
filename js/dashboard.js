@@ -97,6 +97,12 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     if (!result) return;
     state.profile = result.profile;
 
+    // მტვრის ათვლა: ადრე გავლილ გაკვეთილებს თარიღი ეწერება (ერთხელ)
+    const p = state.profile;
+    if (typeof store.stampGems === "function" && p.completedLessons.some((id) => !p.gemSeen[id])) {
+      state.profile = store.updateProfile((x) => store.stampGems(x)) || p;
+    }
+
     if (result.heartsRefilled) {
       showToast("☀️ ახალი დღე — სიცოცხლეები 5-მდე შეივსო!");
     }
@@ -461,7 +467,9 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     // (typeof — თუ ბრაუზერს ჯერ ძველი storage.js აქვს, ბილიკი მაინც გამოჩნდეს)
     const quality = status !== "completed" ? "socket"
       : typeof store.gemState === "function" ? store.gemState(state.profile, lesson.id) : "polished";
-    symbol.append(gems.icon(kind, quality));
+    const dusty = status === "completed" && typeof store.gemDusty === "function" &&
+      store.gemDusty(state.profile, lesson.id);
+    symbol.append(gems.icon(kind, quality, dusty));
     if (status === "locked") {
       const lock = createEl("span", "medallion__lock");
       lock.append(lockIcon());
@@ -470,7 +478,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     node.append(symbol);
 
     const statusText = { completed: "დასრულებული", current: "მიმდინარე", locked: "დაბლოკილი" }[status] +
-      (quality === "rough" ? ", ქვა ნატეხია — გაიარე უშეცდომოდ და გაპრიალდება" : "");
+      (dusty ? ", ქვა მტვრიანია" : quality === "rough" ? ", ქვა ნატეხია — გაიარე უშეცდომოდ და გაპრიალდება" : "");
     node.setAttribute("aria-label", (indexInChapter + 1) + ". " + lesson.title + " — " + statusText);
     if (status === "locked") node.setAttribute("aria-disabled", "true");
     if (status === "current") node.setAttribute("aria-current", "step");
@@ -498,8 +506,15 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     label.setAttribute("aria-hidden", "true");
 
     item.append(wrap, label);
+    // მტვრიანი ქვა: ღილაკი — 5 სწრაფი კითხვა ამ გაკვეთილიდან (lesson.html?mode=clean)
+    if (dusty) {
+      const clean = createEl("a", "path__polish path__polish--dust", "🧹 გაწმინდე · 5 კითხვა");
+      clean.href = store.URLS.lesson + "?" +
+        new URLSearchParams({ mode: "clean", course: course.id, lesson: lesson.id }).toString();
+      clean.setAttribute("aria-label", lesson.title + " — მტვრის გაწმენდა, 5 კითხვა");
+      item.append(clean);
+    } else if (quality === "rough") {
     // ნატეხი ქვა: მინიშნება, რომ განმეორებით უშეცდომოდ გავლა ქვას გააპრიალებს
-    if (quality === "rough") {
       const tag = createEl("span", "path__polish", "✦ გააპრიალე");
       tag.setAttribute("aria-hidden", "true");
       item.append(tag);

@@ -85,6 +85,24 @@
   filter: saturate(0.7) brightness(0.88);
 }
 
+/* მტვრიანი: ფერმკრთალი ქვა + ნაწილაკები */
+.gem--dusty > use:first-child {
+  filter: grayscale(0.75) brightness(1.08) contrast(0.8);
+}
+
+.gem-dust {
+  fill: var(--gem-dust);
+  opacity: 0.75;
+}
+
+.gem-dust-smear {
+  fill: none;
+  stroke: var(--gem-dust-smear);
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+
 /* --- ცარიელი ბუდე --- */
 .gem-socket {
   fill: var(--gem-socket);

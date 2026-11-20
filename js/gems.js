@@ -12,6 +12,7 @@
    გამოყენება:
      IMS_GEMS.icon("lapis")          — გაპრიალებული ქვა
      IMS_GEMS.icon("lapis", "rough") — ნატეხი (გავლილია შეცდომებით)
+     IMS_GEMS.icon("lapis", "polished", true) — მტვრიანი (დიდი ხანია არ გაგიმეორებია)
      IMS_GEMS.icon(null, "socket")   — ცარიელი ბუდე
      IMS_GEMS.wedge()                — ლურსმნული სოლი (ბილიკის კავშირისთვის)
    ========================================================== */
@@ -157,6 +158,15 @@
     socket.append(node("polygon", { points: CUT }, "gem-socket"));
     svg.append(socket);
 
+    // მტვერი: ნაცრისფერი ნაწილაკები + ერთი მქრქალი ზოლი (ქვის თავზე ეფინება)
+    const dust = node("symbol", { id: "ims-gem-dust", viewBox: "0 0 64 64" });
+    const r = seeded(99);
+    for (let i = 0; i < 40; i++) {
+      dust.append(node("circle", { cx: f1(r(12, 52)), cy: f1(r(12, 52)), r: f1(r(0.6, 1.8)) }, "gem-dust"));
+    }
+    dust.append(node("path", { d: "M14 40 Q30 30 50 38" }, "gem-dust-smear"));
+    svg.append(dust);
+
     // ლურსმნული სოლი: სამკუთხა თავი + გრძელი კუდი (ცენტრი — 0,0; მიმართულება → )
     const wedge = node("symbol", { id: "ims-wedge", viewBox: "-7 -4.5 17 9", overflow: "visible" });
     wedge.append(node("path", { d: "M-6 -3.6 L0 0 L-6 3.6 Z M-0.5 -0.7 H8 L9 0 L8 0.7 H-0.5 Z" }));
@@ -169,13 +179,18 @@
    * ქვა ან ცარიელი ბუდე, როგორც <svg>. kind — KINDS-იდან;
    * state: "polished" (ნაგულისხმევი) | "rough" (ნატეხი) | "socket" (ცარიელი ბუდე).
    */
-  function icon(kind, state) {
+  function icon(kind, state, dusty) {
     ensureSprite();
     const isGem = state !== "socket" && KINDS.includes(kind);
     const rough = isGem && state === "rough";
     const svg = node("svg", { viewBox: "0 0 64 64", "aria-hidden": "true", focusable: "false" },
       "gem" + (isGem ? " gem--" + kind + (rough ? " gem--rough" : "") : " gem--socket"));
     svg.append(node("use", { href: isGem ? "#ims-gem-" + kind + (rough ? "-rough" : "") : "#ims-gem-socket" }));
+    // მტვრიანი: ქვა ფერმკრთალდება (css: .gem--dusty) და ზემოდან მტვერი ეფინება
+    if (isGem && dusty) {
+      svg.classList.add("gem--dusty");
+      svg.append(node("use", { href: "#ims-gem-dust" }));
+    }
     return svg;
   }
 

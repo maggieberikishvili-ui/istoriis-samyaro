@@ -79,6 +79,10 @@
   --gem-socket: #efe7d9;                  /* ცარიელი ბუდე */
   --polish-bg: #f6e3da;                   /* „✦ გააპრიალე“ იარლიყი ნატეხ ქვაზე */
   --polish-ink: #8e3a20;
+  --dust-bg: #ece7df;                     /* „გაწმინდე“ ღილაკი მტვრიან ქვაზე */
+  --dust-ink: #6e6255;
+  --gem-dust: #8c8072;                    /* მტვრის ნაწილაკები */
+  --gem-dust-smear: #bfb3a3;
   --gem-socket-edge: #c9bca6;
   --wedge-done: #5a4636;                  /* ლურსმნული სოლი: გავლილი გზა */
   --wedge-ahead: #d3c6b0;                 /*                  წინ მდებარე */
@@ -174,6 +178,8 @@
     --gem-socket: #2f2822;
     --polish-bg: #4a2a20;
     --polish-ink: #f0a98a;
+    --dust-bg: #3a332c;
+    --dust-ink: #cfc2b2;
     --gem-socket-edge: #6b5d4e;
     --wedge-done: #e3cdb4;
     --wedge-ahead: #51473c;
@@ -230,6 +236,8 @@
   --gem-socket: #2f2822;
   --polish-bg: #4a2a20;
   --polish-ink: #f0a98a;
+  --dust-bg: #3a332c;
+  --dust-ink: #cfc2b2;
   --gem-socket-edge: #6b5d4e;
   --wedge-done: #e3cdb4;
   --wedge-ahead: #51473c;

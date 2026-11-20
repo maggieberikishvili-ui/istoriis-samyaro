@@ -776,6 +776,20 @@
   border-radius: var(--radius-sm);
 }
 
+/* მტვრიანი ქვის „გაწმინდე“ ღილაკი */
+.path__polish--dust {
+  position: relative;
+  z-index: 2;
+  color: var(--dust-ink);
+  background-color: var(--dust-bg);
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+}
+
+.path__polish--dust:hover {
+  border-color: var(--color-border-strong);
+}
+
 .path-note {
   margin-top: var(--space-5);
   text-align: center;

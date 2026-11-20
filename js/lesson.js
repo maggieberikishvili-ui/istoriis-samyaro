@@ -40,6 +40,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   const PRACTICE_TYPES = ["choice", "truefalse", "fill"];
   const MISTAKES_SIZE = 10;  // „ჩემი შეცდომები“ — ერთ ჯერზე მაქსიმუმ 10 კითხვა
   const MISTAKES_XP = 2;     // თითო გამეორებულ კითხვაზე
+  const CLEAN_SIZE = 5;      // მტვრის გაწმენდა — 5 სწრაფი კითხვა ერთი გაკვეთილიდან
+  const CLEAN_XP = 10;
 
   /* ==========================================================
      გაკვეთილის ჩატვირთვა და შემოწმება
@@ -58,8 +60,9 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   const params = new URLSearchParams(window.location.search);
   const isPractice = params.get("mode") === "practice";
   const isMistakes = params.get("mode") === "mistakes";
+  const isClean = params.get("mode") === "clean"; // მტვრიანი ქვის გაწმენდა
   // გამეორების რეჟიმი: სიცოცხლე არ აკლდება, არასწორი კითხვა ბოლოს მეორდება
-  const isReview = isPractice || isMistakes;
+  const isReview = isPractice || isMistakes || isClean;
 
   let lesson = null;
   let lessonCourse = null; // ჩვეულებრივი გაკვეთილის კურსი (ქვის სახეობისთვის)
@@ -74,7 +77,24 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     stepInfo.set(step, { c: courseId, l: lessonId, i: index, q: window.IMS_DATA.stepFingerprint(step) });
   }
 
-  if (isMistakes) {
+  if (isClean) {
+    // მხოლოდ გავლილი გაკვეთილი; კითხვა თუ არ აქვს — ჩვეულებრივ გაკვეთილზე გადავა
+    practiceCourse = window.IMS_DATA.getCourse(params.get("course"));
+    lesson = practiceCourse ? window.IMS_DATA.getLesson(practiceCourse.id, params.get("lesson")) : null;
+    lessonCourse = practiceCourse;
+    if (!lesson || !initialProfile.completedLessons.includes(lesson.id)) {
+      store.redirect(DASHBOARD_URL);
+      return;
+    }
+    steps = buildCleanSteps(practiceCourse, lesson);
+    if (steps.length === 0) {
+      store.redirect(store.URLS.lesson + "?" +
+        new URLSearchParams({ course: practiceCourse.id, lesson: lesson.id }).toString());
+      return;
+    }
+    practiceTarget = steps.length;
+    document.title = "მტვრის გაწმენდა — Edubba";
+  } else if (isMistakes) {
     practiceCourse =
       window.IMS_DATA.getCourse(params.get("course")) ||
       window.IMS_DATA.getCourse(store.readString(store.KEYS.selectedCourse)) ||
@@ -129,6 +149,18 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     steps = lesson.steps.slice();
     steps.forEach((s, i) => rememberStep(course.id, lesson.id, s, i));
     document.title = lesson.title + " — Edubba";
+  }
+
+  /** მტვრის გაწმენდა: ერთი გაკვეთილის CLEAN_SIZE შემთხვევითი კითხვა. */
+  function buildCleanSteps(course, l) {
+    const pool = [];
+    (l.steps || []).forEach((s, k) => {
+      if (PRACTICE_TYPES.includes(s.type)) pool.push({ step: s, index: k });
+    });
+    return shuffle(pool).slice(0, CLEAN_SIZE).map((item) => {
+      rememberStep(course.id, l.id, item.step, item.index);
+      return item.step;
+    });
   }
 
   /** „ჩემი შეცდომები“: ამ კურსის ბოლო შეცდომები (უახლესი — პირველი), არეული. */
@@ -572,7 +604,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   function exerciseHeader(label, question, image) {
-    el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " + practiceCourse.title + " · " : isMistakes ? "🔁 ჩემი შეცდომები · " + practiceCourse.title + " · " : "") + label));
+    el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " + practiceCourse.title + " · " : isMistakes ? "🔁 ჩემი შეცდომები · " + practiceCourse.title + " · " : isClean ? "🧹 მტვრის გაწმენდა · " + lesson.title + " · " : "") + label));
     if (question) el.stage.append(createEl("h1", "exercise__question", question));
     const figure = buildFigure(image);
     if (figure) el.stage.append(figure);
@@ -758,6 +790,10 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       finishMistakes();
       return;
     }
+    if (isClean) {
+      finishClean();
+      return;
+    }
 
     let xpGain = 0;
     let heartGain = 0;
@@ -806,7 +842,11 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     const kind = gems.kindFor(lessonCourse.lessons.indexOf(lesson));
     const name = gems.NAMES[kind];
     let text;
-    if (gem.after === "rough") {
+    if (gem.cleaned) {
+      text = "მტვერი გაიწმინდა." + (gem.after === "rough"
+        ? " ქვა ჯერ ნატეხია — გაიარე გაკვეთილი უშეცდომოდ და გაპრიალდება."
+        : " ქვა გაპრიალებულია.");
+    } else if (gem.after === "rough") {
       text = (gem.before ? name + " ჯერ ისევ ნატეხია." : "ახალი ქვა — " + name + ", ჯერ ნატეხი.") +
         " გაიარე გაკვეთილი უშეცდომოდ და გაპრიალდება.";
     } else if (gem.before === "rough") {
@@ -821,6 +861,32 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     art.replaceChildren(gems.icon(kind, gem.after));
     box.querySelector(".result__gem-text").textContent = text;
     box.hidden = false;
+  }
+
+  /** მტვრის გაწმენდის დასრულება: ქვა ისევ ბრწყინავს (ხარისხი არ იცვლება), +CLEAN_XP. */
+  function finishClean() {
+    const profile = store.updateProfile((p) => {
+      store.touchGem(p, lesson.id);
+      p.xp += CLEAN_XP;
+    });
+    if (!profile) return;
+    renderProgress();
+
+    const gems = window.IMS_GEMS;
+    const kind = gems.kindFor(lessonCourse.lessons.indexOf(lesson));
+    const quality = store.gemState(profile, lesson.id) || "polished";
+    const accuracy = state.attempts ? Math.round((state.correct / state.attempts) * 100) : 100;
+
+    hideLesson();
+    el.victoryEmblem.textContent = "✨";
+    el.victoryTitle.textContent = gems.NAMES[kind] + (quality === "rough" ? " მტვრისგან გაიწმინდა!" : " ისევ ბრწყინავს!");
+    el.victorySubtitle.textContent = "„" + lesson.title + "“ — " + practiceTarget + " კითხვა გაიმეორე.";
+    el.victoryXp.textContent = "+" + CLEAN_XP;
+    el.victoryAccuracy.textContent = accuracy + "%";
+    el.victoryHeartsStat.hidden = true;
+    renderVictoryGem({ before: quality, after: quality, cleaned: true });
+    el.victory.hidden = false;
+    el.victory.querySelector(".result__btn").focus();
   }
 
   /** სავარჯიშოს დასრულება: +1 ❤️ (მაქს. 5) და +5 XP, შემდეგ დაფაზე დაბრუნება. */

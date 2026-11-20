@@ -135,6 +135,7 @@
       mistakes: [],
       activity: {},
       gems: {},
+      gemSeen: {},
     };
   }
 
@@ -196,6 +197,7 @@
       mistakes: normalizeMistakes(raw.mistakes),
       activity: normalizeActivity(raw.activity),
       gems: normalizeGems(raw.gems),
+      gemSeen: normalizeGemSeen(raw.gemSeen),
     };
   }
 
@@ -215,6 +217,58 @@
     return out;
   }
 
+  /* მტვერი: ქვა მტვრიანდება, თუ გაკვეთილი DUST_DAYS დღე არ გაგიმეორებია.
+     profile.gemSeen = { "<გაკვეთილის id>": "YYYY-MM-DD" } — ბოლო გავლა ან გაწმენდა.
+     მტვერი მხოლოდ იერია: ხარისხი (ნატეხი/გაპრიალებული) არ იცვლება და ქვა არ იკარგება. */
+  const DUST_DAYS = 30;
+  const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+  function normalizeGemSeen(raw) {
+    const out = {};
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return out;
+    Object.keys(raw).forEach((id) => {
+      if (typeof raw[id] === "string" && DATE_RE.test(raw[id])) out[id] = raw[id];
+    });
+    return out;
+  }
+
+  /** რამდენი დღე გავიდა YYYY-MM-DD თარიღიდან (ადგილობრივი კალენდრით). */
+  function daysSince(dateKey) {
+    const [y, m, d] = dateKey.split("-").map(Number);
+    const then = new Date(y, m - 1, d);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round((today - then) / 86400000);
+  }
+
+  /** მტვრიანია თუ არა გავლილი გაკვეთილის ქვა. */
+  function gemDusty(profile, lessonId) {
+    if (!profile || !profile.completedLessons.includes(lessonId)) return false;
+    const seen = profile.gemSeen[lessonId];
+    return Boolean(seen) && daysSince(seen) >= DUST_DAYS;
+  }
+
+  /** ქვის „გაწმენდა“: ბოლო გამეორების თარიღი = დღეს. */
+  function touchGem(profile, lessonId) {
+    profile.gemSeen[lessonId] = todayKey();
+  }
+
+  /**
+   * გავლილ გაკვეთილებს, რომლებსაც თარიღი ჯერ არ აქვს (ფუნქციამდე გავლილი),
+   * დღევანდელი თარიღი ეწერება — მტვერი მათზე DUST_DAYS დღეში გამოჩნდება.
+   * აბრუნებს true-ს, თუ რამე შეიცვალა (მხოლოდ მაშინ ღირს შენახვა).
+   */
+  function stampGems(profile) {
+    let changed = false;
+    profile.completedLessons.forEach((id) => {
+      if (!profile.gemSeen[id]) {
+        profile.gemSeen[id] = todayKey();
+        changed = true;
+      }
+    });
+    return changed;
+  }
+
   /** ქვის მდგომარეობა: null (ჯერ არ გავლილა) | "rough" | "polished". */
   function gemState(profile, lessonId) {
     if (!profile || !profile.completedLessons.includes(lessonId)) return null;
@@ -230,6 +284,7 @@
     const before = gemState(profile, lessonId);
     const after = flawless || before === "polished" ? "polished" : "rough";
     profile.gems[lessonId] = after;
+    touchGem(profile, lessonId); // გაკვეთილის ნებისმიერი გავლა მტვერსაც წმენდს
     return { before: before, after: after };
   }
 
@@ -572,6 +627,10 @@
     recordAnswer: recordAnswer,
     gemState: gemState,
     recordGem: recordGem,
+    gemDusty: gemDusty,
+    touchGem: touchGem,
+    stampGems: stampGems,
+    DUST_DAYS: DUST_DAYS,
     toDateKey: toDateKey,
 
     // ანგარიშები / სესია
