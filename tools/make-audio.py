@@ -23,6 +23,8 @@ import os
 import re
 import subprocess
 import sys
+import time
+import urllib.error
 import urllib.request
 from xml.sax.saxutils import escape
 
@@ -139,8 +141,55 @@ def say_numbers(t):
     return t
 
 
+# შემოკლებები და უცხო სიტყვები (ახალი ცუდად წაკითხული სიტყვა → აქ დაამატე)
+REPLACE = [
+    (r"(?<![ა-ჰ])ე\. ?წ\.", "ეგრეთ წოდებული"),
+    (r"(?<![ა-ჰ])მაგ\.", "მაგალითად"),
+    (r"(?<![ა-ჰ])სხვ\.", "სხვა"),
+    (r"(?<![ა-ჰ])წმ\.", "წმინდა"),
+    (r"(?<![ა-ჰ])ბერძნ\.", "ბერძნულად"),
+    (r"(?<![ა-ჰ])ლათ\.", "ლათინურად"),
+    (r"(?<![ა-ჰ])გერმ\.", "გერმანულად"),
+    (r"(?<![ა-ჰ])არაბ\.", "არაბულად"),
+    (r"(?<![ა-ჰ])სპარს\.", "სპარსულად"),
+    (r"\bUNESCO-?", "იუნესკო"),
+    (r"\bDictatus Papae\b", "დიქტატუს პაპე"),
+    (r"\bland\b", "ლანდ"),
+    (r"\btag\b", "ტაგ"),
+    (r"\s*/\s*", " ან "),
+    (r"\s*\+\s*", " და "),
+]
+
+
+def stem(words):
+    """ბოლო „ი“-ს მოშორება: „სამოცი“ → „სამოც“ (სუფიქსის წინ)."""
+    return words[:-1] if words.endswith("ი") else words
+
+
+def number_forms(t):
+    """რიცხვი სუფიქსით/შემოკლებით — say_numbers-მდე."""
+    # „527–565 წწ.“ → „ხუთას ოცდაშვიდიდან ხუთას სამოცდახუთ წლამდე“
+    t = re.sub(r"(\d{1,4})\s*[–-]\s*(\d{1,4}) წწ\.",
+               lambda m: ablative(number_words(int(m.group(1)))) + " " + short_form(number_words(int(m.group(2)))) + " წლამდე", t)
+    # „800 წ.“ → „რვაასი წელი“
+    t = re.sub(r"(\d{1,4}) წ\.", lambda m: number_words(int(m.group(1))) + " წელი", t)
+    # „60-იანი წლები“ → „სამოციანი“, „1170-იან“ → „ათას ას სამოცდაათიან“
+    t = re.sub(r"(\d{1,4})-(იან[ა-ჰ]*)", lambda m: stem(number_words(int(m.group(1)))) + m.group(2), t)
+    # „30-წლიანი“ → „ოცდაათწლიანი“
+    t = re.sub(r"(\d{1,4})-(წლიან[ა-ჰ]*)", lambda m: short_form(number_words(int(m.group(1)))) + m.group(2), t)
+    # „1104-ით“ → „ათას ას ოთხით“
+    t = re.sub(r"(\d{1,4})-ით\b", lambda m: stem(number_words(int(m.group(1)))) + "ით", t)
+    return t
+
+
 def speakable(text):
     t = text.replace("•", " ").replace("\n", " ")
+    for pattern, repl in REPLACE:
+        t = re.sub(pattern, repl, t)
+    # „XIII–XIV სს.“ → „მეცამეტე–მეთოთხმეტე საუკუნეები“
+    t = re.sub(r"\b([IVX]+)\s*[–-]\s*([IVX]+) სს\.",
+               lambda m: ordinal(roman_to_int(m.group(1))) + "–" + ordinal(roman_to_int(m.group(2))) + " საუკუნეები", t)
+    t = number_forms(t)
     t = say_numbers(t)
     # „XIII ს.“ → „მეცამეტე საუკუნე“
     t = re.sub(r"\b([IVX]+) ს\.", lambda m: ordinal(roman_to_int(m.group(1))) + " საუკუნე", t)
@@ -238,8 +287,17 @@ def synthesize(ssml, key, region):
             "User-Agent": "istoriis-samyaro-tts",
         },
     )
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        return resp.read()
+    # უფასო ტარიფს წუთში მოთხოვნების ლიმიტი აქვს — 429-ზე ველოდებით და ვიმეორებთ
+    for attempt in range(6):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as e:
+            if e.code != 429 or attempt == 5:
+                raise
+            wait = int(e.headers.get("Retry-After") or 0) or 15 * (attempt + 1)
+            print("… Azure-ის ლიმიტი, ველოდები %d წმ" % wait)
+            time.sleep(wait)
 
 
 # ---------- მთავარი ----------
