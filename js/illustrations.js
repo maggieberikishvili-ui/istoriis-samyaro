@@ -883,6 +883,37 @@
           el("circle", { cx: 106, cy: 36, r: 5, class: "f-sand s-ink" }),
         ],
       },
+
+      /* --- თამარ მეფის ეპოქა (g8-l33–l37) --- */
+      {
+        id: "magna-carta",
+        after: "g8-l34",
+        title: "თავისუფლებების დიდი ქარტია",
+        fact: "1215 წელს ინგლისის მეფე ჯონ უმიწაწყლომ ქარტიას მოაწერა ხელი: ამიერიდან ახალ გადასახადს სამეფოს საერთო საბჭოს თანხმობის გარეშე ვეღარ დააწესებდა.",
+        shapes: [
+          el("rect", { x: 26, y: 20, width: 68, height: 58, class: "f-paper s-ink" }),
+          el("rect", { x: 20, y: 14, width: 80, height: 10, rx: 5, class: "f-sand s-ink" }),
+          el("rect", { x: 20, y: 72, width: 80, height: 10, rx: 5, class: "f-sand s-ink" }),
+          el("path", { d: "M34 34 H86 M34 42 H82 M34 50 H86 M34 58 H66", class: "s-thin o" }),
+          el("path", { d: "M74 82 L70 90 M78 82 L82 90", class: "s-terra o" }),
+          el("circle", { cx: 76, cy: 91, r: 6, class: "f-terra s-ink" }),
+          el("circle", { cx: 76, cy: 91, r: 2.4, class: "f-ochre" }),
+        ],
+      },
+      {
+        id: "caliph-banner",
+        after: "g8-l36",
+        title: "ხალიფას დროშა",
+        fact: "1195 წელს, შამქორის ბრძოლაში, შალვა ახალციხელმა ხალიფას დროშა ხელთ იგდო. თამარმა ეს დროშა ხახულის ღვთისმშობლის ხატს შესწირა.",
+        shapes: [
+          ground(92),
+          el("line", { x1: 36, y1: 12, x2: 36, y2: 92, class: "s-ink o w5" }),
+          el("circle", { cx: 36, cy: 10, r: 4, class: "f-ochre s-ink" }),
+          el("path", { d: "M38 18 H98 L86 36 L98 54 H38 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M46 28 H78 M46 44 H78", class: "s-ochre o w4" }),
+          el("path", { d: "M26 92 H46", class: "s-ink o w4" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
