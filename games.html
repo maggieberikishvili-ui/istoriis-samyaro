@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ისტორიული თამაშები გავლილ გაკვეთილებზე: სწრაფი ვიქტორინა, დროის ხაზი, „ვინ ვარ მე?“ და დეტექტივი.">
   <title>თამაშები — ისტორიის სამყარო</title>
+  <!-- პირადი გვერდი (შესვლის შემდეგ) — საძიებოში არ ჩანს -->
+  <meta name="robots" content="noindex">
 
   <!-- საერთო საცავი: ავტორიზაციის შემოწმება + თემის ადრეული ჩატვირთვა -->
   <script src="js/storage.js" data-auth="required"></script>
@@ -40,7 +43,7 @@
   <script src="js/games.js" defer></script>
 </head>
 <body>
-  <div class="lesson-app games-app">
+  <main class="lesson-app games-app">
 
     <!-- ============ თამაშების მენიუ ============ -->
     <section class="games-hub" id="hub" aria-labelledby="hubTitle">
@@ -146,7 +149,7 @@
         <span class="race-hud__combo" id="raceCombo" hidden></span>
       </div>
 
-      <main class="lesson-stage race-stage" id="raceStage" aria-live="polite"></main>
+      <div class="lesson-stage race-stage" id="raceStage" aria-live="polite"></div>
     </section>
 
     <!-- ============ მეხსიერების ბარათები ============ -->
@@ -159,10 +162,10 @@
           <span>⏱ <strong id="memoryTime">0:00</strong></span>
         </div>
       </header>
-      <main class="memory-stage">
+      <div class="memory-stage">
         <p class="memory-hint">იპოვე ცნება და მისი განმარტება</p>
         <div class="memory-grid" id="memoryGrid"></div>
-      </main>
+      </div>
     </section>
 
     <!-- ============ დროის ხაზი ============ -->
@@ -175,7 +178,7 @@
         <span class="race-clock tl-round" id="timelineRound">1 / 3</span>
       </header>
 
-      <main class="lesson-stage tl-stage">
+      <div class="lesson-stage tl-stage">
         <p class="exercise__label">ააშენე დროის კედელი</p>
         <p class="tl-instruction" id="timelineInstruction">ყველაზე ძველი მოვლენა — საძირკველში (ქვემოთ), ყველაზე ახალი — ზემოთ. აგური გადაათრიე კედელზე ან ჯერ შეეხე მას, მერე — „＋ აქ“ ადგილს.</p>
 
@@ -189,7 +192,7 @@
           <h2 class="tl-answer__title">სწორი თანმიმდევრობა — ძველიდან ახლისკენ</h2>
           <ol class="tl-answer__list" id="timelineAnswerList"></ol>
         </div>
-      </main>
+      </div>
 
       <footer class="lesson-footer" id="timelineFooter" data-state="idle">
         <div class="lesson-footer__inner">
@@ -215,17 +218,17 @@
         <span class="race-clock tl-round" id="whoRound">1 / 5</span>
       </header>
 
-      <main class="lesson-stage who-stage">
+      <div class="lesson-stage who-stage">
         <div class="who-head">
           <span class="who-kind" id="whoKind"></span>
           <span class="who-points" id="whoPoints"></span>
         </div>
-        <h1 class="who-title">ვინ ვარ მე?</h1>
+        <h2 class="who-title">ვინ ვარ მე?</h2>
         <ol class="who-clues" id="whoClues" aria-live="polite"></ol>
         <button type="button" class="btn btn--outline btn--block who-more" id="whoMore">🔍 კიდევ ერთი მინიშნება (−1 ქულა)</button>
         <p class="who-hint" id="whoHint" role="status"></p>
         <div class="options who-options" id="whoOptions"></div>
-      </main>
+      </div>
 
       <footer class="lesson-footer" id="whoFooter" data-state="idle">
         <div class="lesson-footer__inner">
@@ -254,7 +257,7 @@
         <span>📅 დღის გამოწვევა</span>
         <span>⏱ <strong id="dailyTime">0:00</strong></span>
       </div>
-      <main class="lesson-stage race-stage" id="dailyStage" aria-live="polite"></main>
+      <div class="lesson-stage race-stage" id="dailyStage" aria-live="polite"></div>
     </section>
 
     <!-- ============ შედეგი ============ -->
@@ -266,12 +269,12 @@
         <span class="race-clock tl-round" id="detectiveRound">1 / 3</span>
       </header>
 
-      <main class="lesson-stage dt-stage">
+      <div class="lesson-stage dt-stage">
         <p class="exercise__label">იპოვე ყალბი დეტალები</p>
         <p class="dt-task" id="detectiveTask" aria-live="polite"></p>
         <article id="detectiveDoc"></article>
         <ol class="dt-evidence" id="detectiveEvidence" hidden></ol>
-      </main>
+      </div>
 
       <footer class="lesson-footer" id="detectiveFooter" data-state="idle">
         <div class="lesson-footer__inner">
@@ -289,7 +292,7 @@
 
     <section class="result game-result" id="result" aria-labelledby="resultTitle" hidden>
       <div class="result__emblem result__emblem--win" id="resultEmblem" aria-hidden="true">🏆</div>
-      <h1 class="result__title" id="resultTitle"></h1>
+      <h2 class="result__title" id="resultTitle"></h2>
       <p class="result__subtitle" id="resultSubtitle"></p>
       <p class="game-result__record" id="resultRecord" hidden>🎉 ახალი რეკორდი!</p>
       <div class="result__stats" id="resultStats"></div>
@@ -304,6 +307,6 @@
         <button type="button" class="btn btn--outline btn--block" id="resultMenu">თამაშების მენიუ</button>
       </div>
     </section>
-  </div>
+  </main>
 </body>
 </html>

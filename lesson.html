@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ისტორიის გაკვეთილი: მოკლე თეორია და სავარჯიშოები.">
   <title>ისტორიის სამყარო — გაკვეთილი</title>
+  <!-- პირადი გვერდი (შესვლის შემდეგ) — საძიებოში არ ჩანს -->
+  <meta name="robots" content="noindex">
 
   <!-- საერთო საცავი: ავტორიზაციის შემოწმება + თემის ადრეული ჩატვირთვა -->
   <script src="js/storage.js" data-auth="required"></script>
@@ -68,7 +71,7 @@
     <!-- გამარჯვების ეკრანი -->
     <section class="result" id="victoryScreen" aria-labelledby="victoryTitle" hidden>
       <div class="result__emblem result__emblem--win" id="victoryEmblem" aria-hidden="true">🏆</div>
-      <h1 class="result__title" id="victoryTitle">გაკვეთილი დასრულდა!</h1>
+      <h2 class="result__title" id="victoryTitle">გაკვეთილი დასრულდა!</h2>
       <p class="result__subtitle" id="victorySubtitle"></p>
       <div class="result__stats">
         <div class="result-stat result-stat--xp">
@@ -90,7 +93,7 @@
     <!-- სიცოცხლეები ამოიწურა -->
     <section class="result" id="gameOverScreen" aria-labelledby="gameOverTitle" hidden>
       <div class="result__emblem result__emblem--lose" aria-hidden="true">💔</div>
-      <h1 class="result__title" id="gameOverTitle">სიცოცხლეები ამოიწურა — სცადე თავიდან!</h1>
+      <h2 class="result__title" id="gameOverTitle">სიცოცხლეები ამოიწურა — სცადე თავიდან!</h2>
       <p class="result__subtitle">დაფაზე გაიარე „❤️ აღდგენის“ სავარჯიშო ან დაბრუნდი ხვალ — ახალ დღეს სიცოცხლეები 5-მდე შეივსება. რამდენიმე წამში ავტომატურად გადახვალ დაფაზე.</p>
       <a class="btn btn--danger btn--block result__btn" href="dashboard.html">დაფაზე დაბრუნება</a>
     </section>

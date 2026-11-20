@@ -582,7 +582,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
     if (step.type === "truefalse") {
       stage.append(createEl("p", "exercise__label", "სწორია თუ მცდარია?"));
-      stage.append(createEl("h1", "exercise__question race-question", step.statement));
+      stage.append(createEl("h2", "exercise__question race-question", step.statement));
       options = [
         { text: "სწორია", correct: step.answer === true },
         { text: "მცდარია", correct: step.answer === false },
@@ -604,7 +604,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       options = shuffleFn(step.options.map((t, i) => ({ text: t, correct: i === step.answer })));
     } else {
       stage.append(createEl("p", "exercise__label", "აირჩიე სწორი პასუხი"));
-      stage.append(createEl("h1", "exercise__question race-question", step.question));
+      stage.append(createEl("h2", "exercise__question race-question", step.question));
       options = shuffleFn(step.options.map((t, i) => ({ text: t, correct: i === step.answer })));
     }
 
