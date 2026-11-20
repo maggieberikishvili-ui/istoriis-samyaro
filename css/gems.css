@@ -1,0 +1,89 @@
+/* ==========================================================
+   ძვირფასი ქვები (js/gems.js) — ფერები css/variables.css-ის --gem-* ცვლადებიდან
+   ========================================================== */
+
+/* სპრაიტი (გრადიენტები + სიმბოლოები) — ეკრანზე არ ჩანს */
+.gem-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.gem {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* --- გრადიენტის ფერები --- */
+.gem-stop--lapis-hi { stop-color: var(--gem-lapis-hi); }
+.gem-stop--lapis-mid { stop-color: var(--gem-lapis-mid); }
+.gem-stop--lapis-lo { stop-color: var(--gem-lapis-lo); }
+.gem-stop--carnelian-hi { stop-color: var(--gem-carnelian-hi); }
+.gem-stop--carnelian-mid { stop-color: var(--gem-carnelian-mid); }
+.gem-stop--carnelian-lo { stop-color: var(--gem-carnelian-lo); }
+.gem-stop--gold-hi { stop-color: var(--gem-gold-hi); }
+.gem-stop--gold-mid { stop-color: var(--gem-gold-mid); }
+.gem-stop--gold-lo { stop-color: var(--gem-gold-lo); }
+.gem-stop--agate-hi { stop-color: var(--gem-agate-hi); }
+.gem-stop--agate-mid { stop-color: var(--gem-agate-mid); }
+.gem-stop--agate-lo { stop-color: var(--gem-agate-lo); }
+.gem-stop--silver-hi { stop-color: var(--gem-silver-hi); }
+.gem-stop--silver-mid { stop-color: var(--gem-silver-mid); }
+.gem-stop--silver-lo { stop-color: var(--gem-silver-lo); }
+.gem-stop--shell-hi { stop-color: var(--gem-shell-hi); }
+.gem-stop--shell-mid { stop-color: var(--gem-shell-mid); }
+.gem-stop--shell-lo { stop-color: var(--gem-shell-lo); }
+
+/* --- კონტური, ჩრდილი, წახნაგები, ბზინვარება --- */
+.gem-edge {
+  fill: none;
+  stroke-width: 1.6;
+}
+.gem-edge--lapis { stroke: var(--gem-lapis-edge); }
+.gem-edge--carnelian { stroke: var(--gem-carnelian-edge); }
+.gem-edge--gold { stroke: var(--gem-gold-edge); }
+.gem-edge--agate { stroke: var(--gem-agate-edge); }
+.gem-edge--silver { stroke: var(--gem-silver-edge); }
+.gem-edge--shell { stroke: var(--gem-shell-edge); }
+
+.gem-shadow {
+  fill: var(--gem-shadow);
+  opacity: 0.18;
+}
+
+.gem-facets {
+  fill: none;
+  stroke: var(--gem-shine);
+  stroke-width: 0.8;
+  opacity: 0.28;
+}
+
+.gem-gloss {
+  fill: var(--gem-shine);
+  opacity: 0.35;
+}
+
+/* --- ზედაპირის ნახატი --- */
+.gem-tx--cloud { fill: var(--gem-lapis-cloud); opacity: 0.18; }
+.gem-tx--vein { fill: none; stroke: var(--gem-lapis-vein); opacity: 0.5; }
+.gem-tx--fleck { fill: var(--gem-lapis-fleck); }
+.gem-tx--band { fill: none; stroke-width: 2.2; opacity: 0.55; }
+.gem-tx--band-light { stroke: var(--gem-agate-light); }
+.gem-tx--band-dark { stroke: var(--gem-agate-dark); }
+.gem-tx--glow { fill: var(--gem-carnelian-glow); opacity: 0.35; }
+.gem-tx--glow-soft { fill: var(--gem-carnelian-glow-soft); opacity: 0.18; }
+.gem-tx--pearl-1 { fill: var(--gem-pearl-1); opacity: 0.55; }
+.gem-tx--pearl-2 { fill: var(--gem-pearl-2); opacity: 0.55; }
+.gem-tx--pearl-3 { fill: var(--gem-pearl-3); opacity: 0.5; }
+.gem-tx--metal { fill: var(--gem-shine); opacity: 0.22; }
+
+/* --- ცარიელი ბუდე --- */
+.gem-socket {
+  fill: var(--gem-socket);
+  stroke: var(--gem-socket-edge);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}

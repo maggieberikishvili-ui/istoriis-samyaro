@@ -592,16 +592,13 @@
   z-index: 0;
 }
 
-.path__route-line {
-  fill: none;
-  stroke: var(--route-ahead);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-dasharray: 7 7;
+/* ლურსმნული სოლები (js/gems.js → wedge): გავლილი გზა მუქია, წინ — ღია */
+.path__wedge {
+  fill: var(--wedge-ahead);
 }
 
-.path__route-line--done {
-  stroke: var(--route-done);
+.path__wedge--done {
+  fill: var(--wedge-done);
 }
 
 .path__item {
@@ -691,6 +688,53 @@
 /* დაბლოკილი — მქრქალი ღია ქვა */
 .medallion--locked {
   cursor: not-allowed;
+}
+
+/* --- ძვირფასი ქვა ბუდეში (js/gems.js) — მედალიონის წრის ნაცვლად --- */
+.medallion--gem {
+  --size: var(--gem-size);
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.medallion--gem.medallion--current {
+  --size: var(--gem-size-current);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--gem-glow-ring), 0 0 18px var(--gem-glow);
+}
+
+.medallion--gem:hover,
+.medallion--gem.medallion--completed:hover,
+.medallion--gem.medallion--current:hover {
+  background-color: transparent;
+}
+
+.medallion--gem.medallion--completed:hover {
+  transform: translateY(-2px);
+}
+
+.medallion--gem .medallion__symbol {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.medallion--gem .medallion__symbol svg.gem {
+  width: 100%;
+  height: 100%;
+}
+
+.medallion__lock {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--gem-socket-edge);
+}
+
+.medallion__lock svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* "დაწყება" — სადა იარლიყი მიმდინარე გაკვეთილის თავზე */
@@ -945,20 +989,12 @@
    ქვეთავები ბილიკზე — ფერადი ზოლი (დაკეცვა + „თემები“)
    ---------------------------------------------------------- */
 
-/* ქვეთავის ფერი რიგრიგობით: ზოლი, ნომერი, გავლილი მედალიონები და გზა */
+/* ქვეთავის ფერი რიგრიგობით: ზოლი და ნომერი */
 .sec-0 { --sec: var(--color-primary); --sec-dark: var(--color-primary-dark); }
 .sec-1 { --sec: var(--color-slate);   --sec-dark: var(--color-slate-dark); }
 .sec-2 { --sec: var(--color-purple);  --sec-dark: var(--color-purple-dark); }
 .sec-3 { --sec: var(--color-teal);    --sec-dark: var(--color-teal-dark); }
 .sec-4 { --sec: var(--color-accent);  --sec-dark: var(--color-accent-dark); }
-
-.path__item[data-section] .medallion--completed {
-  --fill: var(--sec);
-}
-
-.path__item[data-section] .medallion--completed:hover {
-  background-color: var(--sec-dark);
-}
 
 .path__section {
   position: relative;
@@ -1121,4 +1157,68 @@
 /* დაკეცილი ქვეთავის შემდეგ ბილიკის დიდი დაშორება არ სჭირდება */
 .path__section[data-open="false"] {
   margin-bottom: -2.75rem;
+}
+
+/* ----------------------------------------------------------
+   შუმერული ფონი: ძლივს შესამჩნევი ლურსმნული ჩანაწერი +
+   საბეჭდავის ფრიზი გვერდის თავში და ბოლოში (ფერი — variables.css)
+   ---------------------------------------------------------- */
+body {
+  overflow-x: clip;                  /* ფრიზი ეკრანის მთელ სიგანეზეა */
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--wedge-bg);
+  opacity: var(--wedge-bg-opacity);
+  -webkit-mask: url("../assets/images/cuneiform-tile.svg") repeat 0 0 / 200px 200px;
+  mask: url("../assets/images/cuneiform-tile.svg") repeat 0 0 / 200px 200px;
+}
+
+.dashboard {
+  position: relative;
+  padding-top: calc(var(--frieze-height) * 0.72);
+  padding-bottom: calc(var(--frieze-height) + var(--space-5));
+}
+
+.dashboard::before,
+.dashboard::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  height: var(--frieze-height);
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--frieze-color);
+  opacity: var(--frieze-opacity);
+  /* ნახატი (ზოლად მეორდება) × გამჭვირვალობის გრადიენტი — შიგთავსისკენ ქრება */
+  -webkit-mask-repeat: repeat-x, no-repeat;
+  mask-repeat: repeat-x, no-repeat;
+  -webkit-mask-size: auto 100%, 100% 100%;
+  mask-size: auto 100%, 100% 100%;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.dashboard::before {
+  top: 0;
+  -webkit-mask-image: url("../assets/images/frieze-top.svg"), linear-gradient(#000 60%, transparent);
+  mask-image: url("../assets/images/frieze-top.svg"), linear-gradient(#000 60%, transparent);
+}
+
+.dashboard::after {
+  bottom: 0;
+  -webkit-mask-image: url("../assets/images/frieze-bottom.svg"), linear-gradient(transparent, #000 40%);
+  mask-image: url("../assets/images/frieze-bottom.svg"), linear-gradient(transparent, #000 40%);
+}
+
+@media (max-width: 600px) {
+  .dashboard {
+    --frieze-height: 96px;
+  }
 }

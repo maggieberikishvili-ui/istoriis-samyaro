@@ -450,13 +450,20 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
     const wrap = createEl("div", "medallion-wrap");
 
-    const node = createEl("button", "medallion medallion--" + status);
+    const node = createEl("button", "medallion medallion--gem medallion--" + status);
     node.type = "button";
 
+    // ერთი გაკვეთილი = ერთი ქვა (js/gems.js): გავლილზე — ქვა, დანარჩენზე — ცარიელი ბუდე
+    const gems = window.IMS_GEMS;
+    const kind = gems.kindFor(course.lessons.indexOf(lesson));
     const symbol = createEl("span", "medallion__symbol");
     symbol.setAttribute("aria-hidden", "true");
-    if (status === "locked") symbol.append(lockIcon());
-    else symbol.textContent = status === "completed" ? "✓" : "★";
+    symbol.append(gems.icon(kind, status === "completed" ? "gem" : "socket"));
+    if (status === "locked") {
+      const lock = createEl("span", "medallion__lock");
+      lock.append(lockIcon());
+      symbol.append(lock);
+    }
     node.append(symbol);
 
     const statusText = { completed: "დასრულებული", current: "მიმდინარე", locked: "დაბლოკილი" }[status];
@@ -621,7 +628,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   /* ---------- რუკის მარშრუტი (SVG) ---------- */
 
-  /** მედალიონების ცენტრებს აერთებს დაკლაკნილი წყვეტილი ხაზით. */
+  /** ქვების ცენტრებს აერთებს დაკლაკნილი გზით — ლურსმნული სოლების რიგით. */
   function drawRoute(path) {
     const svg = path.querySelector(".path__route");
     if (!svg) return;
@@ -634,35 +641,55 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     if (box.width === 0) return;
     svg.setAttribute("viewBox", "0 0 " + box.width + " " + box.height);
 
+    // ქვა + სათაური: აქ სოლები არ ჯდება (გზა სათაურის ქვემოდან იწყება)
+    const PAD = 6;
+    const zones = items.map((item) => {
+      const r = item.getBoundingClientRect();
+      return {
+        left: r.left - box.left - PAD, right: r.right - box.left + PAD,
+        top: r.top - box.top - PAD, bottom: r.bottom - box.top + PAD,
+      };
+    });
+    const free = (p) => !zones.some((z) => p.x > z.left && p.x < z.right && p.y > z.top && p.y < z.bottom);
+
     const points = items.map((item) => {
       const r = item.querySelector(".medallion").getBoundingClientRect();
       return {
         x: r.left + r.width / 2 - box.left,
         y: r.top + r.height / 2 - box.top,
         reached: item.dataset.status !== "locked",
-        color: getComputedStyle(item).getPropertyValue("--sec").trim(),
       };
     });
 
+    // ლურსმნული სოლები მრუდის გასწვრივ: გავლილი გზა — მუქი, წინ — ღია
+    const STEP = 19;   // მანძილი სოლებს შორის
+    const probe = document.createElementNS(SVG_NS, "path");
+    svg.append(probe);
     for (let i = 0; i < points.length - 1; i++) {
       const a = points[i];
       const b = points[i + 1];
       const dy = b.y - a.y;
       // მონაცვლე მოხვევა — ძველი რუკის კლაკნილი გზა
       const bend = (i % 2 === 0 ? -1 : 1) * Math.min(48, box.width / 8);
-      const d =
+      probe.setAttribute("d",
         "M " + a.x + " " + a.y +
         " C " + (a.x + bend) + " " + (a.y + dy * 0.45) +
         ", " + (b.x - bend) + " " + (b.y - dy * 0.45) +
-        ", " + b.x + " " + b.y;
-
-      const line = document.createElementNS(SVG_NS, "path");
-      line.setAttribute("d", d);
-      line.setAttribute("class", "path__route-line" + (b.reached ? " path__route-line--done" : ""));
-      // ქვეთავის შიგნით გავლილი გზა ქვეთავის ფერისაა
-      if (b.reached && b.color && a.color === b.color) line.style.stroke = b.color;
-      svg.append(line);
+        ", " + b.x + " " + b.y);
+      const length = probe.getTotalLength();
+      const cls = "path__wedge" + (b.reached ? " path__wedge--done" : "");
+      // პირველი თავისუფალი წერტილიდან ვიწყებთ, რომ ყოველ მონაკვეთზე სოლები თანაბრად დალაგდეს
+      let t = 0;
+      while (t < length && !free(probe.getPointAtLength(t))) t += 2;
+      for (t += STEP / 2; t < length; t += STEP) {
+        const p = probe.getPointAtLength(t);
+        if (!free(p)) continue;
+        const q = probe.getPointAtLength(Math.min(length, t + 1));
+        const angle = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI;
+        svg.append(window.IMS_GEMS.wedge(p.x, p.y, angle, cls));
+      }
     }
+    probe.remove();
   }
 
   let routeFrame = 0;

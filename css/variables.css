@@ -58,6 +58,34 @@
   --mortar: #ddd2c1;                 /* აგურებს შორის ხსნარი */
   --ground: #8c8273;                 /* საძირკვლის ხაზი */
 
+  /* --- ძვირფასი ქვები ბილიკზე (js/gems.js, css/gems.css) ---
+     ქვის ფერი ორივე თემაში ერთია (ნახატია); თემას მიჰყვება მხოლოდ ბუდე,
+     ლურსმნული სოლები და ფრიზი. */
+  --gem-lapis-hi: #3a5be0;     --gem-lapis-mid: #1c34b0;     --gem-lapis-lo: #0e1c6e;     --gem-lapis-edge: #0a1550;
+  --gem-carnelian-hi: #f08a55; --gem-carnelian-mid: #c9461f; --gem-carnelian-lo: #7a220e; --gem-carnelian-edge: #5e1a0a;
+  --gem-gold-hi: #fff0a8;      --gem-gold-mid: #d9ae35;      --gem-gold-lo: #7d5a0c;      --gem-gold-edge: #5e4308;
+  --gem-agate-hi: #d9a47a;     --gem-agate-mid: #9a5e38;     --gem-agate-lo: #5a3320;     --gem-agate-edge: #3e2316;
+  --gem-silver-hi: #ffffff;    --gem-silver-mid: #b9c0ca;    --gem-silver-lo: #5f6875;    --gem-silver-edge: #454c57;
+  --gem-shell-hi: #fff9f0;     --gem-shell-mid: #ead9cc;     --gem-shell-lo: #b9a795;     --gem-shell-edge: #8e7b6a;
+  --gem-lapis-vein: #dce6ff;   --gem-lapis-cloud: #8fa6f0;   --gem-lapis-fleck: #f2d06b;
+  --gem-agate-light: #f0ddc2;  --gem-agate-dark: #6e3e24;
+  --gem-carnelian-glow: #ffb27a; --gem-carnelian-glow-soft: #ffd0a8;
+  --gem-pearl-1: #cfe6e2;      --gem-pearl-2: #f2cfda;       --gem-pearl-3: #d6d9f2;
+  --gem-shine: #ffffff;        --gem-shadow: #000000;
+  --gem-size: 62px;
+  --gem-size-current: 70px;
+  --gem-glow: rgba(201, 162, 39, 0.45);   /* მიმდინარე ბუდის ოქროსფერი შუქი */
+  --gem-glow-ring: rgba(201, 162, 39, 0.18);
+  --gem-socket: #efe7d9;                  /* ცარიელი ბუდე */
+  --gem-socket-edge: #c9bca6;
+  --wedge-done: #5a4636;                  /* ლურსმნული სოლი: გავლილი გზა */
+  --wedge-ahead: #d3c6b0;                 /*                  წინ მდებარე */
+  --wedge-bg: #7a5a3c;                    /* ფონის ლურსმნული ჩანაწერი */
+  --wedge-bg-opacity: 0.07;
+  --frieze-color: #2b4a9e;                /* საბეჭდავის ფრიზი — ლაჟვარდი */
+  --frieze-opacity: 0.42;
+  --frieze-height: 130px;
+
   /* --- ტიპოგრაფია --- */
   --font-main: "Noto Sans Georgian", "FiraGO", "BPG Arial", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-brand: "Gelasio", Georgia, "Times New Roman", serif; /* მხოლოდ „Edubba“ ლოგოს წარწერისთვის */
@@ -139,6 +167,16 @@
     --color-brand-tag: #C98A64;
     --stone: #3a3630;
     --stone-ink: #9c9284;
+    --gem-glow: rgba(217, 174, 53, 0.5);
+    --gem-glow-ring: rgba(217, 174, 53, 0.22);
+    --gem-socket: #2f2822;
+    --gem-socket-edge: #6b5d4e;
+    --wedge-done: #e3cdb4;
+    --wedge-ahead: #51473c;
+    --wedge-bg: #e8d5bf;
+    --wedge-bg-opacity: 0.06;
+    --frieze-color: #9fb4f2;
+    --frieze-opacity: 0.22;
     --route-done: #cf7a55;
     --route-ahead: #4c463e;
     --brick: #4a3a30;
@@ -183,6 +221,16 @@
   --color-brand-tag: #C98A64;
   --stone: #3a3630;
   --stone-ink: #9c9284;
+  --gem-glow: rgba(217, 174, 53, 0.5);
+  --gem-glow-ring: rgba(217, 174, 53, 0.22);
+  --gem-socket: #2f2822;
+  --gem-socket-edge: #6b5d4e;
+  --wedge-done: #e3cdb4;
+  --wedge-ahead: #51473c;
+  --wedge-bg: #e8d5bf;
+  --wedge-bg-opacity: 0.06;
+  --frieze-color: #9fb4f2;
+  --frieze-opacity: 0.22;
   --route-done: #cf7a55;
   --route-ahead: #4c463e;
   --brick: #4a3a30;

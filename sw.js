@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v57";
+const VERSION = "v58";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -38,6 +38,7 @@ const CORE_FILES = [
   "./css/global.css",
   "./css/auth.css",
   "./css/dashboard.css",
+  "./css/gems.css",
   "./css/lesson.css",
   "./css/games.css",
   "./css/timeline-board.css",
@@ -65,6 +66,7 @@ const CORE_FILES = [
   "./js/whoami-data.js",
   "./js/timeline-board.js",
   "./js/illustrations.js",
+  "./js/gems.js",
   "./js/auth.js",
   "./js/dashboard.js",
   "./js/lesson.js",
@@ -87,6 +89,10 @@ const CORE_FILES = [
   "./icons/apple-touch-icon.png",
   // სასწავლო სურათები, რომლებიც ოფლაინშიც თავიდანვე უნდა იყოს ხელმისაწვდომი
   "./assets/images/clay-pot.jpg",
+  // დაფის შუმერული ფონი (ფრიზი + ლურსმნული ჩანაწერი)
+  "./assets/images/frieze-top.svg",
+  "./assets/images/frieze-bottom.svg",
+  "./assets/images/cuneiform-tile.svg",
 ];
 
 const FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
