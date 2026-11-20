@@ -58,6 +58,7 @@
   const passwordToggle = document.getElementById("passwordToggle");
   const submitBtn = document.getElementById("submitBtn");
   const guestBtn = document.getElementById("guestBtn");
+  const switchBtn = document.getElementById("switchToRegister");
   const tabs = document.querySelectorAll(".tab");
 
   let mode = "login"; // "login" | "register"
@@ -76,6 +77,7 @@
   function clearMessage() {
     message.textContent = "";
     message.hidden = true;
+    switchBtn.hidden = true;
     [nameInput, emailInput, passwordInput].forEach((el) => el.removeAttribute("aria-invalid"));
   }
 
@@ -204,7 +206,13 @@
     const failText = "ელ-ფოსტა ან პაროლი არასწორია.";
 
     if (!account) {
-      showMessage(failText, "error");
+      // სერვერი ჯერ არ გვაქვს: ანგარიში მხოლოდ იმ ბრაუზერშია, სადაც შეიქმნა.
+      // ამიტომ პირდაპირ ვეუბნებით, რომ აქ ასეთი ანგარიში არ არის, და რეგისტრაციას ვთავაზობთ.
+      showMessage(
+        "ამ ბრაუზერში ასეთი ანგარიში არ არის. ანგარიში ინახება მხოლოდ იმ მოწყობილობაზე, სადაც შექმენი — აქ ახალი რეგისტრაცია გჭირდება.",
+        "error"
+      );
+      switchBtn.hidden = false;
       return;
     }
 
@@ -247,6 +255,11 @@
     }
   });
 
+  switchBtn.addEventListener("click", () => {
+    setMode("register"); // ელ-ფოსტა და პაროლი ველებში რჩება
+    nameInput.focus();
+  });
+
   /* ---------- სტუმარი ---------- */
 
   guestBtn.addEventListener("click", () => {
@@ -266,7 +279,7 @@
   function showAuth(visible) {
     roleCard.hidden = visible;
     authCard.hidden = !visible;
-    if (visible) emailInput.focus();
+    if (visible) (mode === "register" ? nameInput : emailInput).focus();
   }
 
   document.getElementById("roleStudent").addEventListener("click", () => showAuth(true));
@@ -286,5 +299,11 @@
   });
   installBtn.addEventListener("click", () => store.promptInstall());
 
-  setMode("login");
+  // ამ ბრაუზერში ჯერ არავინ დარეგისტრირებულა → ვიწყებთ რეგისტრაციით
+  setMode(Object.keys(store.getUsers()).length ? "login" : "register");
+
+  // Messenger / Instagram / Facebook / TikTok-ის შიდა ბრაუზერი
+  if (/FBAN|FBAV|FB_IAB|Messenger|Instagram|TikTok|musical_ly/i.test(navigator.userAgent)) {
+    document.getElementById("inAppWarning").hidden = false;
+  }
 })();

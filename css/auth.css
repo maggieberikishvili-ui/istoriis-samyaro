@@ -161,8 +161,14 @@
   margin-bottom: var(--space-5);
 }
 
-.auth-form .alert {
+.auth-form .alert,
+.auth-switch,
+.auth-inapp {
   margin-bottom: var(--space-4);
+}
+
+.auth-inapp {
+  font-weight: var(--fw-regular);
 }
 
 .password-wrap {

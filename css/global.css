@@ -279,6 +279,12 @@ a {
   border-color: var(--color-primary);
 }
 
+.alert--info {
+  color: var(--color-text);
+  background-color: var(--color-secondary-light);
+  border-color: var(--color-secondary);
+}
+
 /* ----------------------------------------------------------
    ანიმაციის შემცირება
    ---------------------------------------------------------- */

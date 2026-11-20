@@ -84,6 +84,11 @@
       <!-- ავტორიზაცია -->
       <section class="card auth-card" id="authCard" aria-label="ავტორიზაცია" hidden>
         <button type="button" class="btn btn--ghost role-back" id="roleBack">← ვინ ხარ? (შეცვლა)</button>
+        <!-- Messenger/Instagram-ის შიდა ბრაუზერი მონაცემებს ხშირად შლის -->
+        <p class="alert alert--info auth-inapp" id="inAppWarning" hidden>
+          ⚠️ ლინკი გახსნილია აპის შიგნით (მაგ. Messenger). ანგარიში და პროგრესი რომ არ დაიკარგოს,
+          გახსენი გვერდი Chrome-ში ან Safari-ში (მენიუ ⋯ → „ბრაუზერში გახსნა“).
+        </p>
         <div class="tabs" role="tablist" aria-label="ავტორიზაციის რეჟიმი">
           <button type="button" class="tab" role="tab" id="tabLogin"
                   aria-selected="true" aria-controls="authForm" data-mode="login">შესვლა</button>
@@ -95,6 +100,9 @@
           <h2 class="auth-form__title" id="formTitle">კეთილი იყოს შენი დაბრუნება!</h2>
 
           <div class="alert alert--error" id="formMessage" role="alert" hidden></div>
+          <button type="button" class="btn btn--outline btn--block auth-switch" id="switchToRegister" hidden>
+            შექმენი ანგარიში ამ ელ-ფოსტით
+          </button>
 
           <div class="field" id="nameField" hidden>
             <label class="field__label" for="name">სახელი</label>
@@ -130,7 +138,8 @@
         </button>
 
         <p class="auth-footer">
-          შენი პროგრესი ავტომატურად შეინახება.
+          შენი პროგრესი ავტომატურად შეინახება — ჯერჯერობით მხოლოდ ამ მოწყობილობასა და ბრაუზერში.
+          სხვა ტელეფონიდან ან ბრაუზერიდან შესასვლელად იქაც ახალი რეგისტრაცია დაგჭირდება.
         </p>
       </section>
     </main>
