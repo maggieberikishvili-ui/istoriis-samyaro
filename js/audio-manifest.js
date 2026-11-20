@@ -70,8 +70,8 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
   "g7-l18": {
     "0": "assets/audio/g7-l18/0-74ba51e2b2.mp3",
     "1": "assets/audio/g7-l18/1-f26e65cc77.mp3",
-    "2": "assets/audio/g7-l18/2-8259c86ce3.mp3",
-    "3": "assets/audio/g7-l18/3-9bdf486b2f.mp3",
+    "2": "assets/audio/g7-l18/2-3a297de10f.mp3",
+    "3": "assets/audio/g7-l18/3-c877440ba1.mp3",
     "4": "assets/audio/g7-l18/4-443419f2a2.mp3"
   },
   "g7-l19": {
@@ -110,7 +110,7 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
     "4": "assets/audio/g7-l23/4-0838bf0c55.mp3"
   },
   "g7-l24": {
-    "0": "assets/audio/g7-l24/0-7fb5eba4c2.mp3",
+    "0": "assets/audio/g7-l24/0-cae2a5e0e3.mp3",
     "1": "assets/audio/g7-l24/1-6d2936f0c7.mp3",
     "2": "assets/audio/g7-l24/2-768c69b235.mp3",
     "3": "assets/audio/g7-l24/3-7eee3b94a3.mp3",
@@ -130,20 +130,20 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
     "3": "assets/audio/g7-l26/3-cd36163c7a.mp3"
   },
   "g7-l27": {
-    "0": "assets/audio/g7-l27/0-ac49e975d9.mp3",
+    "0": "assets/audio/g7-l27/0-ae116f3893.mp3",
     "1": "assets/audio/g7-l27/1-e5029ace94.mp3",
     "2": "assets/audio/g7-l27/2-ec9c7b1ca3.mp3",
     "3": "assets/audio/g7-l27/3-5cb1ab5934.mp3"
   },
   "g7-l28": {
-    "0": "assets/audio/g7-l28/0-c3cb6b9378.mp3",
+    "0": "assets/audio/g7-l28/0-66866d7914.mp3",
     "1": "assets/audio/g7-l28/1-596ba9d4a5.mp3",
     "2": "assets/audio/g7-l28/2-33b0ee4ca2.mp3",
     "3": "assets/audio/g7-l28/3-abc7a11bdb.mp3"
   },
   "g7-l29": {
     "0": "assets/audio/g7-l29/0-973131b7d3.mp3",
-    "1": "assets/audio/g7-l29/1-f260dff8d6.mp3",
+    "1": "assets/audio/g7-l29/1-ebdf80a2f6.mp3",
     "2": "assets/audio/g7-l29/2-b9a6daff22.mp3",
     "3": "assets/audio/g7-l29/3-7237954721.mp3"
   },
@@ -185,7 +185,7 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
   },
   "g7-l35": {
     "0": "assets/audio/g7-l35/0-a14f318a3b.mp3",
-    "1": "assets/audio/g7-l35/1-66469486e1.mp3",
+    "1": "assets/audio/g7-l35/1-6728907f34.mp3",
     "2": "assets/audio/g7-l35/2-1d8d314bff.mp3",
     "3": "assets/audio/g7-l35/3-0db6f2edc6.mp3"
   },
@@ -285,7 +285,7 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
   "g7-l8": {
     "0": "assets/audio/g7-l8/0-a49632affd.mp3",
     "1": "assets/audio/g7-l8/1-2ff453461f.mp3",
-    "2": "assets/audio/g7-l8/2-708d6a9ebd.mp3",
+    "2": "assets/audio/g7-l8/2-22312eb7a1.mp3",
     "3": "assets/audio/g7-l8/3-154301e85b.mp3",
     "4": "assets/audio/g7-l8/4-c7c855aff5.mp3"
   },
@@ -418,13 +418,13 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
     "2": "assets/audio/g8-l31/2-7d03d5b635.mp3",
     "3": "assets/audio/g8-l31/3-c2040bfa58.mp3",
     "4": "assets/audio/g8-l31/4-017844872f.mp3",
-    "5": "assets/audio/g8-l31/5-0c60bd9bad.mp3",
+    "5": "assets/audio/g8-l31/5-489f1f5404.mp3",
     "6": "assets/audio/g8-l31/6-17f9067428.mp3"
   },
   "g8-l32": {
     "0": "assets/audio/g8-l32/0-bf0b25ef60.mp3",
     "1": "assets/audio/g8-l32/1-b3658c297f.mp3",
-    "2": "assets/audio/g8-l32/2-b233e6f799.mp3",
+    "2": "assets/audio/g8-l32/2-58dc60e5c3.mp3",
     "3": "assets/audio/g8-l32/3-87528ff074.mp3",
     "4": "assets/audio/g8-l32/4-f961f20b10.mp3",
     "5": "assets/audio/g8-l32/5-7e654ae703.mp3",
@@ -473,6 +473,14 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
     "3": "assets/audio/g8-l37/3-3fa1f9aa2e.mp3",
     "4": "assets/audio/g8-l37/4-3611bed0ca.mp3",
     "5": "assets/audio/g8-l37/5-49ea318c56.mp3"
+  },
+  "g8-l38": {
+    "0": "assets/audio/g8-l38/0-406c59513a.mp3",
+    "1": "assets/audio/g8-l38/1-c697ff619f.mp3",
+    "2": "assets/audio/g8-l38/2-082f287dd6.mp3",
+    "3": "assets/audio/g8-l38/3-db2d3ccef1.mp3",
+    "4": "assets/audio/g8-l38/4-f62ed6eb2e.mp3",
+    "5": "assets/audio/g8-l38/5-93d4b52327.mp3"
   },
   "g8-l4": {
     "0": "assets/audio/g8-l4/0-b32080fdc7.mp3",

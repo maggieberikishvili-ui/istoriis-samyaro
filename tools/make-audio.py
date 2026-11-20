@@ -158,6 +158,7 @@ REPLACE = [
     (r"\bland\b", "ლანდ"),
     (r"\btag\b", "ტაგ"),
     (r"(?<![ა-ჰ])ინგლ\.", "ინგლისურად"),
+    (r"(?<![ა-ჰ])კმ(?![ა-ჰ])", "კილომეტრი"),
     # ლათინური/ბერძნული სიტყვები (მე-7 კლასი) — ქართული ასოებით, რომ ქართულმა ხმამ წაიკითხოს
     (r"\bchronos\b", "ქრონოს"), (r"\blogos\b", "ლოგოს"), (r"\bethnos\b", "ეთნოს"),
     (r"\bgrapho\b", "გრაფო"), (r"\bmageia\b", "მაგეია"), (r"\banima\b", "ანიმა"),
@@ -193,6 +194,12 @@ def number_forms(t):
                lambda m: ablative(number_words(int(m.group(1)))) + " " + short_form(number_words(int(m.group(2)))) + " გრადუსამდე", t)
     t = re.sub(r"(\d{1,4})\s*°C-მდე", lambda m: short_form(number_words(int(m.group(1)))) + " გრადუსამდე", t)
     t = re.sub(r"(\d{1,4})\s*°C", lambda m: number_words(int(m.group(1))) + " გრადუსი", t)
+    # „53 000 ჰექტარს“ → „ორმოცდაცამეტი ათას ჰექტარს“ (ათასეულები ჰარით; ბრუნვაში — მოკლე ფორმა)
+    def thousands(m):
+        words = number_words(int(m.group(1) + m.group(2)))
+        nxt = m.group(3)
+        return (short_form(words) if nxt.endswith("ს") and not nxt.endswith("ის") else words) + " " + nxt  # მიცემითი: „ჰექტარს“; ნათესაობითი „წლის“ — სრული
+    t = re.sub(r"\b(\d{1,3})[  ](\d{3}) ([ა-ჰ]+)", thousands, t)
     # „400-მდე“ → „ოთხასამდე“, „3-დან“ → „სამიდან“, „700-ზე“ → „შვიდასზე“
     t = re.sub(r"(\d{1,4})-მდე\b", lambda m: terminative(number_words(int(m.group(1)))), t)
     t = re.sub(r"(\d{1,4})-დან\b", lambda m: ablative(number_words(int(m.group(1)))), t)
