@@ -81,6 +81,12 @@
   --border-width: 2px;
   --shadow-depth: 4px;               /* ღილაკის დაჭერის სიღრმე */
 
+  /* ლოგოს ნიშნის (icons/logo-mark.svg) ზომები */
+  --logo-mark-lg: 76px;
+  --logo-mark-md: 40px;
+  --logo-mark-sm: 34px;
+  --tagline-tracking: 0.28em;
+
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;

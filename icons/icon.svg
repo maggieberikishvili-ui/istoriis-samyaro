@@ -1,22 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <title>ისტორიის სამყარო</title>
-
-  <!-- ფონი: მქრქალი ზურმუხტი (full-bleed — maskable-თვის) -->
-  <rect width="512" height="512" fill="#2e6f5e"/>
-
-  <!-- სტილიზებული ტაძარი — ბრტყელი, ქაღალდისფერი; 0.9 მასშტაბით უსაფრთხო ზონაში -->
-  <g transform="translate(256 256) scale(0.9) translate(-256 -268)" fill="#f7f3ea">
-    <path d="M256 128 L398 200 Q402 206 396 210 L116 210 Q110 206 114 200 Z"/>
-    <rect x="132" y="220" width="248" height="24" rx="5"/>
-    <rect x="148" y="254" width="36" height="94" rx="5"/>
-    <rect x="208" y="254" width="36" height="94" rx="5"/>
-    <rect x="268" y="254" width="36" height="94" rx="5"/>
-    <rect x="328" y="254" width="36" height="94" rx="5"/>
-    <rect x="126" y="356" width="260" height="22" rx="5"/>
-    <rect x="106" y="384" width="300" height="24" rx="6"/>
-  </g>
-  <!-- ტერაკოტას აქცენტი ფრონტონზე -->
-  <g transform="translate(256 256) scale(0.9) translate(-256 -268)">
-    <circle cx="256" cy="180" r="11" fill="#b85d3b"/>
+  <title>Edubba</title>
+  <!-- აპის ხატულა: თიხისფერი ფონი მთელ კვადრატზე (maskable-ისთვის) და ლურსმნული ნიშანი DINGIR
+       უსაფრთხო ზონაში (ცენტრიდან ≤ 40%). წყარო: brand/edubba/b-clay-icon.svg -->
+  <rect width="512" height="512" fill="#B5653A"/>
+  <g transform="translate(256 256) scale(6.4)" fill="#3B2A20">
+    <path fill="none" stroke="#3B2A20" stroke-width="2.9" stroke-linecap="round" d="M0 -12 V24 M-12 0 H24 M-8.5 -8.5 L19 19 M-8.5 8.5 L19 -19"/>
+    <path fill-rule="evenodd" transform="rotate(0)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/>
+    <path fill-rule="evenodd" transform="rotate(-45)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/>
+    <path fill-rule="evenodd" transform="rotate(-90)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/>
+    <path fill-rule="evenodd" transform="rotate(-135)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/>
   </g>
 </svg>

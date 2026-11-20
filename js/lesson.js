@@ -84,7 +84,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       return;
     }
     practiceTarget = steps.length;
-    document.title = "ჩემი შეცდომები — ისტორიის სამყარო";
+    document.title = "ჩემი შეცდომები — Edubba";
   } else if (isPractice) {
     // სავარჯიშო საჭიროა მხოლოდ მაშინ, როცა სიცოცხლე 5-ზე ნაკლებია (და არა Pro)
     if (unlimited || initialProfile.hearts >= store.MAX_HEARTS) {
@@ -103,7 +103,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       return;
     }
     practiceTarget = steps.length; // ჩვეულებრივ ზუსტად 3
-    document.title = "სიცოცხლის აღდგენა — ისტორიის სამყარო";
+    document.title = "სიცოცხლის აღდგენა — Edubba";
   } else {
     const course = window.IMS_DATA.getCourse(params.get("course"));
     lesson = course ? window.IMS_DATA.getLesson(course.id, params.get("lesson")) : null;
@@ -126,7 +126,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
     steps = lesson.steps.slice();
     steps.forEach((s, i) => rememberStep(course.id, lesson.id, s, i));
-    document.title = lesson.title + " — ისტორიის სამყარო";
+    document.title = lesson.title + " — Edubba";
   }
 
   /** „ჩემი შეცდომები“: ამ კურსის ბოლო შეცდომები (უახლესი — პირველი), არეული. */

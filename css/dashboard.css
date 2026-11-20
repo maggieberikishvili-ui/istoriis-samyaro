@@ -39,6 +39,7 @@
   gap: var(--space-2);
   color: var(--color-primary);
   font-size: var(--fs-lg);
+  font-family: var(--font-serif);
   font-weight: var(--fw-heavy);
   text-decoration: none;
 }
@@ -48,7 +49,8 @@
 }
 
 .navbar__logo-icon {
-  font-size: 1.6rem;
+  width: var(--logo-mark-md);
+  height: var(--logo-mark-md);
 }
 
 .navbar__stats {
@@ -146,7 +148,8 @@
   }
 
   .navbar__logo-icon {
-    font-size: 1.3rem;
+    width: var(--logo-mark-sm);
+    height: var(--logo-mark-sm);
   }
 
   .btn--danger-text {

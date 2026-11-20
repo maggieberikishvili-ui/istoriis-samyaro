@@ -175,7 +175,7 @@
 
   function shareText() {
     const lines = [
-      "📊 " + profile.name + " — ისტორიის სამყარო",
+      "📊 " + profile.name + " — Edubba",
       shortDate(days[0].date) + " – " + shortDate(days[WEEK - 1].date) + ":",
       "• აქტიური დღე: " + totals.active + " / " + WEEK,
       "• ახალი გაკვეთილი: " + totals.lessons,

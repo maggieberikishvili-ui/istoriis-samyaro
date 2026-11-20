@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v55";
+const VERSION = "v56";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -81,6 +81,7 @@ const CORE_FILES = [
   "./js/detective-game.js",
   "./js/lesson-picker.js",
   "./icons/icon.svg",
+  "./icons/logo-mark.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/apple-touch-icon.png",

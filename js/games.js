@@ -1299,7 +1299,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     }
 
     const perfect = daily.correct === DAILY_SIZE;
-    state.shareText = "📅 ისტორიის სამყარო — დღის გამოწვევა\n" + todayLabel() + " · " + course.title + "\n" +
+    state.shareText = "📅 Edubba — დღის გამოწვევა\n" + todayLabel() + " · " + course.title + "\n" +
       "✅ " + daily.correct + " / " + DAILY_SIZE + " · ⏱ " + formatTime(seconds) +
       (streak >= 2 ? " · 🔥 " + streak + " დღე ზედიზედ" : "");
 

@@ -69,7 +69,22 @@
   font-weight: var(--fw-heavy);
   color: var(--color-primary);
   letter-spacing: -0.01em;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.hero__emblem-img {
+  width: var(--logo-mark-lg);
+  height: var(--logo-mark-lg);
+}
+
+/* ქვეწარწერა ლოგოს ქვეშ — „House of Tablets“ */
+.logo-tagline {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  letter-spacing: var(--tagline-tracking);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 .hero__text {

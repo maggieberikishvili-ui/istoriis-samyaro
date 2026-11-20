@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Edubba</title>
+  <!-- Edubba ლოგოს ნიშანი: თიხის ფირფიტა ლურსმნული ნიშნით DINGIR („ცა / ღვთაება“).
+       წყარო: brand/edubba/b-clay-icon.svg. ფერები: თიხა #B5653A, მელანი #3B2A20. -->
+  <rect x="9" y="5" width="46" height="54" rx="9" fill="#B5653A"/>
+  <g transform="translate(32 32) scale(0.7917)" fill="#3B2A20">
+    <path fill="none" stroke="#3B2A20" stroke-width="2.9" stroke-linecap="round" d="M0 -12 V24 M-12 0 H24 M-8.5 -8.5 L19 19 M-8.5 8.5 L19 -19"/>
+    <path fill-rule="evenodd" transform="rotate(0)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/>
+    <path fill-rule="evenodd" transform="rotate(-45)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/>
+    <path fill-rule="evenodd" transform="rotate(-90)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/>
+    <path fill-rule="evenodd" transform="rotate(-135)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/>
+  </g>
+</svg>
