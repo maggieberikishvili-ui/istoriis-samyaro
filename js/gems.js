@@ -11,6 +11,7 @@
 
    გამოყენება:
      IMS_GEMS.icon("lapis")          — გაპრიალებული ქვა
+     IMS_GEMS.icon("lapis", "rough") — ნატეხი (გავლილია შეცდომებით)
      IMS_GEMS.icon(null, "socket")   — ცარიელი ბუდე
      IMS_GEMS.wedge()                — ლურსმნული სოლი (ბილიკის კავშირისთვის)
    ========================================================== */
@@ -29,6 +30,9 @@
   const TABLE = "44,37 37,44 27,44 20,37 20,27 27,20 37,20 44,27";
   const FACETS = "M56 41.9 L44 37 M41.9 56 L37 44 M22.1 56 L27 44 M8 41.9 L20 37 " +
     "M8 22.1 L20 27 M22.1 8 L27 20 M41.9 8 L37 20 M56 22.1 L44 27";
+  // ნატეხი — უსწორმასწორო ქვა, ბზარები ერთი წერტილიდან
+  const ROUGH = "M15 12 L40 6 L53 15 L57 39 L47 58 L19 57 L8 37 Z";
+  const ROUGH_CRACKS = "M15 12 L30 30 L40 6 M30 30 L57 39 M30 30 L19 57 M30 30 L8 37 M30 30 L47 58";
 
   /** განმეორებადი „შემთხვევითი“ რიცხვები — ქვის ნახატი ყოველთვის ერთნაირია. */
   function seeded(seed) {
@@ -103,18 +107,31 @@
     return g;
   }
 
-  function gemSymbol(kind) {
-    const sym = node("symbol", { id: "ims-gem-" + kind, viewBox: "0 0 64 64" });
-    sym.append(node("polygon", { points: CUT, transform: "translate(1.5 2.5)" }, "gem-shadow"));
-    sym.append(node("polygon", { points: CUT, fill: "url(#ims-gem-g-" + kind + ")" }));
-    const inner = node("g", { "clip-path": "url(#ims-gem-clip)" });
+  /** ქვის ფორმა: წახნაგოვანი (გაპრიალებული) ან ნატეხი. */
+  function outline(rough, attrs, cls) {
+    return rough
+      ? node("path", Object.assign({ d: ROUGH }, attrs), cls)
+      : node("polygon", Object.assign({ points: CUT }, attrs), cls);
+  }
+
+  function gemSymbol(kind, rough) {
+    const sym = node("symbol", { id: "ims-gem-" + kind + (rough ? "-rough" : ""), viewBox: "0 0 64 64" });
+    sym.append(outline(rough, { transform: "translate(1.5 2.5)" }, "gem-shadow"));
+    // ნატეხი მქრქალია (css: .gem-matte), გაპრიალებული — ბზინავს
+    const body = node("g", null, rough ? "gem-matte" : null);
+    body.append(outline(rough, { fill: "url(#ims-gem-g-" + kind + ")" }));
+    const inner = node("g", { "clip-path": "url(#ims-gem-clip" + (rough ? "-rough" : "") + ")" });
     texture(kind).forEach((t) => inner.append(t));
     const facets = node("g", null, "gem-facets");
-    facets.append(node("polygon", { points: TABLE }), node("path", { d: FACETS }));
+    if (rough) facets.append(node("path", { d: ROUGH_CRACKS }));
+    else facets.append(node("polygon", { points: TABLE }), node("path", { d: FACETS }));
     inner.append(facets);
-    inner.append(node("ellipse", { cx: 22, cy: 18, rx: 11, ry: 5, transform: "rotate(-25 22 18)" }, "gem-gloss"));
-    sym.append(inner);
-    sym.append(node("polygon", { points: CUT }, "gem-edge gem-edge--" + kind));
+    if (!rough) {
+      inner.append(node("ellipse", { cx: 22, cy: 18, rx: 11, ry: 5, transform: "rotate(-25 22 18)" }, "gem-gloss"));
+    }
+    body.append(inner);
+    sym.append(body);
+    sym.append(outline(rough, null, "gem-edge gem-edge--" + kind));
     return sym;
   }
 
@@ -128,10 +145,12 @@
     const defs = node("defs");
     const clip = node("clipPath", { id: "ims-gem-clip" });
     clip.append(node("polygon", { points: CUT }));
-    defs.append(clip);
+    const clipRough = node("clipPath", { id: "ims-gem-clip-rough" });
+    clipRough.append(node("path", { d: ROUGH }));
+    defs.append(clip, clipRough);
     KINDS.forEach((kind) => defs.append(gradient(kind)));
     svg.append(defs);
-    KINDS.forEach((kind) => svg.append(gemSymbol(kind)));
+    KINDS.forEach((kind) => svg.append(gemSymbol(kind, false), gemSymbol(kind, true)));
 
     // ცარიელი ბუდე — წყვეტილი კონტური
     const socket = node("symbol", { id: "ims-gem-socket", viewBox: "0 0 64 64" });
@@ -146,13 +165,17 @@
     document.body.append(svg);
   }
 
-  /** ქვა ან ცარიელი ბუდე, როგორც <svg>. kind — KINDS-იდან; state: "gem" | "socket". */
+  /**
+   * ქვა ან ცარიელი ბუდე, როგორც <svg>. kind — KINDS-იდან;
+   * state: "polished" (ნაგულისხმევი) | "rough" (ნატეხი) | "socket" (ცარიელი ბუდე).
+   */
   function icon(kind, state) {
     ensureSprite();
     const isGem = state !== "socket" && KINDS.includes(kind);
+    const rough = isGem && state === "rough";
     const svg = node("svg", { viewBox: "0 0 64 64", "aria-hidden": "true", focusable: "false" },
-      "gem" + (isGem ? " gem--" + kind : " gem--socket"));
-    svg.append(node("use", { href: isGem ? "#ims-gem-" + kind : "#ims-gem-socket" }));
+      "gem" + (isGem ? " gem--" + kind + (rough ? " gem--rough" : "") : " gem--socket"));
+    svg.append(node("use", { href: isGem ? "#ims-gem-" + kind + (rough ? "-rough" : "") : "#ims-gem-socket" }));
     return svg;
   }
 

@@ -77,6 +77,8 @@
   --gem-glow: rgba(201, 162, 39, 0.45);   /* მიმდინარე ბუდის ოქროსფერი შუქი */
   --gem-glow-ring: rgba(201, 162, 39, 0.18);
   --gem-socket: #efe7d9;                  /* ცარიელი ბუდე */
+  --polish-bg: #f6e3da;                   /* „✦ გააპრიალე“ იარლიყი ნატეხ ქვაზე */
+  --polish-ink: #8e3a20;
   --gem-socket-edge: #c9bca6;
   --wedge-done: #5a4636;                  /* ლურსმნული სოლი: გავლილი გზა */
   --wedge-ahead: #d3c6b0;                 /*                  წინ მდებარე */
@@ -170,6 +172,8 @@
     --gem-glow: rgba(217, 174, 53, 0.5);
     --gem-glow-ring: rgba(217, 174, 53, 0.22);
     --gem-socket: #2f2822;
+    --polish-bg: #4a2a20;
+    --polish-ink: #f0a98a;
     --gem-socket-edge: #6b5d4e;
     --wedge-done: #e3cdb4;
     --wedge-ahead: #51473c;
@@ -224,6 +228,8 @@
   --gem-glow: rgba(217, 174, 53, 0.5);
   --gem-glow-ring: rgba(217, 174, 53, 0.22);
   --gem-socket: #2f2822;
+  --polish-bg: #4a2a20;
+  --polish-ink: #f0a98a;
   --gem-socket-edge: #6b5d4e;
   --wedge-done: #e3cdb4;
   --wedge-ahead: #51473c;

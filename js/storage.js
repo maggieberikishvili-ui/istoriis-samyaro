@@ -134,6 +134,7 @@
       lastActive: todayKey(),
       mistakes: [],
       activity: {},
+      gems: {},
     };
   }
 
@@ -194,7 +195,42 @@
       lastActive: typeof raw.lastActive === "string" ? raw.lastActive : todayKey(),
       mistakes: normalizeMistakes(raw.mistakes),
       activity: normalizeActivity(raw.activity),
+      gems: normalizeGems(raw.gems),
     };
+  }
+
+  /* ---------- ძვირფასი ქვები: ხარისხი თითო გაკვეთილზე ----------
+     profile.gems = { "<გაკვეთილის id>": "rough" | "polished" }
+     ნატეხი (rough) — გავლილია შეცდომებით; გაპრიალებული (polished) — უშეცდომოდ.
+     ქვა არასოდეს უარესდება და არ იკარგება. ამ ველამდე გავლილ გაკვეთილებს
+     ჩანაწერი არ აქვს — ისინი გაპრიალებულად ითვლება. */
+  const GEM_QUALITIES = ["rough", "polished"];
+
+  function normalizeGems(raw) {
+    const out = {};
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return out;
+    Object.keys(raw).forEach((id) => {
+      if (GEM_QUALITIES.includes(raw[id])) out[id] = raw[id];
+    });
+    return out;
+  }
+
+  /** ქვის მდგომარეობა: null (ჯერ არ გავლილა) | "rough" | "polished". */
+  function gemState(profile, lessonId) {
+    if (!profile || !profile.completedLessons.includes(lessonId)) return null;
+    return profile.gems[lessonId] === "rough" ? "rough" : "polished";
+  }
+
+  /**
+   * გაკვეთილის დასრულებისას (updateProfile-ის შიგნით, completedLessons-ში
+   * დამატებამდე): უშეცდომოდ → გაპრიალებული, თორემ ნატეხი (თუ უკვე არ იყო გაპრიალებული).
+   * აბრუნებს { before, after }.
+   */
+  function recordGem(profile, lessonId, flawless) {
+    const before = gemState(profile, lessonId);
+    const after = flawless || before === "polished" ? "polished" : "rough";
+    profile.gems[lessonId] = after;
+    return { before: before, after: after };
   }
 
   function loadProfile() {
@@ -534,6 +570,8 @@
     checkDaily: checkDaily,
     hasUnlimitedHearts: hasUnlimitedHearts,
     recordAnswer: recordAnswer,
+    gemState: gemState,
+    recordGem: recordGem,
     toDateKey: toDateKey,
 
     // ანგარიშები / სესია

@@ -80,6 +80,11 @@
 .gem-tx--pearl-3 { fill: var(--gem-pearl-3); opacity: 0.5; }
 .gem-tx--metal { fill: var(--gem-shine); opacity: 0.22; }
 
+/* ნატეხი: მქრქალი, ნაკლებად გაჯერებული */
+.gem-matte {
+  filter: saturate(0.7) brightness(0.88);
+}
+
 /* --- ცარიელი ბუდე --- */
 .gem-socket {
   fill: var(--gem-socket);

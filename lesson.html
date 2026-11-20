@@ -28,10 +28,12 @@
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/lesson.css">
+  <link rel="stylesheet" href="css/gems.css">
 
   <script src="js/utils.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/audio-manifest.js" defer></script>
+  <script src="js/gems.js" defer></script>
   <script src="js/lesson.js" defer></script>
 </head>
 <body>
@@ -87,6 +89,11 @@
           <span class="result-stat__label">სიცოცხლე</span>
           <span class="result-stat__value" id="victoryHearts"></span>
         </div>
+      </div>
+      <!-- ძვირფასი ქვა (js/gems.js): ნატეხი ან გაპრიალებული -->
+      <div class="result__gem" id="victoryGem" hidden>
+        <span class="result__gem-art" aria-hidden="true"></span>
+        <p class="result__gem-text"></p>
       </div>
       <a class="btn btn--block result__btn" href="dashboard.html">დაფაზე დაბრუნება</a>
     </section>

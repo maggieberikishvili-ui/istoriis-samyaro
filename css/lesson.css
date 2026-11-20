@@ -527,6 +527,37 @@
   margin: var(--space-4) 0 var(--space-6);
 }
 
+/* ძვირფასი ქვა გამარჯვების ეკრანზე (js/gems.js) */
+.result__gem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.result__gem[hidden] {
+  display: none;
+}
+
+.result__gem-art {
+  flex: none;
+  width: var(--gem-size);
+  height: var(--gem-size);
+}
+
+.result__gem-text {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: 1.4;
+}
+
 .result-stat {
   display: flex;
   flex-direction: column;

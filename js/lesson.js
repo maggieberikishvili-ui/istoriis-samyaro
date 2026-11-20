@@ -62,6 +62,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   const isReview = isPractice || isMistakes;
 
   let lesson = null;
+  let lessonCourse = null; // ჩვეულებრივი გაკვეთილის კურსი (ქვის სახეობისთვის)
   let steps;
   let practiceCourse = null;
   let practiceTarget = PRACTICE_SIZE; // რამდენი სწორი პასუხი სჭირდება სავარჯიშოს
@@ -107,6 +108,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   } else {
     const course = window.IMS_DATA.getCourse(params.get("course"));
     lesson = course ? window.IMS_DATA.getLesson(course.id, params.get("lesson")) : null;
+    lessonCourse = course;
 
     if (!lesson || !Array.isArray(lesson.steps) || lesson.steps.length === 0) {
       store.redirect(DASHBOARD_URL);
@@ -206,6 +208,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     victoryAccuracy: document.getElementById("victoryAccuracy"),
     victoryHeartsStat: document.getElementById("victoryHeartsStat"),
     victoryHearts: document.getElementById("victoryHearts"),
+    victoryGem: document.getElementById("victoryGem"),
     gameOver: document.getElementById("gameOverScreen"),
   };
 
@@ -759,8 +762,12 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     let xpGain = 0;
     let heartGain = 0;
     let firstTime = false;
+    let gem = null;
+    // უშეცდომო გავლა → გაპრიალებული ქვა; შეცდომით → ნატეხი
+    const flawless = state.correct === state.attempts;
 
     const profile = store.updateProfile((p) => {
+      gem = store.recordGem(p, lesson.id, flawless);
       firstTime = !p.completedLessons.includes(lesson.id);
       xpGain = firstTime ? store.toCount(lesson.xp, 10) : REPEAT_XP;
       if (firstTime) p.completedLessons.push(lesson.id);
@@ -787,8 +794,33 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.victorySubtitle.textContent = firstTime
       ? "„" + lesson.title + "“ — გავლილია!"
       : "განმეორებითი გავლა — სიმბოლური +" + REPEAT_XP + " XP.";
+    renderVictoryGem(gem);
     el.victory.hidden = false;
     el.victory.querySelector(".result__btn").focus();
+  }
+
+  /** ქვა გამარჯვების ეკრანზე: მიღებული/გაპრიალებული ქვა ან მინიშნება, როგორ გაპრიალდეს. */
+  function renderVictoryGem(gem) {
+    const gems = window.IMS_GEMS;
+    if (!gem || !gems || !lessonCourse) return;
+    const kind = gems.kindFor(lessonCourse.lessons.indexOf(lesson));
+    const name = gems.NAMES[kind];
+    let text;
+    if (gem.after === "rough") {
+      text = (gem.before ? name + " ჯერ ისევ ნატეხია." : "ახალი ქვა — " + name + ", ჯერ ნატეხი.") +
+        " გაიარე გაკვეთილი უშეცდომოდ და გაპრიალდება.";
+    } else if (gem.before === "rough") {
+      text = name + " გაპრიალდა! ✦";
+    } else if (gem.before === "polished") {
+      text = name + " ისევ ბრწყინავს.";
+    } else {
+      text = "ახალი ქვა — " + name + ", უშეცდომოდ და უკვე გაპრიალებული! ✦";
+    }
+    const box = el.victoryGem;
+    const art = box.querySelector(".result__gem-art");
+    art.replaceChildren(gems.icon(kind, gem.after));
+    box.querySelector(".result__gem-text").textContent = text;
+    box.hidden = false;
   }
 
   /** სავარჯიშოს დასრულება: +1 ❤️ (მაქს. 5) და +5 XP, შემდეგ დაფაზე დაბრუნება. */

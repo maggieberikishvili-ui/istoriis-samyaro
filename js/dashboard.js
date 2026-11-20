@@ -458,7 +458,10 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     const kind = gems.kindFor(course.lessons.indexOf(lesson));
     const symbol = createEl("span", "medallion__symbol");
     symbol.setAttribute("aria-hidden", "true");
-    symbol.append(gems.icon(kind, status === "completed" ? "gem" : "socket"));
+    // (typeof — თუ ბრაუზერს ჯერ ძველი storage.js აქვს, ბილიკი მაინც გამოჩნდეს)
+    const quality = status !== "completed" ? "socket"
+      : typeof store.gemState === "function" ? store.gemState(state.profile, lesson.id) : "polished";
+    symbol.append(gems.icon(kind, quality));
     if (status === "locked") {
       const lock = createEl("span", "medallion__lock");
       lock.append(lockIcon());
@@ -466,7 +469,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     }
     node.append(symbol);
 
-    const statusText = { completed: "დასრულებული", current: "მიმდინარე", locked: "დაბლოკილი" }[status];
+    const statusText = { completed: "დასრულებული", current: "მიმდინარე", locked: "დაბლოკილი" }[status] +
+      (quality === "rough" ? ", ქვა ნატეხია — გაიარე უშეცდომოდ და გაპრიალდება" : "");
     node.setAttribute("aria-label", (indexInChapter + 1) + ". " + lesson.title + " — " + statusText);
     if (status === "locked") node.setAttribute("aria-disabled", "true");
     if (status === "current") node.setAttribute("aria-current", "step");
@@ -494,6 +498,12 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     label.setAttribute("aria-hidden", "true");
 
     item.append(wrap, label);
+    // ნატეხი ქვა: მინიშნება, რომ განმეორებით უშეცდომოდ გავლა ქვას გააპრიალებს
+    if (quality === "rough") {
+      const tag = createEl("span", "path__polish", "✦ გააპრიალე");
+      tag.setAttribute("aria-hidden", "true");
+      item.append(tag);
+    }
     return item;
   }
 

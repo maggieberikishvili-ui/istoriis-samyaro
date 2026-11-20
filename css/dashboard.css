@@ -766,6 +766,16 @@
   color: var(--color-text-muted);
 }
 
+/* ნატეხი ქვის მინიშნება (stage 2: ხარისხი) */
+.path__polish {
+  padding: 1px var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--polish-ink);
+  background-color: var(--polish-bg);
+  border-radius: var(--radius-sm);
+}
+
 .path-note {
   margin-top: var(--space-5);
   text-align: center;
