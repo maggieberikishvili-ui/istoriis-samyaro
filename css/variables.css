@@ -47,6 +47,8 @@
 
   /* --- ისტორიული ელემენტები (თავები, ბილიკი) --- */
   --parchment: #f3ebdc;              /* თავის ბანერის ფონი */
+  --color-brand-ink: #3B2A20;        /* Edubba წარწერა — ლოგოს „მელანი“ */
+  --color-brand-tag: #8A5A3C;        /* „House of Tablets“ — თიხის ტონი */
   --stone: #e5ded0;                  /* დაბლოკილი ნიშანი */
   --stone-ink: #8c8273;
   --route-done: #b85d3b;             /* გავლილი მარშრუტი */
@@ -58,6 +60,7 @@
 
   /* --- ტიპოგრაფია --- */
   --font-main: "Noto Sans Georgian", "FiraGO", "BPG Arial", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-brand: "Gelasio", Georgia, "Times New Roman", serif; /* მხოლოდ „Edubba“ ლოგოს წარწერისთვის */
   --font-serif: "Noto Serif Georgian", "BPG Nino Mtavruli", Georgia, "Times New Roman", serif;
   --fs-xs: 0.8125rem;
   --fs-sm: 0.9375rem;
@@ -69,6 +72,7 @@
   --fs-display: clamp(1.4rem, 0.9rem + 2.4vw, 3rem);
   --fs-option: clamp(1.05rem, 0.85rem + 1.1vw, 1.75rem);
   --fw-regular: 500;
+  --fw-semibold: 600;
   --fw-bold: 700;
   --fw-heavy: 800;
 
@@ -131,6 +135,8 @@
     --color-text-muted: #a99f90;
 
     --parchment: #2a2723;
+    --color-brand-ink: #F5E6D8;
+    --color-brand-tag: #C98A64;
     --stone: #3a3630;
     --stone-ink: #9c9284;
     --route-done: #cf7a55;
@@ -173,6 +179,8 @@
   --color-text-muted: #a99f90;
 
   --parchment: #2a2723;
+  --color-brand-ink: #F5E6D8;
+  --color-brand-tag: #C98A64;
   --stone: #3a3630;
   --stone-ink: #9c9284;
   --route-done: #cf7a55;
