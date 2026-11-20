@@ -253,7 +253,8 @@
     if (busy) return;
     clearMessage();
     setBusy(true);
-    beginSession(store.createProfile("სტუმარი", null, true));
+    // ადრინდელი სტუმრის პროფილი აღდგება (პროგრესი და სიცოცხლეები არ ნულდება)
+    beginSession(store.loadGuestProfile() || store.createProfile("სტუმარი", null, true));
     if (!sessionStarted) setBusy(false);
   });
 

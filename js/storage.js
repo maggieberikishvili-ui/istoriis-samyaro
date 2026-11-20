@@ -31,6 +31,7 @@
     installDismissed: "ims_installDismissed",
     games: "ims_games",             // თამაშების რეკორდები და დღიური XP (თითო მომხმარებელზე)
     sectionFold: "ims_sectionFold", // თავებისა და ქვეთავების დაკეცვა დაფაზე: { chapterId/sectionId: true(გაშლილი)/false }
+    guestProfile: "ims_guestProfile", // სტუმრის პროფილი გასვლის შემდეგ (ხელახლა შესვლისას აღდგება)
   });
 
   const URLS = Object.freeze({
@@ -221,9 +222,21 @@
     return loadProfile() !== null;
   }
 
+  /**
+   * გასვლა. სტუმრის პროფილი (XP, პროგრესი, სიცოცხლეები) ცალკე ინახება,
+   * რომ „სტუმრად“ ხელახლა შესვლამ ის არ გააქროს და სიცოცხლეები უფასოდ არ შეავსოს.
+   */
   function logout() {
+    const profile = loadProfile();
+    if (profile && profile.isGuest) writeJSON(KEYS.guestProfile, profile);
     removeKey(KEYS.currentUser);
     redirect(URLS.login);
+  }
+
+  /** სტუმრის შენახული პროფილი (თუ ადრე სტუმრად იყო შესული), ან null. */
+  function loadGuestProfile() {
+    const profile = normalizeProfile(readJSON(KEYS.guestProfile, null));
+    return profile && profile.isGuest ? profile : null;
   }
 
   function redirect(url) {
@@ -453,6 +466,7 @@
     isLoggedIn: isLoggedIn,
     requireAuth: requireAuth,
     logout: logout,
+    loadGuestProfile: loadGuestProfile,
     redirect: redirect,
 
     // თემა
