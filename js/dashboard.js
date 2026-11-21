@@ -14,10 +14,10 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   const store = window.IMS_STORE;
   const data = window.IMS_DATA;
 
-  // ზიგზაგის ფორმა (ჰორიზონტალური წანაცვლება)
-  // მარშრუტი ცენტრთან ახლოს — გვერდებზე ილუსტრაციებისთვის ადგილი რჩება
-  const PATH_OFFSETS = [0, -1, 0, 1];
-  // ილუსტრაცია ყოველი მეორე გაკვეთილის შემდეგ — ასე ის ყოველთვის მარშრუტის საპირისპირო მხარესაა
+  // კლაკნილი ბილიკი (ჰორიზონტალური წანაცვლება × --path-step): ტალღა მარცხნივ და მარჯვნივ.
+  // ილუსტრაცია ყოველთვის ბილიკის საპირისპირო მხარესაა (იხ. buildDecor).
+  const PATH_OFFSETS = [0, -1.2, -2, -1.2, 0, 1.2, 2, 1.2];
+  // ილუსტრაცია ყოველი მეორე გაკვეთილის შემდეგ
   const DECOR_EVERY = 2;
 
   if (!store.requireAuth()) return;
@@ -428,7 +428,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       if (group) markSectionItem(node, group);
       path.append(node);
       if (plan.has(i)) {
-        const card = buildDecor(decor[plan.get(i)], decorIndex);
+        const card = buildDecor(decor[plan.get(i)], decorIndex, i);
         if (group) markSectionItem(card, group);
         path.append(card);
         decorIndex += 1;
@@ -651,8 +651,13 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   let decorSeq = 0;
 
-  function buildDecor(illustration, k) {
-    const item = createEl("li", "path__decor path__decor--" + (k % 2 === 0 ? "right" : "left"));
+  /** afterIndex — რომელი გაკვეთილის შემდეგ ჯდება; ბარათი ბილიკის საპირისპირო მხარეს იდგება. */
+  function buildDecor(illustration, k, afterIndex) {
+    // ბილიკის მიმართულება ამ ორ გაკვეთილს შორის (წინა + შემდეგი)
+    const n = PATH_OFFSETS.length;
+    const offset = PATH_OFFSETS[afterIndex % n] + PATH_OFFSETS[(afterIndex + 1) % n];
+    const side = offset > 0 ? "left" : offset < 0 ? "right" : (k % 2 === 0 ? "right" : "left");
+    const item = createEl("li", "path__decor path__decor--" + side);
     // სხვადასხვა ფაზა, რომ ილუსტრაციები სინქრონულად არ „ცეკვავდნენ“
     item.style.setProperty("--delay", (-(k * 1.3)).toFixed(1) + "s");
 

@@ -93,11 +93,14 @@
   --frieze-height: 130px;
 
   /* --- დაფის განლაგება (სამი სვეტი / ტელეფონის ზოლები) --- */
-  --layout-max: 1360px;
+  --layout-max: 1440px;
   --layout-left: 248px;                   /* მარცხენა სვეტი: კურსები და მენიუ */
   --layout-left-narrow: 84px;             /* ტაბლეტზე — მხოლოდ ხატულები */
   --layout-right: 300px;                  /* მარჯვენა სვეტი: „დღეს“ */
-  --layout-center-max: 720px;             /* ბილიკის მაქსიმალური სიგანე */
+  --layout-center-max: 760px;             /* ბილიკის მაქსიმალური სიგანე */
+  --layout-gap: 3.5rem;                   /* სვეტებს შორის — რომ გვერდმა „ისუნთქოს“ */
+  --path-step: 80px;                      /* ბილიკის კლაკნილის ნაბიჯი (× --offset) */
+  --path-step-sm: 26px;                   /* ტელეფონზე */
   --topbar-height: 56px;
   --tabbar-height: 62px;
   --sheet-shadow: rgba(43, 38, 35, 0.22); /* ქვემოდან ამომავალი ფანჯრის ჩრდილი */
