@@ -92,6 +92,20 @@
   --frieze-opacity: 0.42;
   --frieze-height: 130px;
 
+  /* „ურის სამეფო თამაში“ (css/ur.css): დაფა ფიზიკური ნივთია — ხე, თიხის ფირფიტები, ძვირფასი ქვები —
+     ამიტომ მისი ფერები ბნელ რეჟიმშიც იგივეა (ბნელ ბლოკებში განზრახ არ მეორდება). */
+  --ur-wood-hi: #94603a;   --ur-wood: #76462a;     --ur-wood-lo: #4f2c16;   --ur-wood-grain: #28140b;
+  --ur-hole: #3a2111;      --ur-hole-edge: #9b7350; --ur-hole-ink: #e9d6b8;
+  --ur-tile: #f2e7cf;      --ur-tile-lo: #e4d4b2;  --ur-tile-line: #5a3a22; --ur-tile-pale: #bfa582;
+  --ur-tile-blue: #2c5da8; --ur-tile-blue-lo: #1c3f7a;
+  --ur-dest: #0b8f3e;      /* „აქ წავა“ რგოლი */
+  --ur-num: #1f4e96;       /* შენი გზის ნომრები და ისრები */
+  --ur-me-hi: #6c93ec;     --ur-me: #2a51b8;       --ur-me-lo: #122a6e;     --ur-me-cloud: #78a0f0;
+  --ur-ai-hi: #f08497;     --ur-ai: #be2140;       --ur-ai-lo: #6e0a20;     --ur-ai-glint: #ff96a5; --ur-ai-glow: #e62846;
+  --ur-die-hi: #5c86e6;    --ur-die-l: #2f59c4;    --ur-die-r: #18337e;     --ur-die-edge: #0e1f52;
+  --ur-ring: 4px;          /* მოციმციმე და „აქ წავა“ რგოლის სისქე */
+  --ur-die-w: 36px;        --ur-die-h: 33px;
+
   /* --- დაფის განლაგება (სამი სვეტი / ტელეფონის ზოლები) --- */
   --layout-max: 1440px;
   --layout-left: 248px;                   /* მარცხენა სვეტი: კურსები და მენიუ */

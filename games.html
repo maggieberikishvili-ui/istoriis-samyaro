@@ -31,6 +31,7 @@
   <link rel="stylesheet" href="css/games.css">
   <link rel="stylesheet" href="css/timeline-board.css">
   <link rel="stylesheet" href="css/detective-board.css">
+  <link rel="stylesheet" href="css/ur.css">
 
   <script src="js/utils.js" defer></script>
   <script src="js/data.js" defer></script>
@@ -40,6 +41,7 @@
   <script src="js/detective-data.js" defer></script>
   <script src="js/detective-board.js" defer></script>
   <script src="js/detective-game.js" defer></script>
+  <script src="js/ur-game.js" defer></script>
   <script src="js/games.js" defer></script>
 </head>
 <body>
@@ -128,6 +130,16 @@
             <p class="game-card__record" id="detectiveRecord"></p>
           </div>
           <button type="button" class="btn btn--secondary game-card__btn" id="detectiveStart">თამაში</button>
+        </article>
+
+        <article class="game-card" id="urCard">
+          <div class="game-card__icon" aria-hidden="true">🎲</div>
+          <div class="game-card__body">
+            <h2 class="game-card__title">ურის სამეფო თამაში</h2>
+            <p class="game-card__text">4500 წლის სამაგიდო თამაში შუმერული ქალაქ ურიდან. ააგდე კამათლები და შენი 7 ლაჟვარდის ქვა ბოლომდე მიიყვანე — კომპიუტერზე ადრე.</p>
+            <p class="game-card__record" id="urRecord"></p>
+          </div>
+          <button type="button" class="btn game-card__btn" id="urStart">თამაში</button>
         </article>
       </div>
 
@@ -288,6 +300,69 @@
           <button type="button" class="btn lesson-footer__btn" id="detectiveBtn" disabled>შემოწმება</button>
         </div>
       </footer>
+    </section>
+
+    <!-- ============ ურის სამეფო თამაში (js/ur-game.js, css/ur.css) ============ -->
+    <section class="game-screen ur-screen" id="ur" data-game-screen="ur" hidden>
+      <header class="lesson-top">
+        <button type="button" class="lesson-top__close games-exit" aria-label="თამაშის შეწყვეტა">✕</button>
+        <h2 class="ur-top__title">ურის სამეფო თამაში</h2>
+        <button type="button" class="ur-ibtn" id="urHelpBtn" aria-label="როგორ ვითამაშო" title="როგორ ვითამაშო">?</button>
+        <button type="button" class="ur-ibtn" id="urSetBtn" aria-label="პარამეტრები" title="პარამეტრები" aria-expanded="false" aria-controls="urSettings">⚙️</button>
+      </header>
+
+      <div class="ur-settings" id="urSettings" hidden>
+        <button type="button" class="ur-chip" id="urModeAi" aria-pressed="true">კომპიუტერთან</button>
+        <button type="button" class="ur-chip" id="urModePvp" aria-pressed="false">👥 ორი მოთამაშე</button>
+        <button type="button" class="ur-chip" id="urRouteChip" aria-pressed="true">➰ ჩემი გზა</button>
+        <button type="button" class="ur-chip" id="urSlowChip" aria-pressed="true">🐢 კომპიუტერი ნელა</button>
+        <button type="button" class="ur-chip" id="urNewChip">↺ თავიდან</button>
+      </div>
+
+      <div class="ur-table" id="urTable">
+        <div class="ur-who ur-who--ai" id="urWhoAi">
+          <span class="ur-who__tok" aria-hidden="true"><span class="ur-pc ur-pc--ai"></span></span>
+          <span class="ur-who__name" id="urNameAi">კომპიუტერი</span>
+          <span class="ur-who__score" id="urScoreAi"></span>
+        </div>
+        <div class="ur-frame" id="urFrame"><div class="ur-board" id="urBoard"></div></div>
+        <div class="ur-who ur-who--me" id="urWhoMe">
+          <span class="ur-who__tok" aria-hidden="true"><span class="ur-pc ur-pc--me"></span></span>
+          <span class="ur-who__name" id="urNameMe">შენ</span>
+          <span class="ur-who__score" id="urScoreMe"></span>
+        </div>
+      </div>
+
+      <div class="ur-dock" id="urDock">
+        <div class="ur-dock__in">
+          <div class="ur-hint" id="urHint" aria-live="polite">
+            <p class="ur-hint__big" id="urHintBig"></p>
+            <p class="ur-hint__small" id="urHintSmall"></p>
+          </div>
+          <div class="ur-dice-wrap"><span class="ur-dice" id="urDice" role="img" aria-label="კამათლები"></span><span class="ur-dsum" id="urDsum"></span></div>
+          <button type="button" class="btn ur-roll" id="urRoll">🎲 აგდება</button>
+        </div>
+      </div>
+
+      <div class="ur-pop" id="urPop" aria-live="polite"></div>
+
+      <svg class="ur-defs" aria-hidden="true" focusable="false"><defs>
+        <linearGradient id="urLapisGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" class="ur-gs-hi"/><stop offset=".6" class="ur-gs-mid"/></linearGradient>
+      </defs></svg>
+
+      <div class="ur-modal" id="urHowto" role="dialog" aria-modal="true" aria-labelledby="urHowtoTitle" hidden>
+        <div class="ur-box">
+          <h2 id="urHowtoTitle">როგორ ვითამაშო?</h2>
+          <ul class="ur-steps">
+            <li class="ur-step"><span class="ur-step__ic" aria-hidden="true"><span class="ur-pc ur-pc--me"></span></span><div><b>მიზანი</b><span>შენი 7 ლაჟვარდისფერი ქვა დაფაზე ბოლომდე გაატარე — კომპიუტერზე ადრე. მისი ქვები ლალისფერია.</span></div></li>
+            <li class="ur-step"><span class="ur-step__ic" aria-hidden="true"><svg viewBox="0 0 30 28" id="urHowDie"></svg></span><div><b>ააგდე 4 ქვა-კამათელი</b><span>რამდენსაც თეთრი წვერი ექნება ზემოთ — იმდენი უჯრით წახვალ (0-დან 4-მდე).</span></div></li>
+            <li class="ur-step"><span class="ur-step__ic" aria-hidden="true">👆</span><div><b>დააჭირე მოციმციმე ქვას</b><span>ის თვითონ წავა მწვანე რგოლამდე. შენი გზა დაფაზე ისრებითა და ციფრებით ჩანს: 1 → 14 → 🏁.</span></div></li>
+            <li class="ur-step"><span class="ur-step__ic" aria-hidden="true"><svg viewBox="0 0 40 40" id="urHowRose"></svg></span><div><b>ვარდული — კიდევ ერთი სვლა</b><span>ლურჯ ყვავილიან ფირფიტაზე თუ დადგები, კიდევ ერთხელ ააგდებ.</span></div></li>
+            <li class="ur-step"><span class="ur-step__ic" aria-hidden="true">💥</span><div><b>შუა ზოლი საერთოა</b><span>მოწინააღმდეგის ქვაზე თუ დადგები, ის „სახლში“ ბრუნდება. შუა ვარდულზე კი ქვა დაცულია.</span></div></li>
+          </ul>
+          <button type="button" class="btn btn--block" id="urHowtoGo">დავიწყოთ!</button>
+        </div>
+      </div>
     </section>
 
     <section class="result game-result" id="result" aria-labelledby="resultTitle" hidden>
