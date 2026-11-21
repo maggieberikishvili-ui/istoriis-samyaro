@@ -39,111 +39,148 @@
   <script src="js/dashboard.js" defer></script>
 </head>
 <body>
-  <!-- ზედა პანელი -->
-  <header class="navbar">
-    <div class="navbar__inner">
-      <a class="navbar__logo" href="dashboard.html">
-        <img class="navbar__logo-icon" src="icons/logo-mark.svg" alt="" width="64" height="64">
-        <span class="navbar__logo-text">Edubba</span>
+  <!-- ტელეფონი (< 760px): ზედა ზოლი — ლოგო, კლასის ღილაკი, სტატისტიკა -->
+  <header class="topbar">
+    <a class="topbar__logo" href="dashboard.html" aria-label="Edubba — მთავარი">
+      <img src="icons/logo-mark.svg" alt="" width="64" height="64">
+    </a>
+    <button type="button" class="topbar__course" id="courseBtn" aria-controls="sideMenu" aria-expanded="false">
+      <span id="courseBtnText">კლასი</span> <span aria-hidden="true">▾</span>
+    </button>
+    <ul class="topbar__stats" aria-label="შენი სტატისტიკა">
+      <li class="mini-stat mini-stat--streak"><span aria-hidden="true">🔥</span><span data-stat="streak">0</span><span class="visually-hidden">უწყვეტი დღე</span></li>
+      <li class="mini-stat mini-stat--xp"><span aria-hidden="true">⚡</span><span data-stat="xp">0</span><span class="visually-hidden">XP</span></li>
+      <li class="mini-stat mini-stat--hearts"><span aria-hidden="true">❤️</span><span data-stat="hearts">0</span><span class="visually-hidden">სიცოცხლე</span></li>
+    </ul>
+  </header>
+
+  <div class="layout">
+    <!-- მარცხენა სვეტი: „სად ვარ“ — ლოგო, კურსები, მენიუ, პროფილი.
+         ტელეფონზე ეს სვეტი ქვემოდან ამომავალი ფანჯარაა (კლასის ღილაკი / „მე“). -->
+    <aside class="side side--left" id="sideMenu" aria-label="მენიუ">
+      <div class="side__sheet-head">
+        <span class="side__grab" aria-hidden="true"></span>
+        <button type="button" class="btn btn--ghost btn--icon side__close" id="menuClose" aria-label="მენიუს დახურვა">✕</button>
+      </div>
+
+      <a class="side__logo" href="dashboard.html">
+        <img class="side__logo-icon" src="icons/logo-mark.svg" alt="" width="64" height="64">
+        <span class="side__logo-text">Edubba</span>
       </a>
 
-      <ul class="navbar__stats" aria-label="შენი სტატისტიკა">
-        <li class="nav-stat nav-stat--streak" title="უწყვეტი დღეები">
-          <span aria-hidden="true">🔥</span>
-          <span class="nav-stat__value" id="statStreak">0</span>
-          <span class="visually-hidden">უწყვეტი დღე</span>
-        </li>
-        <li class="nav-stat nav-stat--xp" title="XP ქულები">
-          <span aria-hidden="true">⚡</span>
-          <span class="nav-stat__value" id="statXp">0</span>
-          <span class="visually-hidden">XP</span>
-        </li>
-        <li class="nav-stat nav-stat--hearts" id="heartsStat" title="სიცოცხლეები">
-          <span aria-hidden="true">❤️</span>
-          <span class="nav-stat__value" id="statHearts">0</span>
-          <span class="visually-hidden">სიცოცხლე</span>
-        </li>
-        <li class="nav-refill" id="refillItem" hidden>
-          <a class="btn btn--danger btn--refill" id="refillBtn" href="lesson.html?mode=practice"
-             title="გაიარე 3 კითხვა და აღიდგინე 1 სიცოცხლე">+ ❤️ აღდგენა</a>
-        </li>
-      </ul>
+      <section class="side__block" aria-labelledby="coursesTitle">
+        <h2 class="side__label" id="coursesTitle">კურსი</h2>
+        <div class="course-list" id="courseList" role="tablist" aria-orientation="vertical" aria-label="კურსის არჩევა"></div>
+      </section>
 
-      <div class="navbar__actions">
-        <span class="navbar__user" id="userName" title="მომხმარებელი"></span>
+      <nav class="side__block" aria-labelledby="menuTitle">
+        <h2 class="side__label" id="menuTitle">მენიუ</h2>
+        <a class="side-link is-active" href="dashboard.html" aria-current="page">
+          <span class="side-link__icon" aria-hidden="true">🗺️</span><span class="side-link__text">ბილიკი</span>
+        </a>
+        <a class="side-link" id="gamesLink" href="games.html">
+          <span class="side-link__icon" aria-hidden="true">🎮</span><span class="side-link__text">თამაშები</span>
+        </a>
+        <a class="side-link" id="mistakesNav" href="lesson.html?mode=mistakes" hidden>
+          <span class="side-link__icon" aria-hidden="true">🔁</span><span class="side-link__text">შეცდომები</span>
+          <span class="side-link__count" id="mistakesCount"></span>
+        </a>
+        <a class="side-link" href="progress.html">
+          <span class="side-link__icon" aria-hidden="true">📊</span><span class="side-link__text">პროგრესი</span>
+        </a>
+      </nav>
+
+      <div class="side__me">
+        <span class="side__avatar" id="userAvatar" aria-hidden="true"></span>
+        <span class="side__user" id="userName"></span>
         <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
           <span aria-hidden="true" id="themeIcon">🌙</span>
         </button>
-        <button type="button" class="btn btn--outline btn--danger-text" id="logoutBtn">გასვლა</button>
+        <button type="button" class="btn btn--outline btn--icon btn--danger-text" id="logoutBtn" aria-label="გასვლა" title="გასვლა">
+          <span aria-hidden="true">↪</span>
+        </button>
       </div>
-    </div>
-  </header>
+    </aside>
 
-  <main class="dashboard">
-    <!-- მისალმება -->
-    <section class="greeting" aria-labelledby="greetingTitle">
-      <h1 class="greeting__title" id="greetingTitle">გამარჯობა!</h1>
-      <p class="greeting__text">აირჩიე კურსი და გააგრძელე სწავლა.</p>
-    </section>
+    <!-- შუა: „რას ვსწავლობ“ — მხოლოდ თავები, ქვეთავები და ბილიკი -->
+    <main class="dashboard" id="main">
+      <!-- თავები: ყოველ თავს — პერგამენტის ბანერი + გაკვეთილების ბილიკი (რუკის მარშრუტით) -->
+      <section class="path-section" id="pathSection" role="tabpanel">
+        <div class="chapter-list" id="chapterList"></div>
+        <p class="path-note">ახალი თავები მალე დაემატება 📜</p>
+      </section>
+    </main>
 
-    <!-- აპლიკაციის დაყენების მინიშნება (PWA) -->
-    <section class="install-banner" id="installBanner" aria-labelledby="installTitle" hidden>
-      <span class="install-banner__icon" aria-hidden="true">📲</span>
-      <div class="install-banner__body">
-        <p class="install-banner__title" id="installTitle">დააყენე აპლიკაცია</p>
-        <p class="install-banner__text" id="installText"></p>
+    <!-- მარჯვენა სვეტი: „დღეს“ — მისალმება, სტატისტიკა, გაგრძელება, შეცდომები.
+         ტაბლეტსა და ტელეფონზე ეს ბარათები ბილიკის თავში ჩანს. -->
+    <aside class="side side--right" aria-label="დღეს">
+      <h1 class="today__hello" id="greetingTitle">გამარჯობა!</h1>
+
+      <ul class="today__stats" aria-label="შენი სტატისტიკა">
+        <li class="today-stat today-stat--streak" title="უწყვეტი დღეები">
+          <span class="today-stat__value"><span aria-hidden="true">🔥</span> <span id="statStreak" data-stat="streak">0</span></span>
+          <span class="today-stat__label">დღე</span>
+        </li>
+        <li class="today-stat today-stat--xp" title="XP ქულები">
+          <span class="today-stat__value"><span aria-hidden="true">⚡</span> <span id="statXp" data-stat="xp">0</span></span>
+          <span class="today-stat__label">XP</span>
+        </li>
+        <li class="today-stat today-stat--hearts" id="heartsStat" title="სიცოცხლეები">
+          <span class="today-stat__value"><span aria-hidden="true">❤️</span> <span id="statHearts" data-stat="hearts">0</span></span>
+          <span class="today-stat__label">სიცოცხლე</span>
+        </li>
+      </ul>
+      <div class="today__refill" id="refillItem" hidden>
+        <a class="btn btn--danger btn--refill" id="refillBtn" href="lesson.html?mode=practice"
+           title="გაიარე 3 კითხვა და აღიდგინე 1 სიცოცხლე">+ ❤️ აღდგენა</a>
       </div>
-      <div class="install-banner__actions">
-        <button type="button" class="btn btn--secondary" id="installBtn" hidden>დაყენება</button>
-        <button type="button" class="btn btn--ghost btn--icon" id="installDismiss" aria-label="მინიშნების დახურვა">✕</button>
-      </div>
-    </section>
 
-    <!-- კურსის არჩევა -->
-    <section class="courses" aria-labelledby="coursesTitle">
-      <h2 class="section-title" id="coursesTitle">კურსები</h2>
-      <div class="course-list" id="courseList" role="tablist" aria-label="კურსის არჩევა"></div>
-    </section>
-
-    <!-- თამაშები -->
-    <section class="games-entry" aria-label="თამაშები">
-      <a class="games-entry__card" id="gamesLink" href="games.html">
-        <span class="games-entry__icon" aria-hidden="true">🎮</span>
-        <span class="games-entry__body">
-          <span class="games-entry__title">თამაშები</span>
-          <span class="games-entry__text">რბოლა · მეხსიერება · დროის ხაზი · ვინ ვარ მე?</span>
+      <!-- შემდეგი გაკვეთილი -->
+      <a class="today-card today-card--continue" id="continueCard" href="lesson.html" hidden>
+        <span class="today-card__icon" id="continueGem" aria-hidden="true"></span>
+        <span class="today-card__body">
+          <span class="today-card__kicker">გააგრძელე</span>
+          <span class="today-card__title" id="continueTitle"></span>
+          <span class="today-card__meta" id="continueMeta"></span>
         </span>
-        <span class="games-entry__arrow" aria-hidden="true">→</span>
+        <span class="today-card__arrow" aria-hidden="true">▶</span>
       </a>
 
       <!-- ჩემი შეცდომები (ჩანს, როცა არჩეულ კურსში შეცდომები გაქვს) -->
-      <a class="games-entry__card games-entry__card--mistakes" id="mistakesLink" href="lesson.html?mode=mistakes" hidden>
-        <span class="games-entry__icon" aria-hidden="true">🔁</span>
-        <span class="games-entry__body">
-          <span class="games-entry__title">ჩემი შეცდომები</span>
-          <span class="games-entry__text" id="mistakesText"></span>
+      <a class="today-card today-card--mistakes" id="mistakesLink" href="lesson.html?mode=mistakes" hidden>
+        <span class="today-card__icon" aria-hidden="true">🔁</span>
+        <span class="today-card__body">
+          <span class="today-card__title">ჩემი შეცდომები</span>
+          <span class="today-card__meta" id="mistakesText"></span>
         </span>
-        <span class="games-entry__arrow" aria-hidden="true">→</span>
+        <span class="today-card__arrow" aria-hidden="true">→</span>
       </a>
 
-      <!-- პროგრესი მშობლისთვის -->
-      <a class="games-entry__card games-entry__card--progress" href="progress.html">
-        <span class="games-entry__icon" aria-hidden="true">📊</span>
-        <span class="games-entry__body">
-          <span class="games-entry__title">ჩემი პროგრესი</span>
-          <span class="games-entry__text">კვირის შეჯამება მშობლისთვის</span>
-        </span>
-        <span class="games-entry__arrow" aria-hidden="true">→</span>
-      </a>
-    </section>
+      <!-- აპლიკაციის დაყენების მინიშნება (PWA) -->
+      <section class="install-banner" id="installBanner" aria-labelledby="installTitle" hidden>
+        <span class="install-banner__icon" aria-hidden="true">📲</span>
+        <div class="install-banner__body">
+          <p class="install-banner__title" id="installTitle">დააყენე აპლიკაცია</p>
+          <p class="install-banner__text" id="installText"></p>
+        </div>
+        <div class="install-banner__actions">
+          <button type="button" class="btn btn--secondary" id="installBtn" hidden>დაყენება</button>
+          <button type="button" class="btn btn--ghost btn--icon" id="installDismiss" aria-label="მინიშნების დახურვა">✕</button>
+        </div>
+      </section>
+    </aside>
+  </div>
 
-    <!-- გაკვეთილების ბილიკი -->
-    <!-- თავები: ყოველ თავს — პერგამენტის ბანერი + გაკვეთილების ბილიკი (რუკის მარშრუტით) -->
-    <section class="path-section" id="pathSection" role="tabpanel">
-      <div class="chapter-list" id="chapterList"></div>
-      <p class="path-note">ახალი თავები მალე დაემატება 📜</p>
-    </section>
-  </main>
+  <!-- ტელეფონი: ქვედა ჩანართები -->
+  <nav class="tabbar" aria-label="ჩანართები">
+    <a class="tabbar__tab is-active" href="dashboard.html" aria-current="page"><span aria-hidden="true">🗺️</span>ბილიკი</a>
+    <a class="tabbar__tab" id="gamesTab" href="games.html"><span aria-hidden="true">🎮</span>თამაშები</a>
+    <a class="tabbar__tab" href="progress.html"><span aria-hidden="true">📊</span>პროგრესი</a>
+    <button type="button" class="tabbar__tab" id="meTab" aria-controls="sideMenu" aria-expanded="false">
+      <span aria-hidden="true">👤</span>მე<span class="tabbar__dot" id="meDot" hidden></span>
+    </button>
+  </nav>
+  <div class="menu-scrim" id="menuScrim" hidden></div>
 
   <!-- შეტყობინება (toast) -->
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

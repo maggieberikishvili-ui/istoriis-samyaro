@@ -31,16 +31,27 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   const el = {
     userName: document.getElementById("userName"),
+    userAvatar: document.getElementById("userAvatar"),
     greetingTitle: document.getElementById("greetingTitle"),
-    statStreak: document.getElementById("statStreak"),
-    statXp: document.getElementById("statXp"),
-    statHearts: document.getElementById("statHearts"),
     heartsStat: document.getElementById("heartsStat"),
     refillItem: document.getElementById("refillItem"),
     refillBtn: document.getElementById("refillBtn"),
     gamesLink: document.getElementById("gamesLink"),
+    gamesTab: document.getElementById("gamesTab"),
     mistakesLink: document.getElementById("mistakesLink"),
     mistakesText: document.getElementById("mistakesText"),
+    mistakesNav: document.getElementById("mistakesNav"),
+    mistakesCount: document.getElementById("mistakesCount"),
+    meDot: document.getElementById("meDot"),
+    continueCard: document.getElementById("continueCard"),
+    continueGem: document.getElementById("continueGem"),
+    continueTitle: document.getElementById("continueTitle"),
+    continueMeta: document.getElementById("continueMeta"),
+    courseBtn: document.getElementById("courseBtn"),
+    courseBtnText: document.getElementById("courseBtnText"),
+    meTab: document.getElementById("meTab"),
+    menuClose: document.getElementById("menuClose"),
+    menuScrim: document.getElementById("menuScrim"),
     logoutBtn: document.getElementById("logoutBtn"),
     courseList: document.getElementById("courseList"),
     pathSection: document.getElementById("pathSection"),
@@ -66,13 +77,16 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   function renderStats() {
     const p = state.profile;
     el.userName.textContent = p.name;
+    el.userAvatar.textContent = Array.from(p.name.trim())[0] || "?";
     el.greetingTitle.textContent = "გამარჯობა, " + p.name + "!";
-    el.statStreak.textContent = String(p.streak);
-    el.statXp.textContent = String(p.xp);
 
     // Pro → ∞ სიცოცხლე; სხვებს — „+ ❤️ აღდგენა“, როცა სიცოცხლე < 5
     const unlimited = store.hasUnlimitedHearts(p);
-    el.statHearts.textContent = unlimited ? "∞" : String(p.hearts);
+    // ერთი და იგივე რიცხვი ორ ადგილასაა: მარჯვენა სვეტი და ტელეფონის ზედა ზოლი
+    const values = { streak: String(p.streak), xp: String(p.xp), hearts: unlimited ? "∞" : String(p.hearts) };
+    document.querySelectorAll("[data-stat]").forEach((node) => {
+      node.textContent = values[node.dataset.stat];
+    });
     el.heartsStat.title = unlimited ? "Pro — ულიმიტო სიცოცხლე" : "სიცოცხლეები";
     el.refillItem.hidden = unlimited || p.hearts >= store.MAX_HEARTS;
   }
@@ -139,10 +153,17 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       card.setAttribute("aria-controls", "pathSection");
       card.tabIndex = selected ? 0 : -1;
 
+      const bar = createEl("span", "course-card__bar");
+      bar.setAttribute("aria-hidden", "true");
+      const fill = createEl("span");
+      fill.style.setProperty("--progress", Math.round(progress.completed / Math.max(progress.total, 1) * 100) + "%");
+      bar.append(fill);
+      card.title = course.title;
       card.append(
         createEl("span", "course-card__badge", course.badge),
         createEl("span", "course-card__title", course.title),
-        createEl("span", "course-card__meta", progress.completed + " / " + progress.total + " გაკვეთილი")
+        createEl("span", "course-card__meta", progress.completed + " / " + progress.total + " გაკვეთილი"),
+        bar
       );
 
       card.addEventListener("click", () => selectCourse(course.id));
@@ -152,14 +173,14 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   function onCourseKeydown(e) {
-    const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
+    const keys = ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp", "Home", "End"];
     if (!keys.includes(e.key)) return;
     e.preventDefault();
 
     const ids = data.courses.map((c) => c.id);
     let i = ids.indexOf(state.courseId);
-    if (e.key === "ArrowRight") i = (i + 1) % ids.length;
-    if (e.key === "ArrowLeft") i = (i - 1 + ids.length) % ids.length;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") i = (i + 1) % ids.length;
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp") i = (i - 1 + ids.length) % ids.length;
     if (e.key === "Home") i = 0;
     if (e.key === "End") i = ids.length - 1;
 
@@ -176,6 +197,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       new URLSearchParams({ mode: "practice", course: courseId }).toString();
     // თამაშები — არჩეული კურსის მასალით
     el.gamesLink.href = store.URLS.games + "?" + new URLSearchParams({ course: courseId }).toString();
+    el.gamesTab.href = el.gamesLink.href;
+    el.courseBtnText.textContent = data.getCourse(courseId).title;
     renderCourses();
     // არჩეული კლასის მასალა იტვირთება მხოლოდ საჭიროებისას (js/data/<id>.js)
     el.pathSection.setAttribute("aria-busy", "true");
@@ -185,6 +208,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       renderCourses();
       renderPath();
       renderMistakes();
+      renderContinue();
     }, data.showLoadError);
   }
 
@@ -198,7 +222,75 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.mistakesLink.href = store.URLS.lesson + "?" +
       new URLSearchParams({ mode: "mistakes", course: courseId }).toString();
     el.mistakesText.textContent = count + " კითხვა · სიცოცხლე არ აკლდება";
+    // იგივე — მარცხენა მენიუში (რაოდენობით) და ტელეფონის „მე“ ჩანართზე (წერტილით)
+    el.mistakesNav.hidden = count === 0;
+    el.mistakesNav.href = el.mistakesLink.href;
+    el.mistakesCount.textContent = String(count);
+    el.meDot.hidden = count === 0;
   }
+
+  /* ---------- „გააგრძელე“ — არჩეული კურსის შემდეგი გაკვეთილი ---------- */
+
+  function renderContinue() {
+    const course = data.getCourse(state.courseId);
+    const done = new Set(state.profile.completedLessons);
+    const index = course.lessons.findIndex((l) => !done.has(l.id));
+    el.continueCard.hidden = index === -1;
+    if (index === -1) return;
+
+    const lesson = course.lessons[index];
+    const chapterIndex = course.chapters.findIndex((ch) => ch.lessons.includes(lesson));
+    const chapter = course.chapters[chapterIndex];
+    const inChapter = chapter.lessons.indexOf(lesson);
+    let place = "თავი " + toRoman(chapterIndex + 1);
+    if (chapter.sections && chapter.sections.length) {
+      const starts = chapter.sections.map((s) => chapter.lessons.findIndex((l) => l.id === s.start));
+      let k = 0;
+      starts.forEach((start, j) => { if (start !== -1 && start <= inChapter) k = j; });
+      place = "ქვეთავი " + (chapterIndex + 1) + "." + (k + 1);
+    }
+
+    el.continueTitle.textContent = lesson.title;
+    el.continueMeta.textContent = place + " · გაკვეთილი " + (inChapter + 1);
+    el.continueGem.replaceChildren(window.IMS_GEMS.icon(window.IMS_GEMS.kindFor(index), "polished"));
+    el.continueCard.href = lessonUrl(course.id, lesson.id);
+    el.continueCard.setAttribute("aria-label", "გააგრძელე: " + lesson.title);
+  }
+
+  // 0 ❤️ — ახალ გაკვეთილს ვერ დაიწყებს (იგივე წესი, რაც ბილიკზე)
+  el.continueCard.addEventListener("click", (e) => {
+    if (!isOutOfHearts()) return;
+    e.preventDefault();
+    showToast("💔 სიცოცხლეები ამოიწურა! გაიარე სავარჯიშო სიცოცხლის აღსადგენად.");
+    nudgeRefill();
+  });
+
+  /* ---------- ტელეფონი: მენიუ ქვემოდან (კლასის ღილაკი / „მე“) ---------- */
+
+  const sideMenu = document.getElementById("sideMenu");
+
+  /** where: "top" — კლასების სია (კლასის ღილაკი), "bottom" — მენიუ და პროფილი („მე“). */
+  function setMenu(open, where) {
+    document.body.classList.toggle("menu-open", open);
+    el.menuScrim.hidden = !open;
+    el.courseBtn.setAttribute("aria-expanded", String(open));
+    el.meTab.setAttribute("aria-expanded", String(open));
+    if (!open) return;
+    sideMenu.scrollTop = where === "bottom" ? sideMenu.scrollHeight : 0;
+    el.menuClose.focus({ preventScroll: true });
+  }
+
+  el.courseBtn.addEventListener("click", () => setMenu(true, "top"));
+  el.meTab.addEventListener("click", () => setMenu(true, "bottom"));
+  el.menuClose.addEventListener("click", () => setMenu(false));
+  el.menuScrim.addEventListener("click", () => setMenu(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && document.body.classList.contains("menu-open")) setMenu(false);
+  });
+  // კლასის არჩევის შემდეგ ფანჯარა იხურება
+  el.courseList.addEventListener("click", (e) => {
+    if (e.target.closest(".course-card") && document.body.classList.contains("menu-open")) setMenu(false);
+  });
 
   /* ---------- გაკვეთილების ბილიკი ---------- */
 
@@ -783,6 +875,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     renderCourses();
     renderPath();
     renderMistakes();
+    renderContinue();
   });
 
   /* ---------- ინიციალიზაცია ---------- */

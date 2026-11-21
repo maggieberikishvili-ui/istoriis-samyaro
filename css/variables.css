@@ -92,6 +92,17 @@
   --frieze-opacity: 0.42;
   --frieze-height: 130px;
 
+  /* --- დაფის განლაგება (სამი სვეტი / ტელეფონის ზოლები) --- */
+  --layout-max: 1360px;
+  --layout-left: 248px;                   /* მარცხენა სვეტი: კურსები და მენიუ */
+  --layout-left-narrow: 84px;             /* ტაბლეტზე — მხოლოდ ხატულები */
+  --layout-right: 300px;                  /* მარჯვენა სვეტი: „დღეს“ */
+  --layout-center-max: 720px;             /* ბილიკის მაქსიმალური სიგანე */
+  --topbar-height: 56px;
+  --tabbar-height: 62px;
+  --sheet-shadow: rgba(43, 38, 35, 0.22); /* ქვემოდან ამომავალი ფანჯრის ჩრდილი */
+  --scrim: rgba(28, 22, 16, 0.45);        /* ფანჯრის უკან ფონის ჩაბნელება */
+
   /* --- ტიპოგრაფია --- */
   --font-main: "Noto Sans Georgian", "FiraGO", "BPG Arial", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-brand: "Gelasio", Georgia, "Times New Roman", serif; /* მხოლოდ „Edubba“ ლოგოს წარწერისთვის */
@@ -194,6 +205,9 @@
     --mortar: #2f2b26;
     --ground: #9c9284;
 
+    --sheet-shadow: rgba(0, 0, 0, 0.5);
+    --scrim: rgba(0, 0, 0, 0.6);
+
     color-scheme: dark;
   }
 }
@@ -251,6 +265,9 @@
   --brick-edge: #7d5c48;
   --mortar: #2f2b26;
   --ground: #9c9284;
+
+  --sheet-shadow: rgba(0, 0, 0, 0.5);
+  --scrim: rgba(0, 0, 0, 0.6);
 
   color-scheme: dark;
 }

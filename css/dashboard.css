@@ -12,87 +12,302 @@
 [data-color="gold"]   { --c: var(--color-accent);    --c-dark: var(--color-accent-dark); }
 
 /* ----------------------------------------------------------
-   ზედა პანელი
+   განლაგება — სამი სვეტი
+   კომპიუტერი (≥ 1100px): მარცხნივ მენიუ | შუაში ბილიკი | მარჯვნივ „დღეს“
+   ტაბლეტი (760–1099px): მარცხნივ მხოლოდ ხატულები, „დღეს“ ბარათები ბილიკის თავში
+   ტელეფონი (< 760px): ზედა ზოლი + ქვედა ჩანართები; მენიუ ქვემოდან ამოდის
    ---------------------------------------------------------- */
-.navbar {
+.layout {
+  display: grid;
+  grid-template-columns: var(--layout-left) minmax(0, 1fr) var(--layout-right);
+  grid-template-areas: "left center right";
+  gap: var(--space-6);
+  max-width: var(--layout-max);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+.side--left  { grid-area: left; }
+.dashboard   { grid-area: center; }
+.side--right { grid-area: right; }
+
+/* გვერდითი სვეტები ადგილზე რჩება, სქროლავს მხოლოდ ბილიკი */
+.side {
   position: sticky;
   top: 0;
-  z-index: 20;
-  background-color: var(--color-bg);
-  border-bottom: var(--border-width) solid var(--color-border);
-}
-
-.navbar__inner {
+  align-self: start;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow-y: auto;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3) var(--space-4);
-  max-width: 1000px;
-  margin-inline: auto;
-  padding: var(--space-3) var(--space-4);
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  padding-block: var(--space-5);
+  scrollbar-width: thin;
 }
 
-.navbar__logo {
+/* ---------- მარცხენა სვეტი ---------- */
+.side__sheet-head {
+  display: none;
+}
+
+.side__logo {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--color-primary);
-  font-size: var(--fs-lg);
   font-family: var(--font-brand);
+  font-size: var(--fs-lg);
   font-weight: var(--fw-bold);
-  text-decoration: none;
-}
-
-.navbar__logo:hover {
-  text-decoration: none;
-}
-
-.navbar__logo-text {
   color: var(--color-brand-ink);
+  text-decoration: none;
 }
 
-.navbar__logo-icon {
+.side__logo:hover {
+  text-decoration: none;
+}
+
+.side__logo-icon {
   width: var(--logo-mark-md);
   height: var(--logo-mark-md);
 }
 
-.navbar__stats {
+.side__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.side__label {
+  margin: 0 0 var(--space-1);
+  padding-inline: var(--space-3);
+  font-family: var(--font-main);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+/* კურსები — სია პროგრესით */
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.course-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: inherit;
+  color: var(--color-text);
+  text-align: left;
+  background-color: transparent;
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.course-card:hover {
+  background-color: var(--color-bg-soft);
+}
+
+.course-card[aria-selected="true"] {
+  border-color: var(--c);
+  background-color: color-mix(in srgb, var(--c) 10%, var(--color-surface));
+}
+
+.course-card__badge {
+  grid-row: span 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-inverse);
+  background-color: var(--c);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 3px 0 var(--c-dark);
+}
+
+.course-card__title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-heavy);
+  line-height: 1.25;
+}
+
+.course-card__meta {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.course-card__bar {
+  height: 4px;
+  margin-top: var(--space-1);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg-soft);
+  overflow: hidden;
+}
+
+.course-card__bar > span {
+  display: block;
+  height: 100%;
+  width: var(--progress, 0%);
+  background-color: var(--c);
+}
+
+/* მენიუს ბმულები */
+.side-link {
   display: flex;
   align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+}
+
+.side-link:hover {
+  text-decoration: none;
+  background-color: var(--color-bg-soft);
+}
+
+.side-link.is-active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.side-link[hidden] {
+  display: none;
+}
+
+.side-link__icon {
+  width: 1.5em;
+  text-align: center;
+  font-size: var(--fs-lg);
+  line-height: 1;
+}
+
+.side-link__count {
+  margin-left: auto;
+  min-width: 24px;
+  padding: 0 var(--space-2);
+  font-size: var(--fs-xs);
+  text-align: center;
+  color: var(--color-text-inverse);
+  background-color: var(--color-secondary);
+  border-radius: var(--radius-pill);
+}
+
+/* პროფილი სვეტის ბოლოში */
+.side__me {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.side__avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-inverse);
+  background-color: var(--color-accent);
+  border-radius: 50%;
+}
+
+.side__user {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--fw-bold);
+}
+
+.btn--danger-text {
+  --btn-color: var(--color-danger);
+}
+
+/* ---------- შუა: ბილიკი ---------- */
+.dashboard {
+  min-width: 0;
+  width: 100%;
+  max-width: var(--layout-center-max);
+  margin-inline: auto;
+}
+
+/* ---------- მარჯვენა სვეტი: „დღეს“ ---------- */
+.today__hello {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--fs-lg);
+}
+
+.today__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.nav-stat {
-  display: inline-flex;
+.today-stat {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-1);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.today-stat__value {
+  font-size: var(--fs-lg);
   font-weight: var(--fw-heavy);
-  border-radius: var(--radius-sm);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.nav-stat:hover {
-  background-color: var(--color-bg-soft);
+.today-stat__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
 }
 
-.nav-stat--streak { color: var(--color-streak); }
-.nav-stat--xp     { color: var(--color-accent-dark); }
-.nav-stat--hearts { color: var(--color-danger); }
+.today-stat--streak .today-stat__value { color: var(--color-streak); }
+.today-stat--xp     .today-stat__value { color: var(--color-accent-dark); }
+.today-stat--hearts .today-stat__value { color: var(--color-danger); }
 
-/* „+ ❤️ აღდგენა“ ღილაკი (ჩანს, როცა სიცოცხლე < 5) */
-.nav-refill {
+.today__refill {
   display: flex;
 }
 
+.today__refill .btn--refill {
+  width: 100%;
+}
+
+/* „+ ❤️ აღდგენა“ ღილაკი (ჩანს, როცა სიცოცხლე < 5) */
 .btn--refill {
   --shadow-depth: 3px;
-  min-height: 34px;
+  min-height: 40px;
   padding: var(--space-1) var(--space-3);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
@@ -112,122 +327,89 @@
   50%      { transform: scale(1.12); }
 }
 
-.navbar__actions {
+/* ბარათები: გააგრძელე / შეცდომები */
+.today-card {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  text-decoration: none;
+  background-color: var(--parchment);
+  border: var(--border-width) solid var(--color-border);
+  border-bottom-width: calc(var(--border-width) + var(--shadow-depth));
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition-fast), background-color var(--transition);
 }
 
-.navbar__user {
-  max-width: 14ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.today-card[hidden] {
+  display: none;
+}
+
+.today-card:hover {
+  text-decoration: none;
+  background-color: var(--color-bg-soft);
+}
+
+.today-card:active {
+  transform: translateY(var(--shadow-depth));
+  border-bottom-width: var(--border-width);
+}
+
+.today-card--continue {
+  border-color: var(--color-secondary);
+}
+
+.today-card--mistakes {
+  border-left: 6px solid var(--color-danger);
+}
+
+.today-card__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.today-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.today-card__kicker {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.04em;
+  color: var(--color-secondary-dark);
+}
+
+.today-card__title {
+  overflow-wrap: anywhere;
+  font-family: var(--font-serif);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-heavy);
+  line-height: 1.3;
+}
+
+.today-card__meta {
+  font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
   color: var(--color-text-muted);
 }
 
-.btn--danger-text {
-  --btn-color: var(--color-danger);
-  min-height: 44px;
-  padding-inline: var(--space-4);
+.today-card__arrow {
+  flex: none;
+  font-weight: var(--fw-heavy);
+  color: var(--color-secondary);
 }
 
-/* მობილური: ლოგო + ღილაკები ზემოთ, სტატისტიკა ქვემოთ სრულ სიგანეზე */
-@media (max-width: 640px) {
-  .navbar__logo-text {
-    font-size: var(--fs-md);
-  }
-
-  .navbar__stats {
-    order: 3;
-    width: 100%;
-    justify-content: space-around;
-    padding-top: var(--space-2);
-    border-top: var(--border-width) solid var(--color-border);
-  }
-
-  .navbar__user {
-    display: none;
-  }
-
-  .navbar__logo-icon {
-    width: var(--logo-mark-sm);
-    height: var(--logo-mark-sm);
-  }
-
-  .btn--danger-text {
-    padding-inline: var(--space-3);
-    letter-spacing: 0;
-  }
-}
-
-/* პატარა ტელეფონები (≤ 420px, მაგ. 375px): ლოგო და ღილაკები ერთ ხაზზე */
-@media (max-width: 420px) {
-  .navbar__inner {
-    column-gap: var(--space-2);
-  }
-
-  .navbar__logo {
-    gap: var(--space-1);
-  }
-
-  .navbar__logo-text {
-    font-size: 0.95rem;
-  }
-
-  .navbar__actions {
-    gap: var(--space-1);
-  }
-
-  .navbar__actions .btn--icon {
-    width: 40px;
-    min-height: 40px;
-    font-size: 1.1rem;
-  }
-
-  .btn--danger-text {
-    min-height: 40px;
-    padding-inline: var(--space-2);
-    font-size: var(--fs-xs);
-  }
-
-  .navbar__stats {
-    flex-wrap: wrap;
-    gap: var(--space-1);
-  }
-
-  .nav-stat {
-    padding-inline: var(--space-2);
-  }
-
-  .btn--refill {
-    padding-inline: var(--space-2);
-  }
-}
-
-/* ----------------------------------------------------------
-   ძირითადი შიგთავსი
-   ---------------------------------------------------------- */
-.dashboard {
-  max-width: 1000px;
-  margin-inline: auto;
-  padding: var(--space-5) var(--space-4) var(--space-7);
-}
-
-.greeting__title {
-  overflow-wrap: anywhere;
-  font-size: var(--fs-xl);
-  margin-bottom: var(--space-1);
-}
-
-.greeting__text {
-  color: var(--color-text-muted);
-}
-
-.section-title {
-  font-size: var(--fs-lg);
-  margin: var(--space-5) 0 var(--space-3);
+.today-card--mistakes .today-card__arrow {
+  color: var(--color-danger);
 }
 
 /* ----------------------------------------------------------
@@ -237,21 +419,20 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3) var(--space-4);
-  margin-top: var(--space-5);
-  padding: var(--space-4);
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3);
   background-color: var(--color-secondary-light);
   border: var(--border-width) solid var(--color-secondary);
   border-radius: var(--radius-lg);
 }
 
 .install-banner__icon {
-  font-size: 2rem;
+  font-size: 1.6rem;
   line-height: 1;
 }
 
 .install-banner__body {
-  flex: 1 1 200px;
+  flex: 1 1 160px;
   min-width: 0;
 }
 
@@ -263,7 +444,7 @@
 
 .install-banner__text {
   margin: 0;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   font-weight: var(--fw-bold);
   color: var(--color-text);
 }
@@ -275,164 +456,369 @@
   margin-left: auto;
 }
 
-/* ----------------------------------------------------------
-   კურსის ბარათები
-   ---------------------------------------------------------- */
-.course-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
-  gap: var(--space-3);
-}
-
-.course-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-3);
-  font-family: inherit;
-  color: var(--color-text);
-  text-align: center;
-  background-color: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-bottom-width: calc(var(--border-width) + var(--shadow-depth));
-  border-radius: var(--radius-lg);
-  cursor: pointer;
-  transition: transform var(--transition-fast), background-color var(--transition);
-}
-
-.course-card:hover {
-  background-color: var(--color-bg-soft);
-}
-
-.course-card:active {
-  transform: translateY(var(--shadow-depth));
-  border-bottom-width: var(--border-width);
-}
-
-.course-card[aria-selected="true"] {
-  border-color: var(--c);
-  background-color: color-mix(in srgb, var(--c) 12%, var(--color-surface));
-}
-
-.course-card__badge {
-  display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-heavy);
-  color: var(--color-text-inverse);
-  background-color: var(--c);
-  border-radius: 16px;
-  box-shadow: 0 4px 0 var(--c-dark);
-}
-
-.course-card__title {
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-heavy);
-  line-height: 1.25;
-}
-
-.course-card__meta {
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-bold);
-  color: var(--color-text-muted);
-}
-
-/* ----------------------------------------------------------
-   თამაშების ბარათი
-   ---------------------------------------------------------- */
-.games-entry {
-  margin-top: var(--space-5);
-}
-
-.games-entry__card {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-4) var(--space-5);
-  color: var(--color-text);
-  text-decoration: none;
-  background-color: var(--parchment);
-  border: var(--border-width) solid var(--color-border);
-  border-left: 6px solid var(--color-secondary);
-  border-bottom-width: calc(var(--border-width) + var(--shadow-depth));
-  border-radius: var(--radius-lg);
-  transition: transform var(--transition-fast), background-color var(--transition);
-}
-
-/* ჩემი შეცდომები / პროგრესი — იგივე ბარათი, სხვა ფერის ზოლით */
-.games-entry__card + .games-entry__card {
-  margin-top: var(--space-3);
-}
-
-.games-entry__card--mistakes {
-  border-left-color: var(--color-danger);
-}
-
-.games-entry__card--mistakes .games-entry__arrow {
-  color: var(--color-danger);
-}
-
-.games-entry__card--progress {
-  border-left-color: var(--color-primary);
-}
-
-.games-entry__card--progress .games-entry__arrow {
-  color: var(--color-primary);
-}
-
-.games-entry__card[hidden] {
+/* ---------- ტელეფონის ზოლები (კომპიუტერზე დამალულია) ---------- */
+.topbar,
+.tabbar,
+.menu-scrim {
   display: none;
 }
 
-.games-entry__card:hover {
-  text-decoration: none;
-  background-color: var(--color-bg-soft);
+/* ==========================================================
+   ტაბლეტი: 760–1099px
+   ========================================================== */
+@media (max-width: 1099px) {
+  .layout {
+    grid-template-columns: var(--layout-left-narrow) minmax(0, 1fr);
+    grid-template-areas:
+      "left right"
+      "left center";
+    column-gap: var(--space-5);
+    row-gap: 0;
+  }
+
+  /* მარცხნივ — მხოლოდ ხატულები */
+  .side--left {
+    grid-row: 1 / span 2;
+    align-items: center;
+  }
+
+  .side__logo-text,
+  .side__label,
+  .side-link__text,
+  .course-card__title,
+  .course-card__meta,
+  .course-card__bar,
+  .side__user {
+    display: none;
+  }
+
+  .course-card {
+    grid-template-columns: auto;
+    justify-items: center;
+    padding: var(--space-1);
+  }
+
+  .course-card__badge {
+    grid-row: auto;
+  }
+
+  .side-link {
+    justify-content: center;
+    position: relative;
+    padding-inline: var(--space-2);
+  }
+
+  .side-link__count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 20px;
+    padding: 0 var(--space-1);
+  }
+
+  .side__me {
+    flex-direction: column;
+  }
+
+  /* „დღეს“ — ბილიკის თავში, ერთ რიგად */
+  .side--right {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    padding-bottom: 0;
+  }
+
+  .today__hello {
+    flex-basis: 100%;
+  }
+
+  .today__stats {
+    flex: 1 1 240px;
+  }
+
+  .today__refill {
+    flex: 0 1 auto;
+    align-items: center;
+  }
+
+  .today-card,
+  .install-banner {
+    flex: 1 1 260px;
+  }
 }
 
-.games-entry__card:active {
-  transform: translateY(var(--shadow-depth));
-  border-bottom-width: var(--border-width);
-}
+/* ==========================================================
+   ტელეფონი: < 760px
+   ========================================================== */
+@media (max-width: 759px) {
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--topbar-height);
+    padding: var(--space-2) var(--space-4);
+    padding-top: calc(var(--space-2) + env(safe-area-inset-top, 0px));
+    background-color: var(--color-bg);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
 
-.games-entry__icon {
-  font-size: 2rem;
-  line-height: 1;
-}
+  .topbar__logo img {
+    display: block;
+    width: var(--logo-mark-sm);
+    height: var(--logo-mark-sm);
+  }
 
-.games-entry__body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-width: 0;
-}
+  .topbar__course {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 40px;
+    padding: var(--space-1) var(--space-3);
+    font-family: inherit;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-heavy);
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+  }
 
-.games-entry__title {
-  font-family: var(--font-serif);
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-heavy);
-}
+  .topbar__stats {
+    display: flex;
+    gap: var(--space-2);
+    margin: 0 0 0 auto;
+    padding: 0;
+    list-style: none;
+  }
 
-.games-entry__text {
-  overflow-wrap: anywhere;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
-  color: var(--color-text-muted);
-}
+  .mini-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-heavy);
+    font-variant-numeric: tabular-nums;
+  }
 
-.games-entry__arrow {
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-heavy);
-  color: var(--color-secondary);
+  .mini-stat--streak { color: var(--color-streak); }
+  .mini-stat--xp     { color: var(--color-accent-dark); }
+  .mini-stat--hearts { color: var(--color-danger); }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-inline: var(--space-4);
+    padding-bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* „დღეს“ ბარათები — ბილიკის თავში, ერთმანეთის ქვეშ */
+  .side--right {
+    order: 1;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+  }
+
+  .dashboard {
+    order: 2;
+  }
+
+  /* მისალმება და სტატისტიკა ზედა ზოლშია */
+  .today__hello,
+  .today__stats {
+    display: none;
+  }
+
+  .today-card,
+  .install-banner {
+    flex: none;
+  }
+
+  /* მენიუ — ქვემოდან ამომავალი ფანჯარა */
+  .side--left {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    z-index: 60;
+    align-items: stretch;
+    max-height: 85vh;
+    max-height: 85dvh;
+    padding: var(--space-2) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: 0 -10px 30px var(--sheet-shadow);
+    transform: translateY(105%);
+    visibility: hidden;
+    transition: transform var(--transition), visibility var(--transition);
+  }
+
+  body.menu-open .side--left {
+    transform: none;
+    visibility: visible;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  .side__sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .side__grab {
+    width: 44px;
+    height: 5px;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-border-strong);
+  }
+
+  .side__close {
+    position: absolute;
+    right: 0;
+  }
+
+  .side__logo {
+    display: none;
+  }
+
+  /* ფანჯარაში ტექსტები ისევ ჩანს */
+  .side__label,
+  .side-link__text,
+  .course-card__title,
+  .course-card__meta,
+  .side__user {
+    display: revert;
+  }
+
+  .course-card__bar {
+    display: block;
+  }
+
+  .course-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: stretch;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .course-card__badge {
+    grid-row: span 3;
+  }
+
+  .side-link {
+    justify-content: flex-start;
+  }
+
+  .side-link__count {
+    position: static;
+  }
+
+  .side__me {
+    flex-direction: row;
+    margin-top: var(--space-2);
+  }
+
+  .menu-scrim:not([hidden]) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background-color: var(--scrim);
+  }
+
+  /* ქვედა ჩანართები */
+  .tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    min-height: var(--tabbar-height);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background-color: var(--color-surface);
+    border-top: var(--border-width) solid var(--color-border);
+  }
+
+  .tabbar__tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: var(--space-1);
+    font-family: inherit;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .tabbar__tab > span:first-child {
+    font-size: var(--fs-lg);
+    line-height: 1;
+  }
+
+  .tabbar__tab:hover {
+    text-decoration: none;
+  }
+
+  .tabbar__tab.is-active {
+    color: var(--color-primary);
+  }
+
+  .tabbar__tab.is-active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 28%;
+    right: 28%;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background-color: var(--color-primary);
+  }
+
+  .tabbar__dot {
+    position: absolute;
+    top: var(--space-2);
+    right: 30%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: var(--color-secondary);
+  }
+
+  .tabbar__dot[hidden] {
+    display: none;
+  }
+
+  .toast {
+    bottom: calc(var(--tabbar-height) + var(--space-3) + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* ----------------------------------------------------------
    თავები (Chapters) — აკადემიური ბარათი
    ---------------------------------------------------------- */
 .path-section {
-  margin-top: var(--space-6);
+  margin-top: 0;
 }
 
 .chapter-list {
@@ -1213,8 +1599,8 @@ body::before {
 .dashboard::after {
   content: "";
   position: absolute;
-  left: calc(50% - 50vw);
-  width: 100vw;
+  left: 0;
+  width: 100%;
   height: var(--frieze-height);
   z-index: -1;
   pointer-events: none;
