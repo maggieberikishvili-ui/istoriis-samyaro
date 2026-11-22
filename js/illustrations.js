@@ -961,6 +961,22 @@
           el("path", { d: "M38 60 h6 v4 h-6 z M52 60 h6 v4 h-6 z", class: "f-ochre s-ink" }),
         ],
       },
+      {
+        id: "rustavi-bowl",
+        after: "g8-l43",
+        title: "რუსთავის მოხატული ჭურჭელი",
+        fact: "XX საუკუნის შუა ხანებში რუსთავის გათხრებისას აღმოჩნდა მოხატული ჭურჭლის ნამტვრევები — შუა საუკუნეების მჭიდროდ დასახლებული ქალაქის ნაშთი.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M18 46 L30 30 L52 24 L64 30 L80 24 L98 34 L104 52 L96 72 L78 86 L54 90 L34 82 L22 66 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M30 46 Q60 30 92 48 M28 70 Q60 84 92 66", class: "s-thin o" }),
+          el("path", { d: "M44 64 Q46 48 60 46 Q68 40 76 44 L70 48 Q78 54 72 62 Q62 70 44 64 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M76 44 L84 42 L78 48", class: "f-terra s-ink" }),
+          el("path", { d: "M50 62 L40 70 M58 64 L54 74", class: "s-terra o" }),
+          el("path", { d: "M32 54 q6 -6 10 0 M84 66 q6 -6 10 0 M36 78 q4 -5 8 0", class: "s-ink o" }),
+          el("path", { d: "M60 52 a3 3 0 1 0 0.1 0 z", class: "f-emerald s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
