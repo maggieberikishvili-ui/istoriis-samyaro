@@ -37,6 +37,13 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     refillItem: document.getElementById("refillItem"),
     refillBtn: document.getElementById("refillBtn"),
     gamesLink: document.getElementById("gamesLink"),
+    treasureNav: document.getElementById("treasureNav"),
+    treasureNew: document.getElementById("treasureNew"),
+    treasureCard: document.getElementById("treasureCard"),
+    treasureArt: document.getElementById("treasureArt"),
+    treasureKicker: document.getElementById("treasureKicker"),
+    treasureTitle: document.getElementById("treasureTitle"),
+    treasureMeta: document.getElementById("treasureMeta"),
     gamesTab: document.getElementById("gamesTab"),
     mistakesLink: document.getElementById("mistakesLink"),
     mistakesText: document.getElementById("mistakesText"),
@@ -209,7 +216,39 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       renderPath();
       renderMistakes();
       renderContinue();
+      renderTreasure();
     }, data.showLoadError);
+  }
+
+  /* ---------- საგანძური (არჩეული კლასი): რამდენი განძი, შემდეგი მიზანი ---------- */
+
+  function renderTreasure() {
+    const T = window.IMS_TREASURE;
+    const course = data.getCourse(state.courseId);
+    if (!T || !course || !course.loaded) return;
+    const list = T.blocks(course).map((b) => ({ block: b, st: T.blockState(b, state.profile) }));
+    const href = store.URLS.treasury + "?" + new URLSearchParams({ course: course.id }).toString();
+    el.treasureCard.href = href;
+    el.treasureNav.href = href;
+    el.treasureCard.hidden = list.length === 0;
+    if (!list.length) return;
+
+    const metals = list.filter((x) => T.isMetal(x.st.tier));
+    const fresh = T.unseen(course, state.profile).map((x) => ({ block: x.block, st: x.state }));
+    const next = list.find((x) => x.st.tier === "progress") || list.find((x) => x.st.tier === "locked");
+    const shown = fresh.length ? fresh[fresh.length - 1] : metals.length ? metals[metals.length - 1] : next;
+    const metal = shown && T.isMetal(shown.st.tier);
+    el.treasureArt.replaceChildren(T.art(shown.block.item.id, metal ? shown.st.tier : "bronze", { locked: !metal }));
+
+    el.treasureKicker.textContent = fresh.length ? "✦ ახალი განძი!" : "საგანძური";
+    el.treasureTitle.textContent = metals.length + " / " + list.length + " განძი";
+    el.treasureMeta.textContent = fresh.length
+      ? "ნახე, რა შექმნეს შენმა ქვებმა"
+      : next
+        ? "შემდეგამდე " + (next.st.total - next.st.done) + " გაკვეთილი"
+        : "ყველა განძი შეგროვებულია";
+    el.treasureCard.classList.toggle("is-new", fresh.length > 0);
+    el.treasureNew.hidden = fresh.length === 0;
   }
 
   /* ---------- ჩემი შეცდომები (არჩეული კურსი) ---------- */
@@ -881,6 +920,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     renderPath();
     renderMistakes();
     renderContinue();
+    renderTreasure();
   });
 
   /* ---------- ინიციალიზაცია ---------- */

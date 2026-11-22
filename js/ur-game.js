@@ -4,7 +4,8 @@
    ძველი მესოპოტამიური სამაგიდო თამაში კომპიუტერთან ან მეგობართან.
    პლაგინი: თავს არეგისტრირებს window.IMS_GAME_PLUGINS-ში (იხ. games.js).
    იხსნება, როცა მოსწავლე ამ კლასში პირველ ბლოკს დაასრულებს
-   (ქვეთავს; თუ თავს ქვეთავები არ აქვს — მთელ თავს).
+   (ქვეთავს; თუ თავს ქვეთავები არ აქვს — მთელ თავს). ფირფიტების ლაჟვარდი
+   კლასის პროცენტით ემატება (საგანძური, js/treasure.js).
    სტილი — css/ur.css, ფერები — css/variables.css (--ur-*).
 
    გეომეტრია: ზოლი (lane) 0 — კომპიუტერი, 1 — საერთო, 2 — შენ; idx 0–7 ზოლის გასწვრივ.
@@ -28,9 +29,9 @@
   // ფირფიტების ორნამენტი (ზოლის გასწვრივ); null — სახლი/ფინიში
   const SIDE = ["rosette", "eyes", "circles", "eyes", null, null, "rosette", "diamond"];
   const MID = ["grid", "circles", "eyes", "rosette", "grid", "diamond", "eyes", "grid"];
-  // მორთულობის დონე: 0 — მხოლოდ კვეთა, 1 — ნაწილობრივ ლაჟვარდი, 2 — სრულად.
-  // მომავალში საგანძურზე (შეგროვებულ ქვებზე) იქნება დამოკიდებული.
-  const DECO = 2;
+  // მორთულობის დონე (0 — მხოლოდ კვეთა, 1 — ნაწილობრივ ლაჟვარდი, 2 — სრულად)
+  // საგანძურიდან მოდის: კლასის 25% → 1, 100% → 2 (IMS_TREASURE.urDecoLevel).
+  let DECO = 0;
 
   const laneOf = (p) => (p === "me" ? 2 : 0);
   const other = (p) => (p === "me" ? "ai" : "me");
@@ -168,26 +169,10 @@
     }
     const aiWait = (ms) => sleep(S.slow ? ms : ms * 0.5);
 
-    /* ---------- გახსნა: პირველი დასრულებული ბლოკი ---------- */
-
-    /** ბლოკები: ქვეთავები, ხოლო ქვეთავების გარეშე თავი — მთლიანად. */
-    function blocks() {
-      const out = [];
-      host.course.chapters.forEach((ch) => {
-        const sections = ch.sections || [];
-        if (sections.length) {
-          sections.forEach((sec) => out.push(host.course.lessons.filter((l) => l.sectionId === sec.id)));
-        } else {
-          out.push(host.course.lessons.filter((l) => l.chapterId === ch.id));
-        }
-      });
-      return out.filter((ls) => ls.length);
-    }
+    /* ---------- გახსნა: პირველი დასრულებული ბლოკი (js/treasure.js) ---------- */
 
     function unlocked() {
-      const profile = store.loadProfile();
-      const done = new Set(profile ? profile.completedLessons : []);
-      return blocks().some((ls) => ls.every((l) => done.has(l.id)));
+      return window.IMS_TREASURE.firstBlockDone(host.course, store.loadProfile());
     }
 
     function renderCard() {
@@ -638,6 +623,7 @@
         return;
       }
       host.open("ur");
+      DECO = window.IMS_TREASURE.urDecoLevel(host.course, store.loadProfile());
       el.settings.hidden = true;
       reset();
       window.requestAnimationFrame(fit);

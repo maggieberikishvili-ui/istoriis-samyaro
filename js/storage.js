@@ -39,6 +39,7 @@
     dashboard: "dashboard.html",
     lesson: "lesson.html",
     games: "games.html",
+    treasury: "treasury.html",
   });
 
   const MAX_HEARTS = 5;
@@ -198,6 +199,8 @@
       activity: normalizeActivity(raw.activity),
       gems: normalizeGems(raw.gems),
       gemSeen: normalizeGemSeen(raw.gemSeen),
+      gemReviewed: normalizeGemSeen(raw.gemReviewed),
+      treasury: normalizeTreasury(raw.treasury),
     };
   }
 
@@ -253,6 +256,26 @@
     profile.gemSeen[lessonId] = todayKey();
   }
 
+  /* გამეორება (საგანძურის ოქროსთვის): profile.gemReviewed = { "<გაკვეთილის id>": "YYYY-MM-DD" } —
+     პირველად როდის გაიმეორა უკვე გავლილი გაკვეთილი (ხელახლა გავლა ან მტვრის გაწმენდა).
+     ერთხელ ჩაწერილი აღარ იშლება — განძი უკან არ ჩამოდის. */
+  function reviewGem(profile, lessonId) {
+    if (!profile.gemReviewed[lessonId]) profile.gemReviewed[lessonId] = todayKey();
+  }
+
+  /* საგანძური: profile.treasury = { "<ბლოკის id>": "bronze" | "silver" | "gold" } —
+     რომელი ლითონი უკვე უნახავს მოსწავლეს (ახალი განძის გამოჩენის ანიმაცია ერთხელ ჩანს). */
+  const TREASURE_TIERS = ["bronze", "silver", "gold"];
+
+  function normalizeTreasury(raw) {
+    const out = {};
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return out;
+    Object.keys(raw).forEach((id) => {
+      if (TREASURE_TIERS.includes(raw[id])) out[id] = raw[id];
+    });
+    return out;
+  }
+
   /**
    * გავლილ გაკვეთილებს, რომლებსაც თარიღი ჯერ არ აქვს (ფუნქციამდე გავლილი),
    * დღევანდელი თარიღი ეწერება — მტვერი მათზე DUST_DAYS დღეში გამოჩნდება.
@@ -285,6 +308,7 @@
     const after = flawless || before === "polished" ? "polished" : "rough";
     profile.gems[lessonId] = after;
     touchGem(profile, lessonId); // გაკვეთილის ნებისმიერი გავლა მტვერსაც წმენდს
+    if (before !== null) reviewGem(profile, lessonId); // უკვე გავლილის ხელახლა გავლა = გამეორება
     return { before: before, after: after };
   }
 
@@ -629,6 +653,7 @@
     recordGem: recordGem,
     gemDusty: gemDusty,
     touchGem: touchGem,
+    reviewGem: reviewGem,
     stampGems: stampGems,
     DUST_DAYS: DUST_DAYS,
     toDateKey: toDateKey,

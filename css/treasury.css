@@ -1,0 +1,502 @@
+/* ==========================================================
+   Edubba — „ჩემი საგანძური“ (treasury.html, js/treasury.js)
+   განძის ნახატი და ლითონები — css/treasure.css
+   ========================================================== */
+
+.tsy-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  max-width: 1040px;
+  margin-inline: auto;
+  padding: var(--space-3) var(--space-4);
+}
+
+.tsy-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 1040px;
+  margin-inline: auto;
+  padding: 0 var(--space-4) var(--space-7);
+}
+
+/* ---------- სათაური და ჩანართები ---------- */
+.tsy-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.tsy-head__title {
+  flex: 1 1 100%;
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-xl);
+  text-wrap: balance;
+}
+
+.tsy-head__lead {
+  flex: 1 1 280px;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.tsy-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background-color: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.tsy-tabs[hidden] {
+  display: none;
+}
+
+.tsy-tab {
+  padding: var(--space-2) var(--space-3);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.tsy-tab[aria-selected="true"] {
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  box-shadow: 0 1px 3px var(--sheet-shadow);
+}
+
+.tsy-tab:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- ბარათი ---------- */
+.tsy-card {
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+/* ---------- პროგრესი და გახსნები ---------- */
+.tsy-prog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.tsy-prog__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.tsy-prog__pct {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.tsy-bar {
+  position: relative;
+  height: 12px;
+  background-color: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.tsy-bar__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--progress, 0%);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.tsy-bar__mark {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 18px;
+  background-color: var(--color-border-strong);
+  border-radius: 2px;
+  transform: translateX(-50%);
+}
+
+.tsy-bar__mark--25 { left: 25%; }
+.tsy-bar__mark--50 { left: 50%; }
+.tsy-bar__mark--100 { left: calc(100% - 2px); }
+
+.tsy-bar__mark.is-on {
+  background-color: var(--color-primary);
+}
+
+.tsy-unlocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tsy-unlock {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.tsy-unlock.is-on {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.tsy-unlock__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  font-size: var(--fs-md);
+  background-color: var(--color-bg-soft);
+  border-radius: var(--radius-sm);
+}
+
+.tsy-unlock__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tsy-unlock__title {
+  display: block;
+  font-size: var(--fs-sm);
+}
+
+.tsy-unlock__state {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.tsy-unlock.is-on .tsy-unlock__state {
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+}
+
+.tsy-unlock__link {
+  white-space: nowrap;
+  font-weight: var(--fw-heavy);
+  color: var(--color-primary);
+}
+
+/* ---------- თარო ---------- */
+.tsy-shelf-title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+}
+
+.tsy-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-3);
+}
+
+.tsy-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-3) var(--space-3) var(--space-3);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.tsy-item--gold {
+  border-color: var(--gem-gold-mid);
+  box-shadow: inset 0 0 0 1px var(--gem-gold-mid);
+}
+
+.tsy-item__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 150px;
+  margin-bottom: var(--space-1);
+}
+
+/* ჩრდილი განძის ქვეშ */
+.tsy-item__art::after {
+  content: "";
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: 4px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--tr-plinth), transparent);
+}
+
+.tsy-item__art .tr-art {
+  position: relative;
+  z-index: 1;
+  width: var(--tr-art-size);
+  height: var(--tr-art-size);
+}
+
+.tsy-item__badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.tsy-item__name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-md);
+  line-height: 1.25;
+}
+
+.tsy-item--locked .tsy-item__name {
+  color: var(--color-text-muted);
+}
+
+.tsy-item__block {
+  margin: 0;
+  font-size: var(--fs-xs);
+  line-height: 1.35;
+  color: var(--color-text-muted);
+}
+
+.tsy-gems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: var(--space-1);
+}
+
+.tsy-gems .gem {
+  width: 18px;
+  height: 18px;
+}
+
+.tsy-item__next {
+  margin: var(--space-1) 0 0;
+  padding-top: var(--space-2);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  border-top: 1px dashed var(--color-border);
+}
+
+/* ოქროს ნაპერწკლები */
+.tsy-sparkle {
+  position: absolute;
+  z-index: 2;
+  font-size: var(--fs-md);
+  color: var(--gem-gold-mid);
+  animation: tsy-twinkle 2.4s ease-in-out infinite;
+}
+
+.tsy-sparkle--1 { left: 8%; top: 30px; }
+.tsy-sparkle--2 { left: 84%; top: 60px; animation-delay: 0.7s; }
+.tsy-sparkle--3 { left: 20%; top: 95px; animation-delay: 1.4s; }
+
+@keyframes tsy-twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* ---------- ლეგენდა ---------- */
+.tsy-legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.tsy-legend__title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+}
+
+.tsy-legend__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.tsy-legend__row p {
+  margin: 0;
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.tsy-legend__row b {
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+
+.tsy-legend__art {
+  flex: none;
+  width: 58px;
+  height: 58px;
+}
+
+.tsy-legend__art .tr-art {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- ახალი განძის გამოჩენა ---------- */
+.tsy-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background-color: var(--scrim);
+}
+
+.tsy-modal[hidden] {
+  display: none;
+}
+
+.tsy-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: min(380px, 100%);
+  overflow: hidden;
+  padding: var(--space-5) var(--space-5);
+  text-align: center;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.tsy-reveal__kicker {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.tsy-reveal__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 200px;
+  height: 170px;
+}
+
+.tsy-reveal__stage--bronze { --tsy-ray: var(--tr-bronze-hi); }
+.tsy-reveal__stage--silver { --tsy-ray: var(--gem-silver-hi); }
+.tsy-reveal__stage--gold   { --tsy-ray: var(--gem-gold-hi); }
+
+.tsy-reveal__ray {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--tsy-ray), transparent);
+  opacity: 0;
+}
+
+.tsy-reveal__art {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.tsy-reveal__art .tr-art {
+  width: 100%;
+  height: 100%;
+}
+
+.tsy-reveal__gems {
+  position: absolute;
+  inset: auto 0 var(--space-2) 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.tsy-reveal__gems .gem {
+  width: 20px;
+  height: 20px;
+}
+
+.is-go .tsy-fly { animation: tsy-fly 0.9s ease-in forwards; }
+.is-go .tsy-fly--1 { animation-delay: 0.08s; }
+.is-go .tsy-fly--2 { animation-delay: 0.16s; }
+.is-go .tsy-fly--3 { animation-delay: 0.24s; }
+.is-go .tsy-fly--4 { animation-delay: 0.32s; }
+.is-go .tsy-fly--5 { animation-delay: 0.4s; }
+.is-go .tsy-fly--6 { animation-delay: 0.48s; }
+.is-go .tsy-fly--7 { animation-delay: 0.56s; }
+.is-go .tsy-reveal__art { animation: tsy-pop 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) 1.25s forwards; }
+.is-go .tsy-reveal__ray { animation: tsy-ray 1.2s ease-out 1.2s forwards; }
+
+@keyframes tsy-fly {
+  to { transform: translateY(-70px) scale(0.2); opacity: 0; }
+}
+
+@keyframes tsy-pop {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes tsy-ray {
+  30% { opacity: 0.9; }
+  100% { opacity: 0.25; }
+}
+
+.tsy-reveal__title {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+}
+
+.tsy-reveal__text {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tsy-sparkle { animation: none; }
+  .is-go .tsy-fly { animation: none; opacity: 0; }
+  .is-go .tsy-reveal__art { animation: none; opacity: 1; transform: none; }
+  .is-go .tsy-reveal__ray { animation: none; opacity: 0.3; }
+}

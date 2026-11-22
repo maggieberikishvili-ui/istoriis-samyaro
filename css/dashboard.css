@@ -417,6 +417,24 @@
   color: var(--color-danger);
 }
 
+.today-card--treasure {
+  border-left: 6px solid var(--gem-gold-mid);
+}
+
+.today-card--treasure.is-new {
+  border-color: var(--gem-gold-mid);
+}
+
+.today-card__icon--art .tr-art {
+  width: 100%;
+  height: 100%;
+}
+
+.side-link__count--new {
+  color: var(--tr-badge-ink);
+  background-color: var(--gem-gold-mid);
+}
+
 /* ----------------------------------------------------------
    აპლიკაციის დაყენების ბანერი (PWA)
    ---------------------------------------------------------- */
@@ -524,6 +542,14 @@
     right: 0;
     min-width: 20px;
     padding: 0 var(--space-1);
+  }
+
+  /* ვიწრო მენიუში „ახალი“ — მხოლოდ ოქროსფერი წერტილი */
+  .side-link__count--new {
+    min-width: 12px;
+    height: 12px;
+    padding: 0;
+    font-size: 0;
   }
 
   .side__me {
@@ -733,6 +759,13 @@
 
   .side-link__count {
     position: static;
+  }
+
+  .side-link__count--new {
+    min-width: 24px;
+    height: auto;
+    padding: 0 var(--space-2);
+    font-size: var(--fs-xs);
   }
 
   .side__me {

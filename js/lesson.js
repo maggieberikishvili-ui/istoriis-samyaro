@@ -867,6 +867,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   function finishClean() {
     const profile = store.updateProfile((p) => {
       store.touchGem(p, lesson.id);
+      store.reviewGem(p, lesson.id); // გაწმენდაც გამეორებად ითვლება (საგანძურის ოქრო)
       p.xp += CLEAN_XP;
     });
     if (!profile) return;

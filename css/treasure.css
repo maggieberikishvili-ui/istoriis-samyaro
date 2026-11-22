@@ -1,0 +1,85 @@
+/* ==========================================================
+   Edubba — განძის ნახატი (js/treasure.js): ლითონი და ჩასმები
+   ----------------------------------------------------------
+   საერთოა საგანძურის გვერდისა (treasury.html) და დაფის ბარათისთვის.
+   ლითონის გრადიენტები ერთხელ ჩაიდება გვერდზე (#trSprite).
+   ========================================================== */
+
+.tr-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* გრადიენტის ფერები ლითონის მიხედვით */
+.tr-s-hi.tr-s--bronze  { stop-color: var(--tr-bronze-hi); }
+.tr-s-mid.tr-s--bronze { stop-color: var(--tr-bronze-mid); }
+.tr-s-lo.tr-s--bronze  { stop-color: var(--tr-bronze-lo); }
+.tr-s-hi.tr-s--silver  { stop-color: var(--gem-silver-hi); }
+.tr-s-mid.tr-s--silver { stop-color: var(--gem-silver-mid); }
+.tr-s-lo.tr-s--silver  { stop-color: var(--gem-silver-lo); }
+.tr-s-hi.tr-s--gold    { stop-color: var(--gem-gold-hi); }
+.tr-s-mid.tr-s--gold   { stop-color: var(--gem-gold-mid); }
+.tr-s-lo.tr-s--gold    { stop-color: var(--gem-gold-lo); }
+
+.tr-art {
+  overflow: visible;
+}
+
+.tr-art--bronze { --tr-lo: var(--tr-bronze-lo); --tr-edge: var(--tr-bronze-edge); }
+.tr-art--silver { --tr-lo: var(--gem-silver-lo); --tr-edge: var(--gem-silver-edge); }
+.tr-art--gold   { --tr-lo: var(--gem-gold-lo);   --tr-edge: var(--gem-gold-edge); }
+
+.tr-art--bronze .tr-m { fill: url(#trGrad-bronze); }
+.tr-art--silver .tr-m { fill: url(#trGrad-silver); }
+.tr-art--gold .tr-m   { fill: url(#trGrad-gold); }
+
+.tr-md { fill: var(--tr-lo); }
+.tr-k  { fill: none; stroke: var(--tr-lo); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+.tr-ko { fill: none; stroke: var(--tr-edge); stroke-width: 1.2; stroke-linejoin: round; }
+.tr-lp { fill: var(--gem-lapis-mid); }
+.tr-cr { fill: var(--gem-carnelian-mid); }
+.tr-sh { fill: var(--tr-shell); }
+.tr-fl { fill: var(--gem-lapis-fleck); }
+
+/* დაფარული განძი — სილუეტი */
+.tr-art--sil .tr-m,
+.tr-art--sil .tr-md,
+.tr-art--sil .tr-lp,
+.tr-art--sil .tr-cr,
+.tr-art--sil .tr-sh,
+.tr-art--sil .tr-fl {
+  fill: var(--tr-sil);
+}
+
+.tr-art--sil .tr-k,
+.tr-art--sil .tr-ko {
+  stroke: var(--tr-sil-edge);
+}
+
+.tr-q {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: var(--fw-heavy);
+  fill: var(--color-text-muted);
+  opacity: 0.55;
+}
+
+/* ლითონის იარლიყი */
+.tr-badge {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.tr-badge--bronze { color: var(--color-text-inverse); background-color: var(--tr-bronze-mid); border-color: transparent; }
+.tr-badge--silver { color: var(--tr-badge-ink); background-color: var(--gem-silver-mid); border-color: transparent; }
+.tr-badge--gold   { color: var(--tr-badge-ink); background-color: var(--gem-gold-mid); border-color: transparent; }

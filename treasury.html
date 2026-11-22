@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ჩემი საგანძური: თითო დასრულებულ ბლოკზე — ერთი შუმერული განძი, რომელიც ბრინჯაოდან ოქრომდე ბრწყინდება.">
+  <title>ჩემი საგანძური — Edubba</title>
+  <!-- პირადი გვერდი (შესვლის შემდეგ) — საძიებოში არ ჩანს -->
+  <meta name="robots" content="noindex">
+
+  <!-- საერთო საცავი: ავტორიზაციის შემოწმება + თემის ადრეული ჩატვირთვა -->
+  <script src="js/storage.js" data-auth="required"></script>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2e6f5e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Edubba">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&family=Noto+Serif+Georgian:wght@700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/gems.css">
+  <link rel="stylesheet" href="css/treasure.css">
+  <link rel="stylesheet" href="css/treasury.css">
+
+  <script src="js/utils.js" defer></script>
+  <script src="js/data.js" defer></script>
+  <script src="js/gems.js" defer></script>
+  <script src="js/treasure.js" defer></script>
+  <script src="js/treasury.js" defer></script>
+</head>
+<body>
+  <header class="tsy-top">
+    <a class="btn btn--outline" href="dashboard.html">← დაფაზე</a>
+    <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
+      <span aria-hidden="true" id="themeIcon">🌙</span>
+    </button>
+  </header>
+
+  <main class="tsy-page">
+    <header class="tsy-head">
+      <h1 class="tsy-head__title">ჩემი საგანძური</h1>
+      <p class="tsy-head__lead">თითო დასრულებულ ბლოკზე — ერთი განძი. ის ბრწყინდება, როცა ქვებს აპრიალებ და იმეორებ.</p>
+      <div class="tsy-tabs" id="courseTabs" role="tablist" aria-label="კლასი" hidden></div>
+    </header>
+
+    <!-- კლასის პროგრესი და გახსნები -->
+    <section class="tsy-card tsy-prog" aria-labelledby="pct">
+      <p class="tsy-prog__top"><b class="tsy-prog__pct" id="pct"></b><span id="pctText"></span></p>
+      <div class="tsy-bar" id="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        <span class="tsy-bar__fill" id="barFill"></span>
+        <span class="tsy-bar__mark tsy-bar__mark--25" data-pct="25"></span>
+        <span class="tsy-bar__mark tsy-bar__mark--50" data-pct="50"></span>
+        <span class="tsy-bar__mark tsy-bar__mark--100" data-pct="100"></span>
+      </div>
+      <ul class="tsy-unlocks" id="unlocks"></ul>
+    </section>
+
+    <!-- თარო: თითო ბლოკს თითო განძი -->
+    <section aria-labelledby="shelfTitle">
+      <h2 class="tsy-shelf-title" id="shelfTitle"></h2>
+      <div class="tsy-shelf" id="shelf"></div>
+    </section>
+
+    <!-- როგორ ბრწყინდება განძი -->
+    <section class="tsy-card tsy-legend" aria-labelledby="legendTitle">
+      <h2 class="tsy-legend__title" id="legendTitle">როგორ ბრწყინდება განძი</h2>
+      <div class="tsy-legend__row"><span class="tsy-legend__art" id="legendBronze"></span><p><b>ბრინჯაო</b>ბლოკის ყველა გაკვეთილი დასრულებულია.</p></div>
+      <div class="tsy-legend__row"><span class="tsy-legend__art" id="legendSilver"></span><p><b>ვერცხლი</b>ყველა ქვა გაპრიალებულია — შეცდომები გასწორებულია.</p></div>
+      <div class="tsy-legend__row"><span class="tsy-legend__art" id="legendGold"></span><p><b>ოქრო</b>თითო გაკვეთილი ერთხელ მაინც გაიმეორე (ხელახლა გაიარე ან მტვერი გაწმინდე). განძი უკან აღარ ჩამოდის.</p></div>
+    </section>
+  </main>
+
+  <!-- ახალი განძის გამოჩენა -->
+  <div class="tsy-modal" id="reveal" hidden>
+    <div class="tsy-reveal" role="dialog" aria-modal="true" aria-labelledby="revealTitle">
+      <p class="tsy-reveal__kicker" id="revealKicker"></p>
+      <div class="tsy-reveal__stage" id="revealStage">
+        <span class="tsy-reveal__ray" id="revealRay"></span>
+        <span class="tsy-reveal__art" id="revealArt"></span>
+        <span class="tsy-reveal__gems" id="revealGems"></span>
+      </div>
+      <h2 class="tsy-reveal__title" id="revealTitle"></h2>
+      <p class="tsy-reveal__text" id="revealText"></p>
+      <button type="button" class="btn btn--block" id="revealClose">საგანძურში დამატება</button>
+    </div>
+  </div>
+</body>
+</html>

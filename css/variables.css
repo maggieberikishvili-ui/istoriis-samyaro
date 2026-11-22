@@ -106,6 +106,16 @@
   --ur-ring: 4px;          /* მოციმციმე და „აქ წავა“ რგოლის სისქე */
   --ur-die-w: 36px;        --ur-die-h: 33px;
 
+  /* საგანძური (css/treasure.css, css/treasury.css): ლითონები და ჩასმები ორივე რეჟიმში ერთია;
+     ბნელ ბლოკებში იცვლება მხოლოდ კვარცხლბეკი და სილუეტი (--tr-plinth, --tr-sil*). */
+  --tr-bronze-hi: #f4c896; --tr-bronze-mid: #b87333; --tr-bronze-lo: #6b3a14; --tr-bronze-edge: #4f2a0e;
+  --tr-shell: #f3e8d8;     /* ნიჟარის ჩასმა */
+  --tr-badge-ink: #2b2623; /* წარწერა ვერცხლისა და ოქროს იარლიყზე */
+  --tr-plinth: #cdbfa8;    /* ჩრდილი განძის ქვეშ */
+  --tr-sil: #d6ccbb;       /* დაფარული განძის სილუეტი */
+  --tr-sil-edge: #c2b5a0;
+  --tr-art-size: 128px;
+
   /* --- დაფის განლაგება (სამი სვეტი / ტელეფონის ზოლები) --- */
   --layout-max: 1440px;
   --layout-left: 248px;                   /* მარცხენა სვეტი: კურსები და მენიუ */
@@ -224,6 +234,9 @@
 
     --sheet-shadow: rgba(0, 0, 0, 0.5);
     --scrim: rgba(0, 0, 0, 0.6);
+    --tr-plinth: #1f1c18;
+    --tr-sil: #3a342d;
+    --tr-sil-edge: #4a433a;
 
     color-scheme: dark;
   }
@@ -285,6 +298,9 @@
 
   --sheet-shadow: rgba(0, 0, 0, 0.5);
   --scrim: rgba(0, 0, 0, 0.6);
+  --tr-plinth: #1f1c18;
+  --tr-sil: #3a342d;
+  --tr-sil-edge: #4a433a;
 
   color-scheme: dark;
 }

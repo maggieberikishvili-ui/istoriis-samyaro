@@ -31,11 +31,13 @@
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/gems.css">
+  <link rel="stylesheet" href="css/treasure.css">
 
   <script src="js/utils.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/illustrations.js" defer></script>
   <script src="js/gems.js" defer></script>
+  <script src="js/treasure.js" defer></script>
   <script src="js/dashboard.js" defer></script>
 </head>
 <body>
@@ -80,6 +82,10 @@
         </a>
         <a class="side-link" id="gamesLink" href="games.html">
           <span class="side-link__icon" aria-hidden="true">🎮</span><span class="side-link__text">თამაშები</span>
+        </a>
+        <a class="side-link" id="treasureNav" href="treasury.html">
+          <span class="side-link__icon" aria-hidden="true">🏺</span><span class="side-link__text">საგანძური</span>
+          <span class="side-link__count side-link__count--new" id="treasureNew" hidden>ახალი</span>
         </a>
         <a class="side-link" id="mistakesNav" href="lesson.html?mode=mistakes" hidden>
           <span class="side-link__icon" aria-hidden="true">🔁</span><span class="side-link__text">შეცდომები</span>
@@ -152,6 +158,17 @@
         <span class="today-card__body">
           <span class="today-card__title">ჩემი შეცდომები</span>
           <span class="today-card__meta" id="mistakesText"></span>
+        </span>
+        <span class="today-card__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- საგანძური: არჩეული კლასის განძები (js/treasure.js) -->
+      <a class="today-card today-card--treasure" id="treasureCard" href="treasury.html" hidden>
+        <span class="today-card__icon today-card__icon--art" id="treasureArt" aria-hidden="true"></span>
+        <span class="today-card__body">
+          <span class="today-card__kicker" id="treasureKicker">საგანძური</span>
+          <span class="today-card__title" id="treasureTitle"></span>
+          <span class="today-card__meta" id="treasureMeta"></span>
         </span>
         <span class="today-card__arrow" aria-hidden="true">→</span>
       </a>
