@@ -642,13 +642,24 @@
       el.setBtn.setAttribute("aria-expanded", String(!el.settings.hidden));
       fit();
     });
-    el.newChip.addEventListener("click", reset);
-    el.modeAi.addEventListener("click", () => setMode("ai"));
-    el.modePvp.addEventListener("click", () => setMode("pvp"));
+    // დაწყებული პარტიის თავიდან დაწყება / რეჟიმის შეცვლა — ჯერ „ნამდვილად გსურს?“
+    const midGame = () => !S.over && S.me.concat(S.ai).some((x) => x > 0);
+    function askRestart(action) {
+      if (!midGame()) return action();
+      window.IMS_UTILS.confirmAction({
+        title: "დავიწყოთ თავიდან?",
+        text: "მიმდინარე პარტია დასრულდება და ქვები საწყის ადგილზე დაბრუნდება.",
+        ok: "დიახ, თავიდან",
+        cancel: "არა, ვაგრძელებ",
+      }).then((ok) => { if (ok) action(); });
+    }
+    el.newChip.addEventListener("click", () => askRestart(reset));
+    el.modeAi.addEventListener("click", () => { if (S.mode !== "ai") askRestart(() => setMode("ai")); });
+    el.modePvp.addEventListener("click", () => { if (S.mode !== "pvp") askRestart(() => setMode("pvp")); });
     el.slowChip.addEventListener("click", () => { S.slow = !S.slow; setChip(el.slowChip, S.slow); });
     el.routeChip.addEventListener("click", () => { S.route = !S.route; setChip(el.routeChip, S.route); render(); });
     // თამაშიდან გასვლა (✕) — კომპიუტერის დაწყებული სვლა ჩერდება
-    el.screen.querySelector(".games-exit").addEventListener("click", () => { S.token += 1; });
+    el.screen.querySelector(".games-exit").addEventListener("games-exit-confirmed", () => { S.token += 1; });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !el.howto.hidden) el.howto.hidden = true;
     });

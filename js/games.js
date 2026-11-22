@@ -27,7 +27,7 @@
 window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   "use strict";
 
-  const { createEl, shuffle, toRoman } = window.IMS_UTILS; // js/utils.js
+  const { createEl, shuffle, toRoman, confirmAction } = window.IMS_UTILS; // js/utils.js
 
   const store = window.IMS_STORE;
   const data = window.IMS_DATA;
@@ -346,7 +346,20 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     show("hub");
   }
 
-  document.querySelectorAll(".games-exit").forEach((btn) => btn.addEventListener("click", goHub));
+  /* თამაშიდან გასვლა (✕) — ჯერ „ნამდვილად გსურს?“; დადასტურებისას ღილაკზე იგზავნება
+     "games-exit-confirmed" (მაგ. ურის თამაში აჩერებს კომპიუტერის სვლას) */
+  document.querySelectorAll(".games-exit").forEach((btn) => btn.addEventListener("click", () => {
+    confirmAction({
+      title: "შევწყვიტოთ თამაში?",
+      text: "ამ თამაშის შედეგი არ შეინახება.",
+      ok: "დიახ, შევწყვიტოთ",
+      cancel: "არა, ვთამაშობ",
+    }).then((ok) => {
+      if (!ok) return;
+      btn.dispatchEvent(new CustomEvent("games-exit-confirmed", { bubbles: true }));
+      goHub();
+    });
+  }));
   el.resultMenu.addEventListener("click", goHub);
   el.resultAgain.addEventListener("click", () => {
     if (state.lastGame === "race") startRace();

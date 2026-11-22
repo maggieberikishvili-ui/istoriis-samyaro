@@ -9,7 +9,7 @@
 window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   "use strict";
 
-  const { createEl, toRoman } = window.IMS_UTILS; // js/utils.js
+  const { createEl, toRoman, confirmAction } = window.IMS_UTILS; // js/utils.js
 
   const store = window.IMS_STORE;
   const data = window.IMS_DATA;
@@ -903,7 +903,17 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   /* ---------- გასვლა ---------- */
 
-  el.logoutBtn.addEventListener("click", store.logout);
+  el.logoutBtn.addEventListener("click", () => {
+    const guest = state.profile && state.profile.isGuest;
+    confirmAction({
+      title: "გახვალ ანგარიშიდან?",
+      text: guest
+        ? "სტუმრის პროგრესი ამ ბრაუზერში დარჩება — დაბრუნდები „სტუმრად შესვლით“."
+        : "პროგრესი შენახულია — დაბრუნებისას ისევ შეხვალ შენი ელფოსტით.",
+      ok: "დიახ, გავალ",
+      cancel: "არა",
+    }).then((ok) => { if (ok) store.logout(); });
+  });
 
   /* ---------- სხვა ჩანართში ცვლილება (გასვლა / გაკვეთილის დასრულება) ---------- */
 

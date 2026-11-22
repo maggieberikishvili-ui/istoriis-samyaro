@@ -11,7 +11,7 @@
 window.IMS_DATA.loadAll().then(function () {
   "use strict";
 
-  const { createEl, toggleFullscreen } = window.IMS_UTILS;
+  const { createEl, toggleFullscreen, confirmAction } = window.IMS_UTILS;
   const data = window.IMS_DATA;
   const detective = window.IMS_DETECTIVE;
   const boardApi = window.IMS_DETECTIVE_BOARD;
@@ -174,7 +174,10 @@ window.IMS_DATA.loadAll().then(function () {
 
   el.mainBtn.addEventListener("click", mainAction);
   el.listBtn.addEventListener("click", backToList);
-  el.exitBtn.addEventListener("click", backToList);
+  el.exitBtn.addEventListener("click", () => {
+    if (!play) return backToList();
+    confirmAction({ title: "დავასრულოთ საქმე?", text: "მიმდინარე საქმე შეწყდება.", ok: "დიახ, დავასრულოთ", cancel: "არა" }).then((ok) => { if (ok) backToList(); });
+  });
   el.fullscreenBtn.addEventListener("click", toggleFullscreen);
 
   document.addEventListener("keydown", (e) => {

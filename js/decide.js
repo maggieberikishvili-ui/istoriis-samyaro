@@ -11,7 +11,7 @@
 (function () {
   "use strict";
 
-  const { createEl, toggleFullscreen } = window.IMS_UTILS;
+  const { createEl, toggleFullscreen, confirmAction } = window.IMS_UTILS;
   const data = window.IMS_DATA;
   const decide = window.IMS_DECIDE;
   const store = window.IMS_STORE;
@@ -455,9 +455,12 @@
   el.fullscreenBtn.addEventListener("click", toggleFullscreen);
 
   el.exitBtn.addEventListener("click", () => {
-    if (game && game.phase !== "over" && !window.confirm("დავასრულოთ თამაში?")) return;
-    game = null;
-    show("setup");
+    const leave = () => {
+      game = null;
+      show("setup");
+    };
+    if (!game || game.phase === "over") return leave();
+    confirmAction({ title: "დავასრულოთ თამაში?", text: "სცენარი შეწყდება.", ok: "დიახ, დავასრულოთ", cancel: "არა" }).then((ok) => { if (ok) leave(); });
   });
 
   el.againBtn.addEventListener("click", () => startGame(scenario()));

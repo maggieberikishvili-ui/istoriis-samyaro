@@ -26,7 +26,7 @@
 window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   "use strict";
 
-  const { createEl, shuffle } = window.IMS_UTILS; // js/utils.js
+  const { createEl, shuffle, confirmAction } = window.IMS_UTILS; // js/utils.js
 
   const store = window.IMS_STORE;
 
@@ -963,6 +963,37 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   /* ==========================================================
      კლავიატურა: Enter → მთავარი ღილაკი, 1–4 → ვარიანტის არჩევა
      ========================================================== */
+
+  /* ==========================================================
+     გასვლა (✕): დაწყებულ გაკვეთილზე — „ნამდვილად გსურს?“
+     ========================================================== */
+
+  const started = () => !state.finished && (state.index > 0 || state.attempts > 0);
+
+  document.querySelector(".lesson-top__close").addEventListener("click", (e) => {
+    if (!started()) return;
+    e.preventDefault();
+    const href = e.currentTarget.href;
+    confirmAction({
+      title: isReview ? "შევწყვიტოთ ვარჯიში?" : "გახვალ გაკვეთილიდან?",
+      text: isReview
+        ? "ვარჯიში შეწყდება და ამ ჯერზე XP არ დაემატება."
+        : "ამ გაკვეთილის პროგრესი არ შეინახება — შემდეგ ჯერზე თავიდან დაიწყება. დაკარგული სიცოცხლეები არ დაბრუნდება.",
+      ok: "დიახ, გავალ",
+      cancel: "არა, გავაგრძელებ",
+    }).then((ok) => {
+      if (!ok) return;
+      state.finished = true; // beforeunload-მა მეორედ აღარ იკითხოს
+      window.location.href = href;
+    });
+  });
+
+  // ჩანართის დახურვა / ბრაუზერის „უკან“ დაწყებულ გაკვეთილზე — ბრაუზერის საკუთარი შეკითხვა
+  window.addEventListener("beforeunload", (e) => {
+    if (!started()) return;
+    e.preventDefault();
+    e.returnValue = "";
+  });
 
   document.addEventListener("keydown", (e) => {
     if (state.finished || e.altKey || e.ctrlKey || e.metaKey) return;

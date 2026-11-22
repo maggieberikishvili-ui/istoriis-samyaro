@@ -11,7 +11,7 @@
 window.IMS_DATA.loadAll().then(function () {
   "use strict";
 
-  const { createEl, shuffle, toggleFullscreen } = window.IMS_UTILS;
+  const { createEl, shuffle, toggleFullscreen, confirmAction } = window.IMS_UTILS;
   const data = window.IMS_DATA;
   const timeline = window.IMS_TIMELINE;
   const board = window.IMS_TL_BOARD;
@@ -257,9 +257,11 @@ window.IMS_DATA.loadAll().then(function () {
   el.fullscreenBtn.addEventListener("click", toggleFullscreen);
 
   el.exitBtn.addEventListener("click", () => {
-    if (!window.confirm("დავასრულოთ მშენებლობა?")) return;
-    game = null;
-    show("setup");
+    confirmAction({ title: "დავასრულოთ მშენებლობა?", text: "მიმდინარე რაუნდი შეწყდება.", ok: "დიახ, დავასრულოთ", cancel: "არა" }).then((ok) => {
+      if (!ok) return;
+      game = null;
+      show("setup");
+    });
   });
 
   el.againBtn.addEventListener("click", startGame);

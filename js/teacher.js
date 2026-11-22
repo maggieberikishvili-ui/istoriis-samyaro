@@ -11,7 +11,7 @@
 window.IMS_DATA.loadAll().then(function () {
   "use strict";
 
-  const { createEl, toggleFullscreen } = window.IMS_UTILS;
+  const { createEl, toggleFullscreen, confirmAction } = window.IMS_UTILS;
   const data = window.IMS_DATA;
   const quiz = window.IMS_QUIZ;
   const store = window.IMS_STORE;
@@ -333,10 +333,12 @@ window.IMS_DATA.loadAll().then(function () {
   el.mainBtn.addEventListener("click", mainAction);
 
   el.exitBtn.addEventListener("click", () => {
-    if (!window.confirm("დავასრულოთ თამაში? ქულები არ შეინახება.")) return;
-    stopTimer();
-    game = null;
-    show("setup");
+    confirmAction({ title: "დავასრულოთ თამაში?", text: "ქულები არ შეინახება.", ok: "დიახ, დავასრულოთ", cancel: "არა" }).then((ok) => {
+      if (!ok) return;
+      stopTimer();
+      game = null;
+      show("setup");
+    });
   });
 
   el.againBtn.addEventListener("click", startGame);

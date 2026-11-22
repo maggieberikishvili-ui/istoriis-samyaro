@@ -48,5 +48,54 @@
     else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
   }
 
-  window.IMS_UTILS = Object.freeze({ createEl, shuffle, toRoman, toggleFullscreen });
+  /**
+   * „ნამდვილად გსურს?“ — საიტის სტილის ფანჯარა window.confirm-ის ნაცვლად
+   * (გაკვეთილიდან/თამაშიდან გასვლა, ანგარიშიდან გასვლა და სხვა შეუქცევადი ნაბიჯები).
+   *   opts: { title, text, ok = "დიახ", cancel = "არა, დავრჩები", danger = true }
+   * აბრუნებს Promise<boolean>-ს: true — დაადასტურა. Esc / ფონზე დაჭერა / „არა“ → false.
+   * ფოკუსი თავიდან „არა“-ზეა — შემთხვევითი Enter არაფერს წაშლის.
+   */
+  function confirmAction(opts) {
+    const o = opts || {};
+    return new Promise((resolve) => {
+      const dialog = createEl("dialog", "confirm-dialog");
+      dialog.setAttribute("aria-labelledby", "confirmTitle");
+      const title = createEl("h2", "confirm-dialog__title", o.title || "ნამდვილად?");
+      title.id = "confirmTitle";
+      dialog.append(title);
+      if (o.text) dialog.append(createEl("p", "confirm-dialog__text", o.text));
+      const actions = createEl("div", "confirm-dialog__actions");
+      const cancel = createEl("button", "btn btn--outline", o.cancel || "არა, დავრჩები");
+      const ok = createEl("button", "btn " + (o.danger === false ? "" : "btn--danger"), o.ok || "დიახ");
+      cancel.type = "button";
+      ok.type = "button";
+      actions.append(cancel, ok);
+      dialog.append(actions);
+
+      // პასუხი ერთხელ: ფანჯარა მაშინვე იხურება და იშლება (Esc-ზე ბრაუზერი თვითონ ხურავს → "close")
+      let done = false;
+      const close = (value) => {
+        if (done) return;
+        done = true;
+        if (dialog.open) dialog.close();
+        dialog.remove();
+        resolve(value);
+      };
+      cancel.addEventListener("click", () => close(false));
+      ok.addEventListener("click", () => close(true));
+      dialog.addEventListener("click", (e) => { if (e.target === dialog) close(false); });
+      dialog.addEventListener("close", () => close(false));
+
+      (document.fullscreenElement || document.body).append(dialog);
+      if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+        cancel.focus();
+      } else {
+        dialog.remove();
+        resolve(window.confirm((o.title || "") + (o.text ? "\n" + o.text : "")));
+      }
+    });
+  }
+
+  window.IMS_UTILS = Object.freeze({ createEl, shuffle, toRoman, toggleFullscreen, confirmAction });
 })();

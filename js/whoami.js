@@ -11,7 +11,7 @@
 window.IMS_DATA.loadAll().then(function () {
   "use strict";
 
-  const { createEl, shuffle, toggleFullscreen } = window.IMS_UTILS;
+  const { createEl, shuffle, toggleFullscreen, confirmAction } = window.IMS_UTILS;
   const data = window.IMS_DATA;
   const whoami = window.IMS_WHOAMI;
   const picker = window.IMS_LESSON_PICKER;
@@ -258,9 +258,11 @@ window.IMS_DATA.loadAll().then(function () {
   el.fullscreenBtn.addEventListener("click", toggleFullscreen);
 
   el.exitBtn.addEventListener("click", () => {
-    if (!window.confirm("დავასრულოთ თამაში?")) return;
-    game = null;
-    show("setup");
+    confirmAction({ title: "დავასრულოთ თამაში?", text: "გუნდების ქულები არ შეინახება.", ok: "დიახ, დავასრულოთ", cancel: "არა" }).then((ok) => {
+      if (!ok) return;
+      game = null;
+      show("setup");
+    });
   });
 
   el.againBtn.addEventListener("click", startGame);
