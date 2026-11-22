@@ -167,6 +167,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     resultSubtitle: $("resultSubtitle"),
     resultRecord: $("resultRecord"),
     resultStats: $("resultStats"),
+    resultBeads: $("resultBeads"),
     resultReview: $("resultReview"),
     resultMistakes: $("resultMistakes"),
     resultAgain: $("resultAgain"),
@@ -288,6 +289,9 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     if (prev && !isBetter(result, prev)) return false;
     mine.records[recordKey(game)] = result;
     saveUserGames(mine);
+    // არსებული რეკორდის გაუმჯობესება → ამ თამაშის აქატის მძივი (js/beads.js; ურს თავისი მძივი აქვს)
+    const bead = prev && window.IMS_BEADS.recordBead(game);
+    if (bead) window.IMS_BEADS.give(bead);
     return true;
   }
 
@@ -473,6 +477,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.resultShare.hidden = !opts.share;
     el.resultShareNote.hidden = true;
     el.resultStats.replaceChildren(...opts.stats);
+    window.IMS_BEADS.showNew(el.resultBeads);
 
     el.resultMistakes.replaceChildren();
     const mistakes = opts.mistakes || [];

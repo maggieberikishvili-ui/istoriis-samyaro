@@ -262,6 +262,150 @@
     $(id).append(T.art("lyre", tier));
   });
 
+  /* ---------- ყელსაბამი (იშვიათი მძივები, js/beads.js) ---------- */
+
+  const B = window.IMS_BEADS;
+  const NS = "http://www.w3.org/2000/svg";
+  let beadSel = null;
+
+  /* ძაფი — კვადრატული მრუდი; ფართოზე ფართო რკალი, ვიწროზე ღრმა „U“ (მძივები რომ არ დაპატარავდეს).
+     მძივები ძაფზე თანაბარ მანძილზეა (სიგრძით, არა t-ით) — ასე „U“-ს ძირში აღარ იჭედება. */
+  function neckGeom() {
+    const narrow = $("neck").getBoundingClientRect().width < 600;
+    return narrow
+      ? { p0: [20, 14], p1: [260, 560], p2: [500, 14], box: "0 -10 520 330" }
+      : { p0: [30, 18], p1: [450, 330], p2: [870, 18], box: "0 -10 900 228" };
+  }
+
+  function curve(g) {
+    const at = (t) => [0, 1].map((i) => (1 - t) ** 2 * g.p0[i] + 2 * (1 - t) * t * g.p1[i] + t * t * g.p2[i]);
+    const angle = (t) => {
+      const d = [0, 1].map((i) => 2 * (1 - t) * (g.p1[i] - g.p0[i]) + 2 * t * (g.p2[i] - g.p1[i]));
+      return (Math.atan2(d[1], d[0]) * 180) / Math.PI;
+    };
+    // სიგრძის ცხრილი: t → გავლილი მანძილი
+    const N = 200;
+    const len = [0];
+    let prev = at(0);
+    for (let i = 1; i <= N; i++) {
+      const pt = at(i / N);
+      len.push(len[i - 1] + Math.hypot(pt[0] - prev[0], pt[1] - prev[1]));
+      prev = pt;
+    }
+    const total = len[N];
+    const tAt = (frac) => {
+      const want = frac * total;
+      let i = 1;
+      while (i < N && len[i] < want) i++;
+      const seg = len[i] - len[i - 1] || 1;
+      return (i - 1 + (want - len[i - 1]) / seg) / N;
+    };
+    return { at: at, angle: angle, tAt: tAt };
+  }
+
+  function beadTip(st) {
+    const tip = $("neckTip");
+    tip.replaceChildren();
+    if (!st) return;
+    const name = createEl("b", "", st.bead.name);
+    const rest = st.got
+      ? "მიღებულია ✓"
+      : st.need && st.have >= st.need ? st.bead.cond + " ✓ — მძივი შემდეგი გაკვეთილის ან თამაშის ბოლოს დაემატება"
+      : st.need ? st.bead.cond + " · ახლა " + st.have + " / " + st.need : st.bead.cond;
+    tip.append(name, " — " + rest);
+  }
+
+  function renderNeck() {
+    const states = B.state(profile);
+    const byId = {};
+    states.forEach((st) => { byId[st.bead.id] = st; });
+    const svg = $("neck");
+    const g = neckGeom();
+    svg.setAttribute("viewBox", g.box);
+    const c = curve(g);
+    const n = B.ORDER.length;
+    const fr0 = 0.06;
+    const fr1 = 0.94;
+    const ts = B.ORDER.map((_, i) => c.tAt(fr0 + ((fr1 - fr0) * i) / (n - 1)));
+
+    let html = '<path class="bead-cord" d="M' + g.p0 + " Q" + g.p1 + " " + g.p2 + '"/>';
+    ts.slice(0, -1).forEach((t, i) => {
+      const pt = c.at((t + ts[i + 1]) / 2);
+      html += '<circle class="bead-spacer" cx="' + pt[0] + '" cy="' + pt[1] + '" r="4"/>';
+    });
+    svg.innerHTML = html;
+
+    B.ORDER.forEach((id, i) => {
+      const st = byId[id];
+      const pt = c.at(ts[i]);
+      const slot = document.createElementNS(NS, "g");
+      slot.setAttribute("class", "bead-slot" + (beadSel === id ? " is-sel" : ""));
+      slot.setAttribute("tabindex", "0");
+      slot.setAttribute("role", "button");
+      slot.setAttribute("aria-pressed", String(beadSel === id));
+      slot.setAttribute("aria-label", st.bead.name + (st.got ? " — მიღებულია" : " — ჯერ არა: " + st.bead.cond));
+      slot.setAttribute("transform", "translate(" + pt[0] + " " + pt[1] + ") rotate(" + c.angle(ts[i]) + ") scale(" + (B.BIG[id] || 1.7) + ") translate(-20 -20)");
+      slot.innerHTML = '<circle class="bead-ring" cx="20" cy="20" r="17"/>' + B.inner(st.bead, !st.got);
+      slot.addEventListener("click", () => pickBead(id));
+      slot.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          pickBead(id);
+        }
+      });
+      svg.append(slot);
+    });
+    $("neckCount").textContent = states.filter((st) => st.got).length + " / " + states.length;
+    beadTip(beadSel ? byId[beadSel] : null);
+  }
+
+  function renderBeadGroups() {
+    const states = B.state(profile);
+    const byId = {};
+    states.forEach((st) => { byId[st.bead.id] = st; });
+    $("beadGroups").replaceChildren(...B.GROUPS.map((G) => {
+      const sec = createEl("section", "bead-grp");
+      sec.append(createEl("h3", "bead-grp__title", G.title), createEl("p", "bead-grp__lead", G.lead));
+      G.beads.forEach((b) => {
+        const st = byId[b.id];
+        const row = createEl("div", "bead-row" + (beadSel === b.id ? " is-sel" : ""));
+        const text = createEl("div", "bead-row__text");
+        text.append(createEl("b", "bead-row__name", b.name), createEl("span", "bead-row__cond", b.cond));
+        if (st.need && !st.got) {
+          const bar = createEl("div", "bead-bar");
+          const fill = createEl("span", "bead-bar__fill");
+          fill.style.setProperty("--bead-pct", Math.round((st.have / st.need) * 100) + "%");
+          bar.append(fill);
+          text.append(bar);
+        }
+        if (b.fact) text.append(createEl("p", "bead-row__fact", b.fact));
+        const ready = st.need && !st.got && st.have >= st.need;
+        const status = st.got ? "✓ მიღებულია" : ready ? "შემდეგ გაკვეთილზე" : st.need ? st.have + " / " + st.need : "ჯერ არა";
+        row.append(B.svg(b, !st.got, "bead-row__art"), text,
+          createEl("span", "bead-status " + (st.got ? "bead-status--got" : "bead-status--no"), status));
+        sec.append(row);
+      });
+      return sec;
+    }));
+  }
+
+  function pickBead(id) {
+    beadSel = beadSel === id ? null : id;
+    renderNeck();
+    renderBeadGroups();
+    const slot = $("neck").querySelector(".bead-slot.is-sel");
+    if (slot) slot.focus();
+  }
+
+  // სერიის მძივს აქ არ ვაძლევთ (მხოლოდ შესვლა არ ითვლება) — ის შედეგის ეკრანზე ემატება
+  renderNeck();
+  renderBeadGroups();
+  let neckResize = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(neckResize);
+    neckResize = setTimeout(renderNeck, 120);
+  });
+
   /* ---------- სტარტი ---------- */
 
   function select(id) {

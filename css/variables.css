@@ -122,6 +122,12 @@
   --tr-sil-edge: #c2b5a0;
   --tr-art-size: 128px;
 
+  /* იშვიათი მძივები (css/beads.css): მძივების ფერები — --gem-*; აქ მხოლოდ ძაფი, მოხატულობა და ზომები */
+  --bead-cord: #7a5a3c;     /* ყელსაბამის ძაფი */
+  --bead-etch: #fff6e8;     /* სარდიონზე თეთრი მოხატულობა (ორივე რეჟიმში ერთი) */
+  --bead-row-size: 44px;    /* მძივი სიაში */
+  --bead-toast-size: 52px;  /* მძივი შეტყობინებაში */
+
   /* --- დაფის განლაგება (სამი სვეტი / ტელეფონის ზოლები) --- */
   --layout-max: 1440px;
   --layout-left: 248px;                   /* მარცხენა სვეტი: კურსები და მენიუ */
@@ -246,6 +252,7 @@
     --tr-plinth: #1f1c18;
     --tr-sil: #3a342d;
     --tr-sil-edge: #4a433a;
+    --bead-cord: #b08a64;
 
     color-scheme: dark;
   }
@@ -313,6 +320,7 @@
   --tr-plinth: #1f1c18;
   --tr-sil: #3a342d;
   --tr-sil-edge: #4a433a;
+  --bead-cord: #b08a64;
 
   color-scheme: dark;
 }

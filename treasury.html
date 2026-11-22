@@ -30,11 +30,13 @@
   <link rel="stylesheet" href="css/gems.css">
   <link rel="stylesheet" href="css/treasure.css">
   <link rel="stylesheet" href="css/treasury.css">
+  <link rel="stylesheet" href="css/beads.css">
 
   <script src="js/utils.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/gems.js" defer></script>
   <script src="js/treasure.js" defer></script>
+  <script src="js/beads.js" defer></script>
   <script src="js/treasury.js" defer></script>
 </head>
 <body>
@@ -48,9 +50,28 @@
   <main class="tsy-page">
     <header class="tsy-head">
       <h1 class="tsy-head__title">ჩემი საგანძური</h1>
-      <p class="tsy-head__lead">თითო დასრულებულ ბლოკზე — ერთი განძი. ის ბრწყინდება, როცა ქვებს აპრიალებ და იმეორებ.</p>
-      <div class="tsy-tabs" id="courseTabs" role="tablist" aria-label="კლასი" hidden></div>
+      <p class="tsy-head__lead">თითო დასრულებულ ბლოკზე — ერთი განძი, კარგ ჩვევაზე — ერთი იშვიათი მძივი.</p>
     </header>
+
+    <!-- ყელსაბამი: ერთი მთელ ანგარიშზე (js/beads.js) -->
+    <section class="tsy-card bead-neck" id="beads" aria-labelledby="neckTitle">
+      <div class="bead-neck__top">
+        <h2 class="bead-neck__title" id="neckTitle">ჩემი ყელსაბამი</h2>
+        <b class="bead-neck__count" id="neckCount"></b>
+        <span class="bead-neck__hint">დააჭირე მძივს ან ცარიელ ადგილს</span>
+      </div>
+      <p class="bead-neck__lead">მძივი კარგი ჩვევისთვის მოდის — სერია, შეცდომების გასწორება, რეკორდები. ყელსაბამი ერთია ყველა კლასისთვის.</p>
+      <svg class="bead-neck__svg" id="neck" viewBox="0 -10 900 228" role="group" aria-label="ყელსაბამი მძივებით"></svg>
+      <p class="bead-tip" id="neckTip" aria-live="polite"></p>
+      <div class="bead-groups" id="beadGroups"></div>
+      <ul class="bead-rules">
+        <li><b>მძივი არ იკარგება</b>სერია თუ გაწყდა, მიღებული მძივი რჩება.</li>
+        <li><b>არ იყიდება</b>მძივი ვალუტა არ არის — ვერც მისით იყიდი რამეს და ვერც ფულით იყიდი მას.</li>
+        <li><b>საქმისთვის, არა შესვლისთვის</b>მძივი გაკვეთილის, ვარჯიშის ან თამაშის დასრულებისას ემატება.</li>
+      </ul>
+    </section>
+
+    <div class="tsy-tabs" id="courseTabs" role="tablist" aria-label="კლასი" hidden></div>
 
     <!-- კლასის პროგრესი და გახსნები -->
     <section class="tsy-card tsy-prog" aria-labelledby="pct">

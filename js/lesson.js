@@ -241,6 +241,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     victoryHeartsStat: document.getElementById("victoryHeartsStat"),
     victoryHearts: document.getElementById("victoryHearts"),
     victoryGem: document.getElementById("victoryGem"),
+    victoryBeads: document.getElementById("victoryBeads"),
     gameOver: document.getElementById("gameOverScreen"),
   };
 
@@ -832,6 +833,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       : "განმეორებითი გავლა — სიმბოლური +" + REPEAT_XP + " XP.";
     renderVictoryGem(gem);
     el.victory.hidden = false;
+    window.IMS_BEADS.showNew(el.victoryBeads);
     el.victory.querySelector(".result__btn").focus();
   }
 
@@ -887,6 +889,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.victoryHeartsStat.hidden = true;
     renderVictoryGem({ before: quality, after: quality, cleaned: true });
     el.victory.hidden = false;
+    window.IMS_BEADS.showNew(el.victoryBeads);
     el.victory.querySelector(".result__btn").focus();
   }
 
@@ -917,6 +920,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.victoryHeartsStat.hidden = heartGain === 0;
     el.victoryHearts.textContent = "+" + heartGain + " ❤️";
     el.victory.hidden = false;
+    window.IMS_BEADS.showNew(el.victoryBeads);
     el.victory.querySelector(".result__btn").focus();
 
     setTimeout(() => store.redirect(DASHBOARD_URL), PRACTICE_REDIRECT_MS);
@@ -943,6 +947,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.victoryAccuracy.textContent = accuracy + "%";
     el.victoryHeartsStat.hidden = true;
     el.victory.hidden = false;
+    window.IMS_BEADS.showNew(el.victoryBeads);
     el.victory.querySelector(".result__btn").focus();
   }
 

@@ -448,6 +448,7 @@
         const prev = host.getRecord("ur") || { wins: 0, played: 0 };
         host.saveRecord("ur", { wins: prev.wins + (meWon ? 1 : 0), played: prev.played + 1 }, () => true);
         xp = host.awardXp(meWon ? XP_WIN : XP_PLAY);
+        if (meWon) window.IMS_BEADS.give("u1"); // პირველი მოგება კომპიუტერთან → მძივი (მეორედ აღარ ემატება)
       }
       const rec = host.getRecord("ur");
       host.showResult({

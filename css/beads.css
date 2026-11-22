@@ -1,0 +1,305 @@
+/* ==========================================================
+   Edubba — იშვიათი მძივები (js/beads.js)
+   მძივის ნახატი, „ახალი მძივის“ შეტყობინება შედეგის ეკრანზე
+   და ყელსაბამი + სია საგანძურის გვერდზე (treasury.html).
+   მძივების ფერები — --gem-*, ძაფი და ზომები — --bead-* (css/variables.css).
+   ========================================================== */
+
+.bead-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* ---------- ფერი: გრადიენტის stop-ები კლასიდან ---------- */
+.bead-s-hi { stop-color: var(--bead-hi); }
+.bead-s-mid { stop-color: var(--bead-mid); }
+.bead-s-lo { stop-color: var(--bead-lo); }
+
+.bead-k--carnelian { --bead-hi: var(--gem-carnelian-hi); --bead-mid: var(--gem-carnelian-mid); --bead-lo: var(--gem-carnelian-lo); }
+.bead-k--lapis { --bead-hi: var(--gem-lapis-hi); --bead-mid: var(--gem-lapis-mid); --bead-lo: var(--gem-lapis-lo); }
+.bead-k--gold { --bead-hi: var(--gem-gold-hi); --bead-mid: var(--gem-gold-mid); --bead-lo: var(--gem-gold-lo); }
+.bead-k--agate { --bead-hi: var(--gem-agate-light); --bead-mid: var(--gem-agate-mid); --bead-lo: var(--gem-agate-lo); }
+.bead-k--silver { --bead-hi: var(--gem-silver-hi); --bead-mid: var(--gem-silver-mid); --bead-lo: var(--gem-silver-lo); }
+.bead-k--shell { --bead-hi: var(--gem-shell-hi); --bead-mid: var(--gem-shell-mid); --bead-lo: var(--gem-shell-lo); }
+
+/* ---------- მძივის დეტალები ---------- */
+.bead-art { display: block; overflow: visible; }
+.bead-empty { fill: var(--gem-socket); stroke: var(--gem-socket-edge); stroke-width: 1.6; stroke-dasharray: 3 2.5; }
+.bead-lo { fill: var(--bead-lo); opacity: 0.55; }
+.bead-gl { fill: var(--gem-shine); opacity: 0.55; }
+.bead-fl { fill: var(--gem-lapis-fleck); }
+.bead-etch { fill: none; stroke: var(--bead-etch); stroke-width: 1.5; stroke-linecap: round; }
+.bead-band { fill: none; stroke: var(--bead-hi); stroke-width: 1.4; opacity: 0.8; }
+.bead-flute { fill: none; stroke: var(--bead-lo); stroke-width: 1; opacity: 0.7; }
+.bead-cap { fill: url(#beadGrad-gold); }
+
+/* ---------- „ახალი მძივი“ შედეგის ეკრანზე ---------- */
+.bead-toasts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  margin: calc(-1 * var(--space-3)) 0 var(--space-5);
+}
+
+.bead-toasts[hidden] {
+  display: none;
+}
+
+.bead-toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  text-align: left;
+  text-decoration: none;
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-md);
+}
+
+.bead-toast:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.bead-toast__art {
+  flex: none;
+  width: var(--bead-toast-size);
+  height: var(--bead-toast-size);
+  animation: bead-drop 0.9s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+.bead-toast small {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  letter-spacing: 0.05em;
+  color: var(--color-accent-dark);
+}
+
+.bead-toast b {
+  display: block;
+  font-size: var(--fs-md);
+}
+
+.bead-toast span {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+@keyframes bead-drop {
+  from { transform: translateY(-18px) scale(0.6); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* ---------- ყელსაბამი (საგანძური) ---------- */
+.bead-neck {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  scroll-margin-top: var(--space-4);
+}
+
+.bead-neck__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+
+.bead-neck__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+}
+
+.bead-neck__count {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-heavy);
+  font-variant-numeric: tabular-nums;
+}
+
+.bead-neck__hint,
+.bead-neck__lead {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.bead-neck__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.bead-cord { fill: none; stroke: var(--bead-cord); stroke-width: 2.6; stroke-linecap: round; }
+.bead-spacer { fill: var(--gem-gold-mid); }
+.bead-slot { cursor: pointer; }
+.bead-slot:focus { outline: none; }
+.bead-ring { fill: none; stroke: transparent; stroke-width: 2; }
+.bead-slot:focus-visible .bead-ring,
+.bead-slot.is-sel .bead-ring { stroke: var(--color-primary); stroke-width: 2.5; }
+
+.bead-tip {
+  min-height: 2.8em;
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.bead-tip b { color: var(--color-text); }
+
+/* ---------- სია ჯგუფებად ---------- */
+.bead-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+  gap: var(--space-3);
+}
+
+.bead-grp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.bead-grp__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+}
+
+.bead-grp__lead {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.bead-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+}
+
+.bead-row.is-sel {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.bead-row__art {
+  flex: none;
+  width: var(--bead-row-size);
+  height: var(--bead-row-size);
+}
+
+.bead-row__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.bead-row__name {
+  display: block;
+  font-size: var(--fs-sm);
+}
+
+.bead-row__cond {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  line-height: 1.35;
+}
+
+.bead-row__fact {
+  margin: var(--space-1) 0 0;
+  font-size: var(--fs-xs);
+  color: var(--color-accent-dark);
+  line-height: 1.4;
+}
+
+.bead-bar {
+  height: var(--space-2);
+  margin-top: var(--space-1);
+  overflow: hidden;
+  background-color: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.bead-bar__fill {
+  display: block;
+  width: var(--bead-pct, 0%);
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.bead-status {
+  flex: none;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  border-radius: var(--radius-pill);
+}
+
+.bead-status--got {
+  color: var(--color-text-inverse);
+  background-color: var(--color-primary);
+}
+
+.bead-status--no {
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+}
+
+/* ---------- წესები ---------- */
+.bead-rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bead-rules li {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  background-color: var(--color-bg-soft);
+  border-radius: var(--radius-md);
+}
+
+.bead-rules b {
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+
+/* ვიწრო ეკრანზე სტატუსი ტექსტის ქვეშ — სახელს მეტი ადგილი რჩება */
+@media (max-width: 479px) {
+  .bead-row__art { grid-row: span 2; }
+  .bead-status { grid-column: 2; justify-self: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bead-toast__art { animation: none; }
+}

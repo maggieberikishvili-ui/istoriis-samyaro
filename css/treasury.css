@@ -59,6 +59,12 @@
   display: none;
 }
 
+/* ჩანართები ყელსაბამის ქვემოთ, კლასის პროგრესის თავზე */
+.tsy-page > .tsy-tabs {
+  align-self: flex-start;
+  margin-bottom: calc(-1 * var(--space-3));
+}
+
 .tsy-tab {
   padding: var(--space-2) var(--space-3);
   font-family: inherit;

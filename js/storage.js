@@ -202,6 +202,9 @@
       gemSeen: normalizeGemSeen(raw.gemSeen),
       gemReviewed: normalizeGemSeen(raw.gemReviewed),
       treasury: normalizeTreasury(raw.treasury),
+      beads: normalizeGemSeen(raw.beads),
+      beadsNew: Array.isArray(raw.beadsNew) ? raw.beadsNew.filter((id) => typeof id === "string").slice(-20) : [],
+      fixedCount: toCount(raw.fixedCount, 0),
     };
   }
 
@@ -379,7 +382,10 @@
       if (isCorrect) day.correct += 1;
       else day.wrong += 1;
       if (!question) return;
+      const before = p.mistakes.length;
       p.mistakes = p.mistakes.filter((m) => !(m.c === question.c && m.l === question.l && m.q === question.q));
+      // სწორი პასუხი კითხვაზე, რომელიც შეცდომებში იყო → „გასწორებული შეცდომა“ (მძივებისთვის, js/beads.js)
+      if (isCorrect && p.mistakes.length < before) p.fixedCount += 1;
       if (!isCorrect) {
         p.mistakes.push({ c: question.c, l: question.l, i: question.i, q: question.q, d: todayKey() });
         p.mistakes = p.mistakes.slice(-MAX_MISTAKES);

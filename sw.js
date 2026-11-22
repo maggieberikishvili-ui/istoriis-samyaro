@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v65";
+const VERSION = "v66";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -52,6 +52,7 @@ const CORE_FILES = [
   "./css/ur.css",
   "./css/treasure.css",
   "./css/treasury.css",
+  "./css/beads.css",
   "./css/progress.css",
   "./js/storage.js",
   "./js/progress.js",
@@ -88,6 +89,7 @@ const CORE_FILES = [
   "./js/ur-game.js",
   "./js/treasure.js",
   "./js/treasury.js",
+  "./js/beads.js",
   "./js/lesson-picker.js",
   "./icons/icon.svg",
   "./icons/logo-mark.svg",
