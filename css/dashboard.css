@@ -236,6 +236,16 @@
   gap: var(--space-2);
 }
 
+/* სახელი და გვარი არ იყოფა; ძალიან გრძელი სახელი — „…“-ით (სრული ტექსტი — title-ში) */
+.today__name {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
 .today__hello {
   margin: 0;
   overflow-wrap: anywhere;
@@ -642,7 +652,8 @@
   }
 
   /* მისალმება და სტატისტიკა ზედა ზოლშია */
-  .today__head,
+  /* ტელეფონზე სტატისტიკა, გადამრთველი და პროფილი ზედა ზოლშია — აქ მხოლოდ მისალმება */
+  .today__corner,
   .today__stats {
     display: none;
   }

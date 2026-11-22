@@ -88,7 +88,9 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     document.querySelectorAll("[data-avatar]").forEach((node) => { node.textContent = initial; });
     el.profileName.textContent = p.name;
     el.profileMeta.textContent = p.isGuest ? "სტუმარი" : p.email || "";
-    el.greetingTitle.textContent = "გამარჯობა, " + p.name + "!";
+    // სახელი და გვარი ერთ ხაზზე: ხაზი შეიძლება გაწყდეს მხოლოდ „გამარჯობა,“-ს შემდეგ
+    el.greetingTitle.replaceChildren("გამარჯობა, ", createEl("span", "today__name", p.name + "!"));
+    el.greetingTitle.title = "გამარჯობა, " + p.name + "!";
 
     // Pro → ∞ სიცოცხლე; სხვებს — „+ ❤️ აღდგენა“, როცა სიცოცხლე < 5
     const unlimited = store.hasUnlimitedHearts(p);
