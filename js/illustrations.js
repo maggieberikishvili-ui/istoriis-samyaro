@@ -979,6 +979,27 @@
       },
     ],
 
+    /* ===== მე-8 კლასი, თავი II — გვიანდელი შუა საუკუნეები და ადრეული ახალი დრო ===== */
+    "g8-c2": [
+      {
+        id: "giorgauli-coin",
+        after: "g8-l45",
+        title: "ვერცხლის „გიორგაული“",
+        fact: "გიორგი V-მ ვაჭრობის ხელშესაწყობად სრულფასოვანი ვერცხლის მონეტა მოჭრა, რომელსაც „გიორგაული“ ერქვა.",
+        shapes: [
+          ground(92),
+          el("circle", { cx: 84, cy: 70, r: 20, class: "f-sand s-ink" }),
+          el("circle", { cx: 84, cy: 70, r: 14, class: "s-thin o" }),
+          el("path", { d: "M78 66 H90 M78 72 H90 M80 78 H88", class: "s-ink o" }),
+          el("circle", { cx: 50, cy: 52, r: 32, class: "f-paper s-ink" }),
+          el("circle", { cx: 50, cy: 52, r: 25, class: "s-thin o" }),
+          el("path", { d: "M50 34 V70 M32 52 H68", class: "s-ink o w4" }),
+          el("path", { d: "M50 34 l-4 6 h8 z M50 70 l-4 -6 h8 z M32 52 l6 -4 v8 z M68 52 l-6 -4 v8 z", class: "f-ochre s-ink" }),
+          el("path", { d: "M36 38 l3 3 M64 38 l-3 3 M36 66 l3 -3 M64 66 l-3 -3", class: "s-ink o" }),
+        ],
+      },
+    ],
+
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
     "g9-c1": [
       {
