@@ -127,6 +127,22 @@
   --ic-fire-hi: #ffe07a; --ic-fire-mid: #ff4a1c; --ic-fire-lo: #b3120a;
   --ic-wood: #7a4a2c;    --ic-wood-lo: #4e2e1a;
   --icon-size: 1.15em;
+  /* დღე/ღამის გადამრთველი: თიხის მთები (დღე), ღამის მთა — ორივე რეჟიმში ერთი; ღარი და ღილი — რეჟიმის მიხედვით */
+  --ic-clay-hi: #e0a27a; --ic-clay-mid: #b5653a; --ic-clay-lo: #7a3f1f; --ic-clay-edge: #5a2e16;
+  --ic-dusk-hi: #7d5a8a; --ic-dusk-mid: #4a3a63; --ic-dusk-lo: #2a2140; --ic-dusk-edge: #1c1630;
+  --switch-w: 72px;
+  --switch-h: 40px;
+  --switch-pad: 4px;
+  --switch-knob: 32px;
+  --switch-icon: 24px;
+  --switch-track: #e6dccb;
+  --switch-knob-bg: #fffdf9;
+  --switch-shadow: rgba(43, 38, 35, 0.2);
+  /* პროფილის ნიშანი და მენიუ (dashboard) */
+  --avatar-size: 36px;
+  --avatar-size-lg: 44px;
+  --menu-width: 264px;
+  --menu-shadow: rgba(43, 38, 35, 0.18);
   --color-hearts: #2b4a9e;  /* სიცოცხლის რიცხვი — ლაჟვარდისფერი (გულიც ლაჟვარდისაა) */
   --bead-cord: #7a5a3c;     /* ყელსაბამის ძაფი */
   --bead-etch: #fff6e8;     /* სარდიონზე თეთრი მოხატულობა (ორივე რეჟიმში ერთი) */
@@ -261,6 +277,10 @@
     --tr-sil-edge: #4a433a;
     --bead-cord: #b08a64;
     --color-hearts: #9fb4f2;
+    --switch-track: #2f2b26;
+    --switch-knob-bg: #45403a;
+    --switch-shadow: rgba(0, 0, 0, 0.5);
+    --menu-shadow: rgba(0, 0, 0, 0.5);
 
     color-scheme: dark;
   }
@@ -330,6 +350,10 @@
   --tr-sil-edge: #4a433a;
   --bead-cord: #b08a64;
   --color-hearts: #9fb4f2;
+  --switch-track: #2f2b26;
+  --switch-knob-bg: #45403a;
+  --switch-shadow: rgba(0, 0, 0, 0.5);
+  --menu-shadow: rgba(0, 0, 0, 0.5);
 
   color-scheme: dark;
 }

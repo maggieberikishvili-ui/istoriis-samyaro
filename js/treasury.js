@@ -39,7 +39,7 @@
     revealClose: $("revealClose"),
   };
 
-  store.bindThemeToggle($("themeToggle"), $("themeIcon"));
+  store.bindThemeToggle($("themeToggle"));
 
   // „მე-8 კლასი“ → „მე-8 კლასის“ (თაროს სათაურისთვის)
   const genitive = (title) => (/კლასი$/.test(title) ? title.replace(/კლასი$/, "კლასის") : title);

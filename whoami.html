@@ -37,9 +37,11 @@
 
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/teacher.css">
   <link rel="stylesheet" href="css/whoami.css">
 
+  <script src="js/icons.js" defer></script>
   <script src="js/utils.js" defer></script>
   <script src="js/activities.js" defer></script>
   <script src="js/lesson-picker.js" defer></script>
@@ -58,8 +60,9 @@
           <p class="t-top__eyebrow">👩‍🏫 მასწავლებლის რეჟიმი</p>
           <h1 class="t-top__title" id="setupTitle">ვინ ვარ მე?</h1>
         </div>
-        <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
-          <span aria-hidden="true" id="themeIcon">🌙</span>
+        <button type="button" class="theme-switch" id="themeToggle" role="switch" aria-checked="false" aria-label="ღამის რეჟიმი">
+          <svg class="ims-icon theme-switch__day" aria-hidden="true" focusable="false"><use href="#ic-day"></use></svg>
+          <svg class="ims-icon theme-switch__night" aria-hidden="true" focusable="false"><use href="#ic-night"></use></svg>
         </button>
       </header>
 

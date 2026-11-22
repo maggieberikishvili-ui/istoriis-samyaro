@@ -208,41 +208,6 @@
   border-radius: var(--radius-pill);
 }
 
-/* პროფილი სვეტის ბოლოში */
-.side__me {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: auto;
-  padding-top: var(--space-3);
-  border-top: var(--border-width) solid var(--color-border);
-}
-
-.side__avatar {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 36px;
-  height: 36px;
-  font-weight: var(--fw-heavy);
-  color: var(--color-text-inverse);
-  background-color: var(--color-accent);
-  border-radius: 50%;
-}
-
-.side__user {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: var(--fw-bold);
-}
-
-.btn--danger-text {
-  --btn-color: var(--color-danger);
-}
-
 /* ---------- შუა: ბილიკი (თხელი ხაზებით გამოყოფილი სვეტი) ---------- */
 .dashboard {
   min-width: 0;
@@ -257,7 +222,23 @@
 }
 
 /* ---------- მარჯვენა სვეტი: „დღეს“ ---------- */
+.today__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.today__corner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  flex: none;
+}
+
 .today__hello {
+  flex: 1;
+  min-width: 0;
   margin: 0;
   overflow-wrap: anywhere;
   font-size: var(--fs-lg);
@@ -515,8 +496,7 @@
   .side-link__text,
   .course-card__title,
   .course-card__meta,
-  .course-card__bar,
-  .side__user {
+  .course-card__bar {
     display: none;
   }
 
@@ -552,10 +532,6 @@
     font-size: 0;
   }
 
-  .side__me {
-    flex-direction: column;
-  }
-
   /* „დღეს“ — ბილიკის თავში, ერთ რიგად */
   .side--right {
     position: static;
@@ -567,7 +543,7 @@
     padding-bottom: 0;
   }
 
-  .today__hello {
+  .today__head {
     flex-basis: 100%;
   }
 
@@ -668,7 +644,7 @@
   }
 
   /* მისალმება და სტატისტიკა ზედა ზოლშია */
-  .today__hello,
+  .today__head,
   .today__stats {
     display: none;
   }
@@ -734,8 +710,7 @@
   .side__label,
   .side-link__text,
   .course-card__title,
-  .course-card__meta,
-  .side__user {
+  .course-card__meta {
     display: revert;
   }
 
@@ -766,11 +741,6 @@
     height: auto;
     padding: 0 var(--space-2);
     font-size: var(--fs-xs);
-  }
-
-  .side__me {
-    flex-direction: row;
-    margin-top: var(--space-2);
   }
 
   .menu-scrim:not([hidden]) {
@@ -1674,5 +1644,172 @@ body::before {
 @media (max-width: 600px) {
   .layout {
     --frieze-height: 96px;
+  }
+}
+
+/* ==========================================================
+   პროფილის ნიშანი და მენიუ (გასვლა — აქ)
+   ========================================================== */
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: none;
+  padding: 3px var(--space-2) 3px 3px;
+  font-family: inherit;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.profile-btn:hover,
+.profile-btn[aria-expanded="true"] {
+  border-color: var(--color-primary);
+}
+
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-inverse);
+  background-color: var(--color-accent);
+  border-radius: 50%;
+}
+
+.profile-avatar--lg {
+  width: var(--avatar-size-lg);
+  height: var(--avatar-size-lg);
+  font-size: var(--fs-lg);
+}
+
+.profile-menu {
+  position: fixed;
+  top: var(--menu-top, var(--space-4));
+  right: var(--menu-right, var(--space-4));
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: min(var(--menu-width), calc(100vw - 2 * var(--space-4)));
+  padding: var(--space-2);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px var(--menu-shadow);
+}
+
+.profile-menu[hidden] {
+  display: none;
+}
+
+.profile-menu__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-3);
+}
+
+.profile-menu__who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.profile-menu__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--fw-heavy);
+}
+
+.profile-menu__meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.profile-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  text-align: left;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.profile-menu__item .ims-icon {
+  --icon-size: 22px;
+}
+
+.profile-menu__item:hover {
+  background-color: var(--color-bg-soft);
+}
+
+.profile-menu__item[aria-disabled="true"] {
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+.profile-menu__item[aria-disabled="true"]:hover {
+  background: transparent;
+}
+
+.profile-menu__item--danger {
+  color: var(--color-danger);
+}
+
+.profile-menu__soon {
+  margin-left: auto;
+  padding: 0 var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-heavy);
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+/* გადამრთველი მენიუში მხოლოდ ტელეფონზე ჩანს (დიდ ეკრანზე ის კუთხეშია) */
+.profile-menu__theme {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+}
+
+.profile-menu__sep {
+  margin: var(--space-1) var(--space-2);
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ტელეფონი: ზოლში მხოლოდ მრგვალი ნიშანი, გადამრთველი — მენიუში */
+@media (max-width: 759px) {
+  .profile-btn--bar {
+    padding: 2px;
+  }
+
+  .profile-menu__theme {
+    display: flex;
   }
 }

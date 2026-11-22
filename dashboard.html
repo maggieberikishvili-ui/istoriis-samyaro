@@ -56,6 +56,9 @@
       <li class="mini-stat mini-stat--xp"><svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-xp"></use></svg><span data-stat="xp">0</span><span class="visually-hidden">XP</span></li>
       <li class="mini-stat mini-stat--hearts"><svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-heart"></use></svg><span data-stat="hearts">0</span><span class="visually-hidden">სიცოცხლე</span></li>
     </ul>
+    <button type="button" class="profile-btn profile-btn--bar" data-profile-btn aria-haspopup="menu" aria-expanded="false" aria-controls="profileMenu" aria-label="პროფილის მენიუ">
+      <span class="profile-avatar" data-avatar aria-hidden="true"></span>
+    </button>
   </header>
 
   <div class="layout">
@@ -98,16 +101,6 @@
         </a>
       </nav>
 
-      <div class="side__me">
-        <span class="side__avatar" id="userAvatar" aria-hidden="true"></span>
-        <span class="side__user" id="userName"></span>
-        <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
-          <span aria-hidden="true" id="themeIcon">🌙</span>
-        </button>
-        <button type="button" class="btn btn--outline btn--icon btn--danger-text" id="logoutBtn" aria-label="გასვლა" title="გასვლა">
-          <span aria-hidden="true">↪</span>
-        </button>
-      </div>
     </aside>
 
     <!-- შუა: „რას ვსწავლობ“ — მხოლოდ თავები, ქვეთავები და ბილიკი -->
@@ -122,7 +115,20 @@
     <!-- მარჯვენა სვეტი: „დღეს“ — მისალმება, სტატისტიკა, გაგრძელება, შეცდომები.
          ტაბლეტსა და ტელეფონზე ეს ბარათები ბილიკის თავში ჩანს. -->
     <aside class="side side--right" aria-label="დღეს">
-      <h1 class="today__hello" id="greetingTitle">გამარჯობა!</h1>
+      <!-- კუთხე: დღე/ღამის გადამრთველი + პროფილის ნიშანი (მენიუ — #profileMenu) -->
+      <div class="today__head">
+        <h1 class="today__hello" id="greetingTitle">გამარჯობა!</h1>
+        <div class="today__corner">
+          <button type="button" class="theme-switch" id="themeToggle" role="switch" aria-checked="false" aria-label="ღამის რეჟიმი">
+            <svg class="ims-icon theme-switch__day" aria-hidden="true" focusable="false"><use href="#ic-day"></use></svg>
+            <svg class="ims-icon theme-switch__night" aria-hidden="true" focusable="false"><use href="#ic-night"></use></svg>
+          </button>
+          <button type="button" class="profile-btn" data-profile-btn aria-haspopup="menu" aria-expanded="false" aria-controls="profileMenu" aria-label="პროფილის მენიუ">
+            <span class="profile-avatar" data-avatar aria-hidden="true"></span>
+            <span class="profile-btn__caret" aria-hidden="true">▾</span>
+          </button>
+        </div>
+      </div>
 
       <ul class="today__stats" aria-label="შენი სტატისტიკა">
         <li class="today-stat today-stat--streak" title="უწყვეტი დღეები">
@@ -196,10 +202,39 @@
     <a class="tabbar__tab" id="gamesTab" href="games.html"><span aria-hidden="true">🎮</span>თამაშები</a>
     <a class="tabbar__tab" href="progress.html"><span aria-hidden="true">📊</span>პროგრესი</a>
     <button type="button" class="tabbar__tab" id="meTab" aria-controls="sideMenu" aria-expanded="false">
-      <span aria-hidden="true">👤</span>მე<span class="tabbar__dot" id="meDot" hidden></span>
+      <span aria-hidden="true">☰</span>მენიუ<span class="tabbar__dot" id="meDot" hidden></span>
     </button>
   </nav>
   <div class="menu-scrim" id="menuScrim" hidden></div>
+
+  <!-- პროფილის მენიუ: იხსნება პროფილის ნიშნიდან (კუთხეში ან ტელეფონის ზედა ზოლში) -->
+  <div class="profile-menu" id="profileMenu" role="menu" aria-label="პროფილი" hidden>
+    <div class="profile-menu__head">
+      <span class="profile-avatar profile-avatar--lg" data-avatar aria-hidden="true"></span>
+      <span class="profile-menu__who">
+        <span class="profile-menu__name" id="profileName"></span>
+        <span class="profile-menu__meta" id="profileMeta"></span>
+      </span>
+    </div>
+    <button type="button" class="profile-menu__item" role="menuitem" aria-disabled="true">
+      <svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-user"></use></svg>ჩემი პროფილი<span class="profile-menu__soon">მალე</span>
+    </button>
+    <a class="profile-menu__item" role="menuitem" href="progress.html">
+      <svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-chart"></use></svg>ჩემი პროგრესი
+    </a>
+    <!-- ტელეფონზე გადამრთველი ზოლში არ ეტევა — აქ არის -->
+    <div class="profile-menu__theme">
+      <span id="themeMenuLabel">ღამის რეჟიმი</span>
+      <button type="button" class="theme-switch" id="themeToggleMenu" role="switch" aria-checked="false" aria-labelledby="themeMenuLabel">
+        <svg class="ims-icon theme-switch__day" aria-hidden="true" focusable="false"><use href="#ic-day"></use></svg>
+        <svg class="ims-icon theme-switch__night" aria-hidden="true" focusable="false"><use href="#ic-night"></use></svg>
+      </button>
+    </div>
+    <hr class="profile-menu__sep">
+    <button type="button" class="profile-menu__item profile-menu__item--danger" role="menuitem" id="logoutBtn">
+      <svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-logout"></use></svg>გასვლა
+    </button>
+  </div>
 
   <!-- შეტყობინება (toast) -->
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

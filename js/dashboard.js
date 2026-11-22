@@ -30,8 +30,9 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   /* ---------- DOM ---------- */
 
   const el = {
-    userName: document.getElementById("userName"),
-    userAvatar: document.getElementById("userAvatar"),
+    profileName: document.getElementById("profileName"),
+    profileMeta: document.getElementById("profileMeta"),
+    profileMenu: document.getElementById("profileMenu"),
     greetingTitle: document.getElementById("greetingTitle"),
     heartsStat: document.getElementById("heartsStat"),
     refillItem: document.getElementById("refillItem"),
@@ -83,8 +84,10 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   function renderStats() {
     const p = state.profile;
-    el.userName.textContent = p.name;
-    el.userAvatar.textContent = Array.from(p.name.trim())[0] || "?";
+    const initial = Array.from(p.name.trim())[0] || "?";
+    document.querySelectorAll("[data-avatar]").forEach((node) => { node.textContent = initial; });
+    el.profileName.textContent = p.name;
+    el.profileMeta.textContent = p.isGuest ? "სტუმარი" : p.email || "";
     el.greetingTitle.textContent = "გამარჯობა, " + p.name + "!";
 
     // Pro → ∞ სიცოცხლე; სხვებს — „+ ❤️ აღდგენა“, როცა სიცოცხლე < 5
@@ -901,9 +904,75 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     });
   }
 
+  /* ---------- პროფილის მენიუ ---------- */
+
+  // ერთი მენიუ, ორი ნიშანი (კუთხეში და ტელეფონის ზოლში) — მენიუ იმ ნიშნის ქვეშ იხსნება, რომელსაც დააჭირე
+  const profileBtns = Array.from(document.querySelectorAll("[data-profile-btn]"));
+  let menuOwner = null;
+
+  function menuItems() {
+    return Array.from(el.profileMenu.querySelectorAll('[role="menuitem"]:not([aria-disabled="true"])'));
+  }
+
+  function closeProfileMenu(returnFocus) {
+    if (!menuOwner) return;
+    const owner = menuOwner;
+    menuOwner = null;
+    el.profileMenu.hidden = true;
+    owner.setAttribute("aria-expanded", "false");
+    if (returnFocus) owner.focus();
+  }
+
+  function openProfileMenu(button) {
+    const rect = button.getBoundingClientRect();
+    el.profileMenu.style.setProperty("--menu-top", Math.round(rect.bottom + 8) + "px");
+    el.profileMenu.style.setProperty("--menu-right", Math.round(document.documentElement.clientWidth - rect.right) + "px");
+    el.profileMenu.hidden = false;
+    button.setAttribute("aria-expanded", "true");
+    menuOwner = button;
+    const first = menuItems()[0];
+    if (first) first.focus({ preventScroll: true });
+  }
+
+  profileBtns.forEach((button) => {
+    button.addEventListener("click", () => {
+      const reopen = menuOwner !== button;
+      closeProfileMenu(false);
+      if (reopen) openProfileMenu(button);
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!menuOwner) return;
+    if (el.profileMenu.contains(e.target) || menuOwner.contains(e.target)) return;
+    closeProfileMenu(false);
+  });
+
+  el.profileMenu.addEventListener("keydown", (e) => {
+    const items = menuItems();
+    const i = items.indexOf(document.activeElement);
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeProfileMenu(true);
+    } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const step = e.key === "ArrowDown" ? 1 : -1;
+      items[(i + step + items.length) % items.length].focus();
+    }
+  });
+
+  el.profileMenu.addEventListener("focusout", (e) => {
+    if (menuOwner && e.relatedTarget && !el.profileMenu.contains(e.relatedTarget) && e.relatedTarget !== menuOwner) {
+      closeProfileMenu(false);
+    }
+  });
+
+  window.addEventListener("resize", () => closeProfileMenu(false));
+
   /* ---------- გასვლა ---------- */
 
   el.logoutBtn.addEventListener("click", () => {
+    closeProfileMenu(false);
     const guest = state.profile && state.profile.isGuest;
     confirmAction({
       title: "გახვალ ანგარიშიდან?",
@@ -937,10 +1006,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   runDailyCheck();
   renderStats();
-  store.bindThemeToggle(
-    document.getElementById("themeToggle"),
-    document.getElementById("themeIcon")
-  );
+  store.bindThemeToggle(document.getElementById("themeToggle"));
+  store.bindThemeToggle(document.getElementById("themeToggleMenu"));
   selectCourse(data.currentCourseId());
   setupInstallBanner();
 }, window.IMS_DATA.showLoadError);

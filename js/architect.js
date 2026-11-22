@@ -274,7 +274,7 @@ window.IMS_DATA.loadAll().then(function () {
     mainAction();
   });
 
-  if (store && store.bindThemeToggle) store.bindThemeToggle($("themeToggle"), $("themeIcon"));
+  if (store && store.bindThemeToggle) store.bindThemeToggle($("themeToggle"));
 
   selectDefaultLessons();
   renderSetup();

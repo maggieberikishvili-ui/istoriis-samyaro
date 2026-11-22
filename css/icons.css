@@ -26,6 +26,8 @@
 
 .ic-k--lapis { --ic-hi: var(--gem-lapis-hi); --ic-mid: var(--gem-lapis-mid); --ic-lo: var(--gem-lapis-lo); }
 .ic-k--gold { --ic-hi: var(--gem-gold-hi); --ic-mid: var(--gem-gold-mid); --ic-lo: var(--gem-gold-lo); }
+.ic-k--clay { --ic-hi: var(--ic-clay-hi); --ic-mid: var(--ic-clay-mid); --ic-lo: var(--ic-clay-lo); }
+.ic-k--dusk { --ic-hi: var(--ic-dusk-hi); --ic-mid: var(--ic-dusk-mid); --ic-lo: var(--ic-dusk-lo); }
 .ic-k--fire { --ic-hi: var(--ic-fire-hi); --ic-mid: var(--ic-fire-mid); --ic-lo: var(--ic-fire-lo); }
 
 .ic-edge { stroke-width: 1.2; stroke-linejoin: round; }
@@ -37,3 +39,81 @@
 .ic-stem { fill: none; stroke: var(--gem-gold-lo); stroke-width: 1.6; stroke-linecap: round; }
 .ic-awn { fill: none; stroke: var(--gem-gold-mid); stroke-width: 1; stroke-linecap: round; }
 .ic-wood { fill: var(--ic-wood); stroke: var(--ic-wood-lo); stroke-width: 1; }
+.ic-edge--clay { stroke: var(--ic-clay-edge); }
+.ic-edge--dusk { stroke: var(--ic-dusk-edge); }
+.ic-ray { fill: none; stroke: var(--gem-gold-mid); stroke-width: 1.8; stroke-linecap: round; }
+.ic-star { stroke: var(--gem-gold-lo); stroke-width: 0.6; stroke-linejoin: round; }
+.ic-line { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* გატეხილი გული: ნახევრები ქვედა წერტილიდან გადაიხრება */
+.ic-crack { fill: none; stroke: var(--gem-lapis-edge); stroke-width: 0.8; stroke-linejoin: round; }
+.ic-half { transform-box: fill-box; transform-origin: 50% 100%; }
+.ic-half--l { transform: translate(-1.4px, 0.6px) rotate(-9deg); animation: ic-break-l 700ms 300ms cubic-bezier(0.3, 1.4, 0.5, 1) both; }
+.ic-half--r { transform: translate(1.4px, 0.6px) rotate(9deg); animation: ic-break-r 700ms 300ms cubic-bezier(0.3, 1.4, 0.5, 1) both; }
+
+@keyframes ic-break-l { from { transform: none; } to { transform: translate(-1.4px, 0.6px) rotate(-9deg); } }
+@keyframes ic-break-r { from { transform: none; } to { transform: translate(1.4px, 0.6px) rotate(9deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ic-half--l,
+  .ic-half--r { animation: none; }
+}
+
+/* ----------------------------------------------------------
+   დღე/ღამის გადამრთველი: ორივე ნახატი ღარში, ღილი აქტიურის ქვეშ
+   <button class="theme-switch" role="switch" aria-checked> — storage.js → bindThemeToggle
+   ---------------------------------------------------------- */
+.theme-switch {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  flex: none;
+  width: var(--switch-w);
+  height: var(--switch-h);
+  padding: var(--switch-pad);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--switch-track);
+  cursor: pointer;
+}
+
+.theme-switch::before {
+  content: "";
+  position: absolute;
+  top: var(--switch-pad);
+  left: var(--switch-pad);
+  width: var(--switch-knob);
+  height: var(--switch-knob);
+  border-radius: 50%;
+  background-color: var(--switch-knob-bg);
+  box-shadow: 0 1px 4px var(--switch-shadow);
+}
+
+.theme-switch[aria-checked="true"]::before {
+  transform: translateX(calc(var(--switch-w) - var(--switch-knob) - 2 * var(--switch-pad)));
+}
+
+.theme-switch .ims-icon {
+  --icon-size: var(--switch-icon);
+  position: relative;
+  justify-self: center;
+  vertical-align: middle;
+}
+
+.theme-switch[aria-checked="false"] .theme-switch__night,
+.theme-switch[aria-checked="true"] .theme-switch__day {
+  opacity: 0.45;
+  transform: scale(0.82);
+}
+
+/* ანიმაცია მხოლოდ მიბმის შემდეგ — გვერდის ჩატვირთვისას ღილი არ „გადაცურდება“ */
+.theme-switch.is-ready::before,
+.theme-switch.is-ready .ims-icon {
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch.is-ready::before,
+  .theme-switch.is-ready .ims-icon { transition: none; }
+}

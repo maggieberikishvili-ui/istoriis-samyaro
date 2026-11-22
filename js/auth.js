@@ -287,10 +287,7 @@
 
   /* ---------- ინიციალიზაცია ---------- */
 
-  store.bindThemeToggle(
-    document.getElementById("themeToggle"),
-    document.getElementById("themeIcon")
-  );
+  store.bindThemeToggle(document.getElementById("themeToggle"));
 
   // „📲 დაყენება“ — ჩანს მხოლოდ მაშინ, როცა ბრაუზერი დაყენებას გვთავაზობს
   const installBtn = document.getElementById("installBtn");

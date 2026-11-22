@@ -216,7 +216,7 @@
 
   /* ---------- ინიციალიზაცია ---------- */
 
-  store.bindThemeToggle($("themeToggle"), $("themeIcon"));
+  store.bindThemeToggle($("themeToggle"));
   renderHeader();
   renderWeek();
   renderCourses();

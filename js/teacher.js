@@ -363,7 +363,7 @@ window.IMS_DATA.loadAll().then(function () {
     if (n >= 1 && n <= game.teams.length) update(quiz.toggleAward(game, n - 1));
   });
 
-  if (store && store.bindThemeToggle) store.bindThemeToggle($("themeToggle"), $("themeIcon"));
+  if (store && store.bindThemeToggle) store.bindThemeToggle($("themeToggle"));
 
   selectDefaultLessons();
   renderSetup();

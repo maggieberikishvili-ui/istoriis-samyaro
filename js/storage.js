@@ -519,35 +519,41 @@
     writeString(KEYS.theme, theme);
   }
 
-  /** თემის გადამრთველი ღილაკის მიბმა (ხატულა + aria-label + click). */
-  function bindThemeToggle(button, iconEl) {
-    if (!button || !iconEl) return;
+  /* დღე/ღამის გადამრთველები (<button class="theme-switch" role="switch">, ხატულები — js/icons.js).
+     გვერდზე შეიძლება ორი იყოს (მაგ. დაფა: კუთხეში და ტელეფონის მენიუში) — ყველა ერთად ახლდება. */
+  const themeSwitches = [];
 
-    function render() {
-      const dark = currentTheme() === "dark";
-      iconEl.textContent = dark ? "☀️" : "🌙";
-      button.setAttribute("aria-label", dark ? "ნათელ თემაზე გადართვა" : "მუქ თემაზე გადართვა");
+  function renderThemeSwitches() {
+    const dark = currentTheme() === "dark";
+    themeSwitches.forEach((button) => button.setAttribute("aria-checked", dark ? "true" : "false"));
+  }
+
+  /** თემის გადამრთველის მიბმა: aria-checked = ღამის რეჟიმი ჩართულია. */
+  function bindThemeToggle(button) {
+    if (!button) return;
+
+    if (!themeSwitches.length) {
+      if (darkQuery && darkQuery.addEventListener) {
+        darkQuery.addEventListener("change", renderThemeSwitches);
+      }
+      // სხვა ჩანართში თემის შეცვლა
+      window.addEventListener("storage", (e) => {
+        if (e.key !== KEYS.theme) return;
+        if (e.newValue === "dark" || e.newValue === "light") {
+          document.documentElement.setAttribute("data-theme", e.newValue);
+        }
+        renderThemeSwitches();
+      });
     }
 
+    themeSwitches.push(button);
     button.addEventListener("click", () => {
       setTheme(currentTheme() === "dark" ? "light" : "dark");
-      render();
+      renderThemeSwitches();
     });
 
-    if (darkQuery && darkQuery.addEventListener) {
-      darkQuery.addEventListener("change", render);
-    }
-
-    // სხვა ჩანართში თემის შეცვლა
-    window.addEventListener("storage", (e) => {
-      if (e.key !== KEYS.theme) return;
-      if (e.newValue === "dark" || e.newValue === "light") {
-        document.documentElement.setAttribute("data-theme", e.newValue);
-      }
-      render();
-    });
-
-    render();
+    renderThemeSwitches();
+    requestAnimationFrame(() => button.classList.add("is-ready"));
   }
 
   /* ==========================================================

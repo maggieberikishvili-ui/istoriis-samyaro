@@ -49,8 +49,9 @@
   <div class="auth-page">
     <header class="auth-header">
       <button type="button" class="btn btn--outline" id="installBtn" hidden>📲 დაყენება</button>
-      <button type="button" class="btn btn--outline btn--icon" id="themeToggle" aria-label="თემის შეცვლა">
-        <span aria-hidden="true" id="themeIcon">🌙</span>
+      <button type="button" class="theme-switch" id="themeToggle" role="switch" aria-checked="false" aria-label="ღამის რეჟიმი">
+        <svg class="ims-icon theme-switch__day" aria-hidden="true" focusable="false"><use href="#ic-day"></use></svg>
+        <svg class="ims-icon theme-switch__night" aria-hidden="true" focusable="false"><use href="#ic-night"></use></svg>
       </button>
     </header>
 
