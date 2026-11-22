@@ -102,11 +102,11 @@
     const items = [
       { icon: "🎲", title: "ურის სამეფო თამაში", on: T.firstBlockDone(course, profile), lockText: "პირველი დასრულებული " + unit, href: "games.html?course=" + course.id },
       { icon: "◈", title: "ურის დაფაზე ლაჟვარდის ჩასმები", on: p.pct >= T.UNLOCK_INLAY, lockText: T.UNLOCK_INLAY + "% · კიდევ " + need(T.UNLOCK_INLAY) + " გაკვეთილი" },
-      { icon: "🎨", title: "ფრიზის ფერის არჩევა", on: false, soon: true, lockText: T.UNLOCK_FRIEZE + "% · მალე" },
+      { icon: "🎨", title: "ფრიზის ფერის არჩევა", on: T.friezeUnlocked(profile), lockText: T.UNLOCK_FRIEZE + "% · კიდევ " + need(T.UNLOCK_FRIEZE) + " გაკვეთილი", picker: true },
       { icon: "✦", title: "ურის დაფა სრულად მოჭედილი", on: p.pct >= T.UNLOCK_FULL, lockText: T.UNLOCK_FULL + "% · კიდევ " + need(T.UNLOCK_FULL) + " გაკვეთილი" },
     ];
     el.unlocks.replaceChildren(...items.map((u) => {
-      const li = createEl("li", "tsy-unlock" + (u.on ? " is-on" : "") + (u.soon ? " is-soon" : ""));
+      const li = createEl("li", "tsy-unlock" + (u.on ? " is-on" : "") + (u.picker && u.on ? " tsy-unlock--wide" : ""));
       li.append(createEl("span", "tsy-unlock__icon", u.icon));
       const body = createEl("span", "tsy-unlock__body");
       const status = createEl("span", "tsy-unlock__state", u.on ? "✓ გახსნილია" : "🔒 " + u.lockText);
@@ -116,9 +116,40 @@
         status.append(" · ", link);
       }
       body.append(createEl("b", "tsy-unlock__title", u.title), status);
+      if (u.picker && u.on) body.append(friezePicker());
       li.append(body);
       return li;
     }));
+  }
+
+  /* ---------- ფრიზის ფერი (დაფის ზედა და ქვედა ორნამენტი) ---------- */
+
+  const FRIEZE_NAMES = { lapis: "ლაჟვარდი", carnelian: "სარდიონი", gold: "ოქრო", clay: "თიხა" };
+
+  function friezePicker() {
+    const box = createEl("span", "tsy-frieze");
+    box.append(createEl("span", "tsy-frieze__preview"));
+    const group = createEl("span", "tsy-frieze__swatches");
+    group.setAttribute("role", "radiogroup");
+    group.setAttribute("aria-label", "ფრიზის ფერი");
+    store.FRIEZE_COLORS.forEach((color) => {
+      const btn = createEl("button", "tsy-swatch tsy-swatch--" + color);
+      btn.type = "button";
+      btn.setAttribute("role", "radio");
+      btn.setAttribute("aria-checked", String(profile.friezeColor === color));
+      btn.setAttribute("aria-label", FRIEZE_NAMES[color]);
+      btn.title = FRIEZE_NAMES[color];
+      btn.addEventListener("click", () => {
+        profile = store.updateProfile((p) => { p.friezeColor = color; }) || profile;
+        store.applyFrieze(profile.friezeColor);
+        group.querySelectorAll(".tsy-swatch").forEach((b) => {
+          b.setAttribute("aria-checked", String(b === btn));
+        });
+      });
+      group.append(btn);
+    });
+    box.append(group);
+    return box;
   }
 
   /* ---------- თარო ---------- */

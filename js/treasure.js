@@ -16,6 +16,7 @@
      IMS_TREASURE.progress(course, profile)     — { done, total, pct }
      IMS_TREASURE.firstBlockDone(course, profile)
      IMS_TREASURE.urDecoLevel(course, profile)  — ურის დაფის მორთულობა 0–2
+     IMS_TREASURE.friezeUnlocked(profile)       — ფრიზის ფერის არჩევა გახსნილია?
      IMS_TREASURE.art(itemId, tier, locked)     — <svg> ნახატი
    ფერები — css/treasure.css (--tr-* ცვლადები css/variables.css-ში).
    ========================================================== */
@@ -41,7 +42,7 @@
 
   // გახსნები კლასის პროცენტით (ურის თამაში — პირველი დასრულებული ბლოკით)
   const UNLOCK_INLAY = 25;   // ურის დაფაზე პირველი ლაჟვარდის ჩასმები
-  const UNLOCK_FRIEZE = 50;  // ფრიზის ფერის არჩევა (მალე)
+  const UNLOCK_FRIEZE = 50;  // ფრიზის ფერის არჩევა (ფრიზი ერთია — საკმარისია ერთი კლასის 50%)
   const UNLOCK_FULL = 100;   // დაფა სრულად მოჭედილი
 
   /* ---------- ბლოკები ---------- */
@@ -107,6 +108,16 @@
   function urDecoLevel(course, profile) {
     const pct = progress(course, profile).pct;
     return pct >= UNLOCK_FULL ? 2 : pct >= UNLOCK_INLAY ? 1 : 0;
+  }
+
+  /** ფრიზის ფერის არჩევა: რომელიმე კლასში გავლილია ≥ 50% (კლასის ფაილის ჩატვირთვა არ სჭირდება). */
+  function friezeUnlocked(profile) {
+    const done = profile ? profile.completedLessons : [];
+    return window.IMS_DATA.courses.some((c) => {
+      const total = c.loaded ? c.lessons.length : c.lessonCount;
+      const count = done.filter((id) => id.startsWith(c.lessonPrefix)).length;
+      return total > 0 && (count / total) * 100 >= UNLOCK_FRIEZE;
+    });
   }
 
   /** ბლოკები, რომლებმაც ახალ ლითონს მიაღწიეს, მაგრამ მოსწავლეს ჯერ არ უნახავს (profile.treasury). */
@@ -271,6 +282,7 @@
     progress: progress,
     firstBlockDone: firstBlockDone,
     urDecoLevel: urDecoLevel,
+    friezeUnlocked: friezeUnlocked,
     unseen: unseen,
     art: art,
   });

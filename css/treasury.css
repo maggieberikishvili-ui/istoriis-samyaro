@@ -203,6 +203,58 @@
   color: var(--color-primary);
 }
 
+.tsy-unlock--wide {
+  grid-column: 1 / -1;
+  order: 1; /* ფერის ამრჩევი — სიის ბოლოს, რომ დანარჩენი ერთ რიგში დარჩეს */
+}
+
+/* ფრიზის ფერი: პატარა ნიმუში (იგივე ორნამენტი, რაც დაფაზე) + ფერის ქვები */
+.tsy-frieze {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.tsy-frieze__preview {
+  flex: 1 1 160px;
+  height: 44px;
+  background-color: var(--frieze-color);
+  opacity: calc(var(--frieze-opacity) + 0.25);
+  -webkit-mask: url("../assets/images/frieze-top.svg") repeat-x left center / auto 100%;
+  mask: url("../assets/images/frieze-top.svg") repeat-x left center / auto 100%;
+}
+
+.tsy-frieze__swatches {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.tsy-swatch {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.tsy-swatch--lapis     { background-color: var(--frieze-lapis); }
+.tsy-swatch--carnelian { background-color: var(--frieze-carnelian); }
+.tsy-swatch--gold      { background-color: var(--frieze-gold); }
+.tsy-swatch--clay      { background-color: var(--frieze-clay); }
+
+.tsy-swatch[aria-checked="true"] {
+  border-color: var(--color-surface);
+  box-shadow: 0 0 0 3px var(--color-primary);
+}
+
+.tsy-swatch:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
 .tsy-unlock__link {
   white-space: nowrap;
   font-weight: var(--fw-heavy);

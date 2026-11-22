@@ -188,6 +188,7 @@
       email: typeof raw.email === "string" ? raw.email : null,
       isGuest: raw.isGuest === true || !raw.email,
       isPro: raw.isPro === true,
+      friezeColor: FRIEZE_COLORS.includes(raw.friezeColor) ? raw.friezeColor : "lapis",
       xp: toCount(raw.xp, 0),
       streak: toCount(raw.streak, 1),
       hearts: Math.min(toCount(raw.hearts, MAX_HEARTS), MAX_HEARTS),
@@ -487,6 +488,18 @@
     if (saved === "dark" || saved === "light") {
       document.documentElement.setAttribute("data-theme", saved);
     }
+    const profile = readJSON(KEYS.currentUser, null);
+    applyFrieze(profile && profile.friezeColor);
+  }
+
+  /* ფრიზის ფერი (საგანძურში იხსნება კლასის 50%-ზე): profile.friezeColor.
+     ადრე ვსვამთ <html data-frieze>-ს, რომ გვერდმა ფერი არ „გადართოს“ ჩატვირთვისას. */
+  const FRIEZE_COLORS = ["lapis", "carnelian", "gold", "clay"];
+
+  function applyFrieze(color) {
+    const root = document.documentElement;
+    if (FRIEZE_COLORS.includes(color) && color !== "lapis") root.setAttribute("data-frieze", color);
+    else root.removeAttribute("data-frieze");
   }
 
   function currentTheme() {
@@ -654,6 +667,8 @@
     gemDusty: gemDusty,
     touchGem: touchGem,
     reviewGem: reviewGem,
+    FRIEZE_COLORS: FRIEZE_COLORS,
+    applyFrieze: applyFrieze,
     stampGems: stampGems,
     DUST_DAYS: DUST_DAYS,
     toDateKey: toDateKey,
