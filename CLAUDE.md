@@ -43,6 +43,10 @@
 - ახალი ფუნქციის დაწერამდე მოძებნე, ხომ არ არსებობს უკვე. რამდენიმე გვერდის
   საერთო ფუნქციები (`createEl`, `shuffle`, `toRoman`, `toggleFullscreen`) — მხოლოდ
   `js/utils.js`-ში; ასლებს სხვა ფაილებში ნუ დაამატებ.
+- სიცოცხლე / XP / სერია — საკუთარი ხატულები, არა ემოჯი: `<svg class="ims-icon" aria-hidden="true"
+  focusable="false"><use href="#ic-heart"></use></svg>` (`ic-heart` ლაჟვარდის გული, `ic-xp` ნისაბას თავთავი,
+  `ic-streak` ჩირაღდანი); JS-ში `IMS_ICONS.el("heart")`. გვერდს სჭირდება `css/icons.css` + `js/icons.js`.
+  ემოჯი რჩება მხოლოდ გასაზიარებელ ტექსტსა და შეტყობინებებში (toast).
 - „ნამდვილად გსურს?“ (გასვლა გაკვეთილიდან/თამაშიდან, ანგარიშიდან გასვლა, შეუქცევადი ნაბიჯი) — მხოლოდ
   `IMS_UTILS.confirmAction({ title, text, ok, cancel })` (აბრუნებს Promise<boolean>), არა `window.confirm`.
 - ახალი ფაილი? დაამატე `sw.js`-ის `CORE_FILES` სიაში და HTML-ში.

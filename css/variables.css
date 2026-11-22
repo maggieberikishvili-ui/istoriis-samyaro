@@ -123,6 +123,11 @@
   --tr-art-size: 128px;
 
   /* იშვიათი მძივები (css/beads.css): მძივების ფერები — --gem-*; აქ მხოლოდ ძაფი, მოხატულობა და ზომები */
+  /* საკუთარი ხატულები (css/icons.css): ლაჟვარდი და ოქრო — --gem-*, აქ ცეცხლი, ხე და ზომა */
+  --ic-fire-hi: #ffe07a; --ic-fire-mid: #ff4a1c; --ic-fire-lo: #b3120a;
+  --ic-wood: #7a4a2c;    --ic-wood-lo: #4e2e1a;
+  --icon-size: 1.15em;
+  --color-hearts: #2b4a9e;  /* სიცოცხლის რიცხვი — ლაჟვარდისფერი (გულიც ლაჟვარდისაა) */
   --bead-cord: #7a5a3c;     /* ყელსაბამის ძაფი */
   --bead-etch: #fff6e8;     /* სარდიონზე თეთრი მოხატულობა (ორივე რეჟიმში ერთი) */
   --bead-row-size: 44px;    /* მძივი სიაში */
@@ -255,6 +260,7 @@
     --tr-sil: #3a342d;
     --tr-sil-edge: #4a433a;
     --bead-cord: #b08a64;
+    --color-hearts: #9fb4f2;
 
     color-scheme: dark;
   }
@@ -323,6 +329,7 @@
   --tr-sil: #3a342d;
   --tr-sil-edge: #4a433a;
   --bead-cord: #b08a64;
+  --color-hearts: #9fb4f2;
 
   color-scheme: dark;
 }

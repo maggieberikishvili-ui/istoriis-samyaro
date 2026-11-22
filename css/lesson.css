@@ -67,7 +67,7 @@
   flex-shrink: 0;
   font-size: var(--fs-lg);
   font-weight: var(--fw-heavy);
-  color: var(--color-danger);
+  color: var(--color-hearts);
 }
 
 .lesson-hearts.is-hit {
@@ -569,7 +569,7 @@
 
 .result-stat--xp       { --rs-color: var(--color-accent); }
 .result-stat--accuracy { --rs-color: var(--color-primary); }
-.result-stat--hearts   { --rs-color: var(--color-danger); }
+.result-stat--hearts   { --rs-color: var(--color-hearts); }
 
 .result-stat__label {
   padding: var(--space-1) var(--space-2);
@@ -656,4 +656,9 @@
   font-weight: var(--fw-bold);
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+/* დიდი ხატულა გამარჯვების ემბლემაში (სიცოცხლის აღდგენა) */
+.result__emblem .ims-icon {
+  --icon-size: 4.5rem;
 }

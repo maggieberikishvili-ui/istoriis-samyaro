@@ -1,0 +1,39 @@
+/* ==========================================================
+   Edubba — საკუთარი ხატულები (js/icons.js): სიცოცხლე, XP, სერია
+   ზომა ტექსტს მიჰყვება (em); ფერები — css/variables.css.
+   ========================================================== */
+
+.ims-icons-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.ims-icon {
+  display: inline-block;
+  flex: none;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  vertical-align: -0.2em;
+  overflow: visible;
+}
+
+/* გრადიენტის ფერები stop-ის კლასიდან */
+.ic-s-hi { stop-color: var(--ic-hi); }
+.ic-s-mid { stop-color: var(--ic-mid); }
+.ic-s-lo { stop-color: var(--ic-lo); }
+
+.ic-k--lapis { --ic-hi: var(--gem-lapis-hi); --ic-mid: var(--gem-lapis-mid); --ic-lo: var(--gem-lapis-lo); }
+.ic-k--gold { --ic-hi: var(--gem-gold-hi); --ic-mid: var(--gem-gold-mid); --ic-lo: var(--gem-gold-lo); }
+.ic-k--fire { --ic-hi: var(--ic-fire-hi); --ic-mid: var(--ic-fire-mid); --ic-lo: var(--ic-fire-lo); }
+
+.ic-edge { stroke-width: 1.2; stroke-linejoin: round; }
+.ic-edge--lapis { stroke: var(--gem-lapis-edge); }
+.ic-edge--gold { stroke: var(--gem-gold-edge); }
+.ic-shine { fill: var(--gem-shine); opacity: 0.6; }
+.ic-fleck { fill: var(--gem-lapis-fleck); }
+.ic-vein { fill: none; stroke: var(--gem-lapis-vein); stroke-width: 0.9; opacity: 0.45; stroke-linecap: round; }
+.ic-stem { fill: none; stroke: var(--gem-gold-lo); stroke-width: 1.6; stroke-linecap: round; }
+.ic-awn { fill: none; stroke: var(--gem-gold-mid); stroke-width: 1; stroke-linecap: round; }
+.ic-wood { fill: var(--ic-wood); stroke: var(--ic-wood-lo); stroke-width: 1; }

@@ -131,7 +131,7 @@
 
 .stat-chip--xp     { color: var(--color-accent-dark); }
 .stat-chip--streak { color: var(--color-streak); }
-.stat-chip--hearts { color: var(--color-danger); }
+.stat-chip--hearts { color: var(--color-hearts); }
 
 /* --- ფორმის ბარათი --- */
 .auth-card {

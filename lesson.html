@@ -27,11 +27,13 @@
 
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/lesson.css">
   <link rel="stylesheet" href="css/gems.css">
   <link rel="stylesheet" href="css/beads.css">
 
   <script src="js/utils.js" defer></script>
+  <script src="js/icons.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/audio-manifest.js" defer></script>
   <script src="js/gems.js" defer></script>
@@ -50,7 +52,7 @@
       </div>
 
       <div class="lesson-hearts" id="heartsBox" title="დარჩენილი სიცოცხლეები">
-        <span aria-hidden="true">❤️</span>
+        <svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-heart"></use></svg>
         <span id="heartsCount">5</span>
         <span class="visually-hidden">სიცოცხლე</span>
       </div>
@@ -106,7 +108,7 @@
     <section class="result" id="gameOverScreen" aria-labelledby="gameOverTitle" hidden>
       <div class="result__emblem result__emblem--lose" aria-hidden="true">💔</div>
       <h2 class="result__title" id="gameOverTitle">სიცოცხლეები ამოიწურა — სცადე თავიდან!</h2>
-      <p class="result__subtitle">დაფაზე გაიარე „❤️ აღდგენის“ სავარჯიშო ან დაბრუნდი ხვალ — ახალ დღეს სიცოცხლეები 5-მდე შეივსება. რამდენიმე წამში ავტომატურად გადახვალ დაფაზე.</p>
+      <p class="result__subtitle">დაფაზე გაიარე „სიცოცხლის აღდგენის“ სავარჯიშო ან დაბრუნდი ხვალ — ახალ დღეს სიცოცხლეები 5-მდე შეივსება. რამდენიმე წამში ავტომატურად გადახვალ დაფაზე.</p>
       <a class="btn btn--danger btn--block result__btn" href="dashboard.html">დაფაზე დაბრუნება</a>
     </section>
   </div>

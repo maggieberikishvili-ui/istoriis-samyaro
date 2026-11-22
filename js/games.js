@@ -461,9 +461,9 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     plugins.forEach((p) => p.renderCard());
 
     const earned = xpEarnedToday();
-    el.xpNote.textContent = earned >= GAMES_XP_DAILY_CAP
-      ? "⚡ დღევანდელი XP-ის ლიმიტი თამაშებიდან ამოიწურა (" + GAMES_XP_DAILY_CAP + "). შეგიძლია ითამაშო რეკორდისთვის!"
-      : "⚡ თამაშებით დღეს მიღებული XP: " + earned + " / " + GAMES_XP_DAILY_CAP;
+    el.xpNote.replaceChildren(window.IMS_ICONS.el("xp"), " ", earned >= GAMES_XP_DAILY_CAP
+      ? "დღევანდელი XP-ის ლიმიტი თამაშებიდან ამოიწურა (" + GAMES_XP_DAILY_CAP + "). შეგიძლია ითამაშო რეკორდისთვის!"
+      : "თამაშებით დღეს მიღებული XP: " + earned + " / " + GAMES_XP_DAILY_CAP);
   }
 
   el.raceStart.addEventListener("click", startRace);
@@ -1208,7 +1208,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.dailyDate.textContent = todayLabel() + " · " + course.title;
     const streak = dailyStreak();
     el.dailyStreak.hidden = streak < 2;
-    el.dailyStreak.textContent = "🔥 " + streak + " დღე";
+    el.dailyStreak.replaceChildren(window.IMS_ICONS.el("streak"), " " + streak + " დღე");
 
     const enough = dailyQuestions().length >= DAILY_SIZE;
     const rec = dailyRecord();

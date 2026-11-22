@@ -29,11 +29,13 @@
 
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/gems.css">
   <link rel="stylesheet" href="css/treasure.css">
 
   <script src="js/utils.js" defer></script>
+  <script src="js/icons.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/illustrations.js" defer></script>
   <script src="js/gems.js" defer></script>
@@ -50,9 +52,9 @@
       <span id="courseBtnText">კლასი</span> <span aria-hidden="true">▾</span>
     </button>
     <ul class="topbar__stats" aria-label="შენი სტატისტიკა">
-      <li class="mini-stat mini-stat--streak"><span aria-hidden="true">🔥</span><span data-stat="streak">0</span><span class="visually-hidden">უწყვეტი დღე</span></li>
-      <li class="mini-stat mini-stat--xp"><span aria-hidden="true">⚡</span><span data-stat="xp">0</span><span class="visually-hidden">XP</span></li>
-      <li class="mini-stat mini-stat--hearts"><span aria-hidden="true">❤️</span><span data-stat="hearts">0</span><span class="visually-hidden">სიცოცხლე</span></li>
+      <li class="mini-stat mini-stat--streak"><svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-streak"></use></svg><span data-stat="streak">0</span><span class="visually-hidden">უწყვეტი დღე</span></li>
+      <li class="mini-stat mini-stat--xp"><svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-xp"></use></svg><span data-stat="xp">0</span><span class="visually-hidden">XP</span></li>
+      <li class="mini-stat mini-stat--hearts"><svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-heart"></use></svg><span data-stat="hearts">0</span><span class="visually-hidden">სიცოცხლე</span></li>
     </ul>
   </header>
 
@@ -124,21 +126,21 @@
 
       <ul class="today__stats" aria-label="შენი სტატისტიკა">
         <li class="today-stat today-stat--streak" title="უწყვეტი დღეები">
-          <span class="today-stat__value"><span aria-hidden="true">🔥</span> <span id="statStreak" data-stat="streak">0</span></span>
+          <span class="today-stat__value"><svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-streak"></use></svg> <span id="statStreak" data-stat="streak">0</span></span>
           <span class="today-stat__label">დღე</span>
         </li>
         <li class="today-stat today-stat--xp" title="XP ქულები">
-          <span class="today-stat__value"><span aria-hidden="true">⚡</span> <span id="statXp" data-stat="xp">0</span></span>
+          <span class="today-stat__value"><svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-xp"></use></svg> <span id="statXp" data-stat="xp">0</span></span>
           <span class="today-stat__label">XP</span>
         </li>
         <li class="today-stat today-stat--hearts" id="heartsStat" title="სიცოცხლეები">
-          <span class="today-stat__value"><span aria-hidden="true">❤️</span> <span id="statHearts" data-stat="hearts">0</span></span>
+          <span class="today-stat__value"><svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-heart"></use></svg> <span id="statHearts" data-stat="hearts">0</span></span>
           <span class="today-stat__label">სიცოცხლე</span>
         </li>
       </ul>
       <div class="today__refill" id="refillItem" hidden>
         <a class="btn btn--danger btn--refill" id="refillBtn" href="lesson.html?mode=practice"
-           title="გაიარე 3 კითხვა და აღიდგინე 1 სიცოცხლე">+ ❤️ აღდგენა</a>
+           title="გაიარე 3 კითხვა და აღიდგინე 1 სიცოცხლე">+ <svg class="ims-icon" aria-hidden="true" focusable="false"><use href="#ic-heart"></use></svg> აღდგენა</a>
       </div>
 
       <!-- შემდეგი გაკვეთილი -->

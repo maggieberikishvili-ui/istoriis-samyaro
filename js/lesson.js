@@ -605,7 +605,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   function exerciseHeader(label, question, image) {
-    el.stage.append(createEl("p", "exercise__label", (isPractice ? "❤️ სავარჯიშო · " + practiceCourse.title + " · " : isMistakes ? "🔁 ჩემი შეცდომები · " + practiceCourse.title + " · " : isClean ? "🧹 მტვრის გაწმენდა · " + lesson.title + " · " : "") + label));
+    el.stage.append(createEl("p", "exercise__label", (isPractice ? "სიცოცხლის აღდგენა · " + practiceCourse.title + " · " : isMistakes ? "🔁 ჩემი შეცდომები · " + practiceCourse.title + " · " : isClean ? "🧹 მტვრის გაწმენდა · " + lesson.title + " · " : "") + label));
     if (question) el.stage.append(createEl("h1", "exercise__question", question));
     const figure = buildFigure(image);
     if (figure) el.stage.append(figure);
@@ -827,7 +827,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     el.victoryXp.textContent = "+" + xpGain;
     el.victoryAccuracy.textContent = accuracy + "%";
     el.victoryHeartsStat.hidden = heartGain === 0;
-    el.victoryHearts.textContent = "+" + heartGain + " ❤️";
+    el.victoryHearts.replaceChildren("+" + heartGain + " ", window.IMS_ICONS.el("heart"));
     el.victorySubtitle.textContent = firstTime
       ? "„" + lesson.title + "“ — გავლილია!"
       : "განმეორებითი გავლა — სიმბოლური +" + REPEAT_XP + " XP.";
@@ -911,14 +911,14 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     const accuracy = state.attempts ? Math.round((state.correct / state.attempts) * 100) : 100;
 
     hideLesson();
-    el.victoryEmblem.textContent = "❤️";
+    el.victoryEmblem.replaceChildren(window.IMS_ICONS.el("heart"));
     el.victoryTitle.textContent = "სიცოცხლე აღდგა!";
     el.victorySubtitle.textContent =
-      (practiceTarget === 3 ? "3-ვე" : "ყველა") + " კითხვას სწორად უპასუხე. ახლა გაქვს " + profile.hearts + " ❤️ — ბრუნდები დაფაზე…";
+      (practiceTarget === 3 ? "3-ვე" : "ყველა") + " კითხვას სწორად უპასუხე. ახლა გაქვს " + profile.hearts + " სიცოცხლე — ბრუნდები დაფაზე…";
     el.victoryXp.textContent = "+" + PRACTICE_XP;
     el.victoryAccuracy.textContent = accuracy + "%";
     el.victoryHeartsStat.hidden = heartGain === 0;
-    el.victoryHearts.textContent = "+" + heartGain + " ❤️";
+    el.victoryHearts.replaceChildren("+" + heartGain + " ", window.IMS_ICONS.el("heart"));
     el.victory.hidden = false;
     window.IMS_BEADS.showNew(el.victoryBeads);
     el.victory.querySelector(".result__btn").focus();

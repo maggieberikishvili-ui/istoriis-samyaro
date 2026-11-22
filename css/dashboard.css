@@ -297,7 +297,7 @@
 
 .today-stat--streak .today-stat__value { color: var(--color-streak); }
 .today-stat--xp     .today-stat__value { color: var(--color-accent-dark); }
-.today-stat--hearts .today-stat__value { color: var(--color-danger); }
+.today-stat--hearts .today-stat__value { color: var(--color-hearts); }
 
 .today__refill {
   display: flex;
@@ -307,7 +307,7 @@
   width: 100%;
 }
 
-/* „+ ❤️ აღდგენა“ ღილაკი (ჩანს, როცა სიცოცხლე < 5) */
+/* „+ სიცოცხლის აღდგენა“ ღილაკი (ჩანს, როცა სიცოცხლე < 5) */
 .btn--refill {
   --shadow-depth: 3px;
   min-height: 40px;
@@ -645,7 +645,7 @@
 
   .mini-stat--streak { color: var(--color-streak); }
   .mini-stat--xp     { color: var(--color-accent-dark); }
-  .mini-stat--hearts { color: var(--color-danger); }
+  .mini-stat--hearts { color: var(--color-hearts); }
 
   .layout {
     display: flex;
