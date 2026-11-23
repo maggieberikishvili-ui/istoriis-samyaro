@@ -1095,6 +1095,26 @@
           el("path", { d: "M24 78 V72 M38 72 V66", class: "s-ink o" }),
         ],
       },
+      {
+        id: "printing-press",
+        after: "g8-l58",
+        title: "საბეჭდი დაზგა",
+        fact: "XV საუკუნეში იოჰან გუტენბერგმა ლითონის ასოები ჩამოასხა და პირველი საბეჭდი დაზგა შექმნა; მხოლოდ XV საუკუნეში ევროპაში 30 ათასი ნაბეჭდი წიგნი გამოიცა.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M30 92 V10 M90 92 V10", class: "s-ink o w5" }),
+          el("path", { d: "M26 10 H94 V18 H26 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M54 18 V42 M66 18 V42", class: "s-ink o w4" }),
+          el("path", { d: "M60 26 H96", class: "s-terra o w4" }),
+          el("circle", { cx: 98, cy: 26, r: 4, class: "f-terra s-ink" }),
+          el("path", { d: "M42 42 H78 V50 H42 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M36 56 H84 V64 H36 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M44 52 H76 V56 H44 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M30 74 H90", class: "s-ink o w4" }),
+          el("path", { d: "M8 92 V74 H22 V92 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M11 79 H19 M11 83 H19 M11 87 H17", class: "s-thin o" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */

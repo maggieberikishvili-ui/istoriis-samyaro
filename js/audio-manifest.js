@@ -623,6 +623,25 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
     "2": "assets/audio/g8-l56/2-7362ff5d83.mp3",
     "3": "assets/audio/g8-l56/3-9c128f1e47.mp3"
   },
+  "g8-l57": {
+    "0": "assets/audio/g8-l57/0-a9b9fafe4b.mp3",
+    "1": "assets/audio/g8-l57/1-0fa881d4c2.mp3",
+    "2": "assets/audio/g8-l57/2-1b48998f60.mp3",
+    "3": "assets/audio/g8-l57/3-b3f1428d0b.mp3"
+  },
+  "g8-l58": {
+    "0": "assets/audio/g8-l58/0-faa5a7a91c.mp3",
+    "1": "assets/audio/g8-l58/1-1360444074.mp3",
+    "2": "assets/audio/g8-l58/2-d16c1afcdf.mp3",
+    "3": "assets/audio/g8-l58/3-7065d8e953.mp3",
+    "4": "assets/audio/g8-l58/4-dab1131f74.mp3"
+  },
+  "g8-l59": {
+    "0": "assets/audio/g8-l59/0-4a11e5b828.mp3",
+    "1": "assets/audio/g8-l59/1-aaebb266c9.mp3",
+    "2": "assets/audio/g8-l59/2-df1b8a676a.mp3",
+    "3": "assets/audio/g8-l59/3-806bd39f2b.mp3"
+  },
   "g8-l6": {
     "0": "assets/audio/g8-l6/0-9db37b5378.mp3",
     "1": "assets/audio/g8-l6/1-c04dbef2c1.mp3"
