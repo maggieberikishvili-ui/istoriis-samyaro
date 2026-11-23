@@ -998,6 +998,23 @@
           el("path", { d: "M36 38 l3 3 M64 38 l-3 3 M36 66 l3 -3 M64 66 l-3 -3", class: "s-ink o" }),
         ],
       },
+      {
+        id: "timur-bust",
+        after: "g8-l47",
+        title: "თემურის ბიუსტი",
+        fact: "რუსმა მეცნიერმა მიხეილ გერასიმოვმა თემურის სახე 1941 წელს მისი აკლდამიდან ამოღებული თავის ქალის მიხედვით აღადგინა.",
+        shapes: [
+          ground(92),
+          el("rect", { x: 40, y: 82, width: 40, height: 10, class: "f-sand s-ink" }),
+          el("path", { d: "M30 82 C32 70 44 64 60 64 C76 64 88 70 90 82 Z", class: "f-emerald s-ink" }),
+          el("path", { d: "M52 58 V66 H68 V58", class: "f-sand s-ink" }),
+          el("ellipse", { cx: 60, cy: 44, rx: 13, ry: 16, class: "f-sand s-ink" }),
+          el("path", { d: "M49 50 C50 64 56 70 60 70 C64 70 70 64 71 50 C66 56 54 56 49 50 Z", class: "f-ink" }),
+          el("path", { d: "M46 38 C46 26 52 20 60 12 C68 20 74 26 74 38 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M45 38 H75", class: "s-ink o w4" }),
+          el("path", { d: "M54 44 h3 M63 44 h3", class: "s-ink o" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
