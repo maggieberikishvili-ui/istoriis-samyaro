@@ -1015,6 +1015,21 @@
           el("path", { d: "M54 44 h3 M63 44 h3", class: "s-ink o" }),
         ],
       },
+      {
+        id: "amilakhvari-arms",
+        after: "g8-l49",
+        title: "ამილახვრების გერბი",
+        fact: "თავადი ამილახვრები აზნაურ ზედგენიძეთა შთამომავლები იყვნენ — გადმოცემით, იოთამ ზედგენიძემ სიცოცხლის ფასად გადაარჩინა მეფე გიორგი VII.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M36 14 H84 V54 C84 72 72 82 60 88 C48 82 36 72 36 54 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M36 40 H84 M60 14 V40", class: "s-ink o" }),
+          el("path", { d: "M44 20 V34 M40 24 H48", class: "s-terra o w4" }),
+          el("path", { d: "M66 20 h5 v10 h6 v5 h-11 z", class: "f-ochre s-ink" }),
+          el("ellipse", { cx: 60, cy: 60, rx: 14, ry: 12, class: "s-ink o" }),
+          el("path", { d: "M52 62 h16 M56 56 l4 -4 l4 4", class: "s-ink o" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
