@@ -1045,6 +1045,21 @@
           el("circle", { cx: 106, cy: 86, r: 6, class: "f-paper s-ink" }),
         ],
       },
+      {
+        id: "sealed-letter",
+        after: "g8-l52",
+        title: "წერილი ბურგუნდიაში",
+        fact: "1459 წელს საქართველოს მეფე გიორგი VIII-მ და სამცხის ათაბაგმა ყვარყვარე II-მ ბურგუნდიის მთავარს ოსმალთა წინააღმდეგ ერთად ბრძოლის შესახებ მისწერეს.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M28 20 H92 V80 H28 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M24 16 H96 V24 H24 Z M24 76 H96 V84 H24 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M38 34 H82 M38 42 H82 M38 50 H74 M38 58 H66", class: "s-thin o" }),
+          el("path", { d: "M76 74 V92 M84 74 V92", class: "s-terra o w4" }),
+          el("circle", { cx: 80, cy: 68, r: 9, class: "f-terra s-ink" }),
+          el("path", { d: "M80 62 V74 M74 68 H86", class: "s-sand o" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
