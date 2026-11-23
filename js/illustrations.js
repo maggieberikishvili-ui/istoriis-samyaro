@@ -1115,6 +1115,26 @@
           el("path", { d: "M11 79 H19 M11 83 H19 M11 87 H17", class: "s-thin o" }),
         ],
       },
+      {
+        id: "galileo-telescope",
+        after: "g8-l60",
+        title: "გალილეოს ტელესკოპი",
+        fact: "გალილეო პირველი იყო, ვინც ლინზებიანი მილი ცისკენ მიმართა — ტელესკოპით დაინახა, რომ მთვარის ზედაპირი გლუვი არ არის, იუპიტერს კი თანამგზავრები ჰყავს.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M60 58 L44 92 M60 58 L76 92 M60 58 V92", class: "s-ink o w4" }),
+          el("path", { d: "M22 74 L96 26 L102 35 L28 83 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M44 60 L50 69 M72 42 L78 51", class: "s-ink o" }),
+          el("path", { d: "M96 26 L102 35", class: "s-terra o w5" }),
+          el("circle", { cx: 60, cy: 58, r: 3, class: "f-ink" }),
+          el("circle", { cx: 100, cy: 12, r: 7, class: "f-paper s-ink" }),
+          el("circle", { cx: 98, cy: 10, r: 1.5, class: "f-sand" }),
+          el("circle", { cx: 102, cy: 15, r: 1.2, class: "f-sand" }),
+          el("circle", { cx: 18, cy: 16, r: 1.6, class: "f-ink" }),
+          el("circle", { cx: 34, cy: 8, r: 1.2, class: "f-ink" }),
+          el("circle", { cx: 72, cy: 10, r: 1.2, class: "f-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
