@@ -1030,6 +1030,21 @@
           el("path", { d: "M52 62 h16 M56 56 l4 -4 l4 4", class: "s-ink o" }),
         ],
       },
+      {
+        id: "basilica-bombard",
+        after: "g8-l50",
+        title: "ბომბარდა „ბაზილიკა“",
+        fact: "მეჰმედ II-ის შეკვეთით უნგრელმა ინჟინერმა ურბანმა უზარმაზარი ბომბარდა ჩამოასხა — მისი ბირთვი 540–590 კგ-ს იწონიდა.",
+        shapes: [
+          ground(92),
+          el("rect", { x: 22, y: 72, width: 58, height: 12, class: "f-sand s-ink" }),
+          el("path", { d: "M20 70 L84 52 L88 66 L24 84 Z", class: "f-emerald s-ink" }),
+          el("ellipse", { cx: 86, cy: 59, rx: 5, ry: 8, class: "f-ink" }),
+          el("path", { d: "M40 64 L42 72 M58 59 L60 67 M72 55 L74 63", class: "s-ink o" }),
+          el("circle", { cx: 98, cy: 82, r: 9, class: "f-paper s-ink" }),
+          el("circle", { cx: 106, cy: 86, r: 6, class: "f-paper s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
