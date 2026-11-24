@@ -1183,6 +1183,26 @@
           el("path", { d: "M12 70 H40 M80 70 H108", class: "s-thin o" }),
         ],
       },
+      {
+        id: "gremi",
+        after: "g8-l68",
+        title: "გრემი",
+        fact: "1614 წელს, შაჰ-აბასის პირველი ლაშქრობისას, ირანელებმა კახეთის სატახტო ქალაქი გრემი დაიკავეს.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M6 92 L22 74 H98 L114 92 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M24 74 V50 H62 V74 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M20 50 L43 40 L66 50 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M35 40 V26 H51 V40 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M33 26 L43 10 L53 26 Z", class: "f-ink" }),
+          el("path", { d: "M43 10 V4 M40 6 H46", class: "s-ink o" }),
+          el("path", { d: "M41 30 h4 v7 h-4 Z M38 74 V64 Q43 58 48 64 V74 Z", class: "f-ink" }),
+          el("path", { d: "M74 74 V30 H98 V74 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M72 30 L86 22 L100 30 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M83 40 h6 v8 h-6 Z M83 56 h6 v8 h-6 Z", class: "f-ink" }),
+          el("path", { d: "M24 62 H62 M74 50 H98", class: "s-thin o" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
