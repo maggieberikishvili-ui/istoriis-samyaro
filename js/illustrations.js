@@ -1234,6 +1234,22 @@
           el("path", { d: "M50 52 H70 M56 64 V92 M64 64 V92", class: "s-thin o" }),
         ],
       },
+      {
+        id: "qvevri",
+        after: "g8-l74",
+        title: "ქვევრი",
+        fact: "შარდენის ცნობით, სამეგრელოში ყურძენს ამოღარულ ხეში წურავდნენ, წვენს კი მიწაში ჩაფლულ ქვევრებში ასხამდნენ.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M14 60 H106 V92 H14 Z", class: "f-sand o" }),
+          el("path", { d: "M48 40 Q30 56 40 78 Q52 98 60 98 Q68 98 80 78 Q90 56 72 40 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M48 40 H72 L70 34 H50 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M44 52 Q60 58 76 52", class: "s-thin o" }),
+          el("path", { d: "M14 60 H106", class: "s-ink" }),
+          el("path", { d: "M84 30 Q92 14 100 22 Q96 34 84 30 Z", class: "f-ochre s-thin" }),
+          el("path", { d: "M90 32 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 M98 36 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 M94 42 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0", class: "f-ink s-thin" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
