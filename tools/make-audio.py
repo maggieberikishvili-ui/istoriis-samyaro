@@ -226,6 +226,8 @@ def number_forms(t):
     t = re.sub(N + r"-მდე\b", lambda m: terminative(num(m)), t)
     t = re.sub(N + r"-დან\b", lambda m: ablative(num(m)), t)
     t = re.sub(N + r"-ზე\b", lambda m: stem(num(m)) + "ზე", t)
+    # „2 000-ს“ → „ორი ათასს“, „300-ს“ → „სამასს“
+    t = re.sub(N + r"-ს(?![ა-ჰ])", lambda m: short_form(num(m)) + "ს", t)
     # „18-მეტრიანი“ → „თვრამეტმეტრიანი“, „8000-წლოვანი“, „365-დღიანი“, „12-მაგ“
     t = re.sub(r"(\d{1,4})-((?:[ა-ჰ]+(?:იან|ოვან)|მაგ)[ა-ჰ]*)",
                lambda m: short_form(number_words(int(m.group(1)))) + m.group(2), t)
