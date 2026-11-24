@@ -48,7 +48,7 @@
   const COURSES = [
     { id: "grade-7", badge: "7", title: "მე-7 კლასი", color: "green", lessonPrefix: "g7-l", lessonCount: 47 },
     { id: "grade-8", badge: "8", title: "მე-8 კლასი", color: "blue", lessonPrefix: "g8-l", lessonCount: 78 },
-    { id: "grade-9", badge: "9", title: "მე-9 კლასი", color: "purple", lessonPrefix: "g9-l", lessonCount: 0 },
+    { id: "grade-9", badge: "9", title: "მე-9 კლასი", color: "purple", lessonPrefix: "g9-l", lessonCount: 1 },
     { id: "grade-10", badge: "10", title: "მე-10 კლასი", color: "orange", lessonPrefix: "g10-l", lessonCount: 1 },
     { id: "grade-11", badge: "11", title: "მე-11 კლასი", color: "red", lessonPrefix: "g11-l", lessonCount: 1 },
     { id: "grade-12", badge: "12", title: "მე-12 კლასი", color: "teal", lessonPrefix: "g12-l", lessonCount: 1 },

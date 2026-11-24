@@ -220,9 +220,12 @@ def number_forms(t):
         return (short_form(words) if nxt.endswith("ს") and not nxt.endswith("ის") else words) + " " + nxt  # მიცემითი: „ჰექტარს“; ნათესაობითი „წლის“ — სრული
     t = re.sub(r"\b(\d{1,3})[  ](\d{3}) ([ა-ჰ]+)", thousands, t)
     # „400-მდე“ → „ოთხასამდე“, „3-დან“ → „სამიდან“, „700-ზე“ → „შვიდასზე“
-    t = re.sub(r"(\d{1,4})-მდე\b", lambda m: terminative(number_words(int(m.group(1)))), t)
-    t = re.sub(r"(\d{1,4})-დან\b", lambda m: ablative(number_words(int(m.group(1)))), t)
-    t = re.sub(r"(\d{1,4})-ზე\b", lambda m: stem(number_words(int(m.group(1)))) + "ზე", t)
+    # „100 000-მდე“ — ათასეულები ჰარით
+    N = r"(\d{1,3}[ \u00a0]\d{3}|\d{1,4})"
+    num = lambda m: number_words(int(re.sub(r"\D", "", m.group(1))))
+    t = re.sub(N + r"-მდე\b", lambda m: terminative(num(m)), t)
+    t = re.sub(N + r"-დან\b", lambda m: ablative(num(m)), t)
+    t = re.sub(N + r"-ზე\b", lambda m: stem(num(m)) + "ზე", t)
     # „18-მეტრიანი“ → „თვრამეტმეტრიანი“, „8000-წლოვანი“, „365-დღიანი“, „12-მაგ“
     t = re.sub(r"(\d{1,4})-((?:[ა-ჰ]+(?:იან|ოვან)|მაგ)[ა-ჰ]*)",
                lambda m: short_form(number_words(int(m.group(1)))) + m.group(2), t)
