@@ -37,6 +37,17 @@
     triumph: { icon: "👑", title: "ტრიუმფი!" },
   };
 
+  /** სცენარს შეუძლია სკალებსა და დასასრულებს თავისი სახელები მისცეს (scales / endingTitles). */
+  function scaleInfo(k) {
+    const own = game && game.scenario.scales && game.scenario.scales[k];
+    return Object.assign({}, SCALE_INFO[k], own);
+  }
+
+  function endingInfo(key) {
+    const own = game && game.scenario.endingTitles && game.scenario.endingTitles[key];
+    return Object.assign({}, ENDING_INFO[key], own);
+  }
+
   const $ = (id) => document.getElementById(id);
   const el = {
     setup: $("setup"),
@@ -316,7 +327,7 @@
   function renderScales(container, deltas) {
     container.replaceChildren();
     decide.scales.forEach((k) => {
-      const info = SCALE_INFO[k];
+      const info = scaleInfo(k);
       const value = game.values[k];
       const item = createEl("li", "d-scale d-scale--" + k);
       if (value <= LOW_VALUE) item.classList.add("is-low");
@@ -352,8 +363,8 @@
     const key = fallen || (allGood ? "triumph" : "survived");
 
     el.end.dataset.ending = fallen ? "fail" : key;
-    el.endIcon.textContent = ENDING_INFO[key].icon;
-    el.endTitle.textContent = ENDING_INFO[key].title;
+    el.endIcon.textContent = endingInfo(key).icon;
+    el.endTitle.textContent = endingInfo(key).title;
     el.endText.textContent = scenario().endings[key];
     renderScales(el.endScales, null);
 
