@@ -1166,6 +1166,23 @@
           el("path", { d: "M58 24 V34 M54 28 H62", class: "s-terra o w4" }),
         ],
       },
+      {
+        id: "yedikule",
+        after: "g8-l66",
+        title: "იედიყულეს ციხე",
+        fact: "1600 წელს ფარცხისთან დატყვევებული სიმონ I სტამბოლის იედიყულეს ციხეში გამოკეტეს, სადაც ის 1611 წელს გარდაიცვალა.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M12 92 V36 H40 V92 Z M80 92 V36 H108 V92 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M12 36 v-6 h5 v6 m5 0 v-6 h6 v6 m5 0 v-6 h7 v6 M80 36 v-6 h5 v6 m5 0 v-6 h6 v6 m5 0 v-6 h7 v6", class: "s-ink o" }),
+          el("path", { d: "M40 92 V56 H80 V92 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M40 56 v-5 h6 v5 m6 0 v-5 h6 v5 m6 0 v-5 h6 v5 m6 0 v-5 h4 v5", class: "s-ink o" }),
+          el("path", { d: "M52 92 V74 Q60 66 68 74 V92 Z", class: "f-ink" }),
+          el("path", { d: "M22 50 h8 v10 h-8 Z M90 50 h8 v10 h-8 Z", class: "f-ink" }),
+          el("path", { d: "M24 50 V60 M28 50 V60 M92 50 V60 M96 50 V60", class: "s-sand o" }),
+          el("path", { d: "M12 70 H40 M80 70 H108", class: "s-thin o" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
