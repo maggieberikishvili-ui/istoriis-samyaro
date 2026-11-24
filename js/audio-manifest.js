@@ -766,6 +766,15 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
     "4": "assets/audio/g8-l74/4-0e483c8e4e.mp3",
     "5": "assets/audio/g8-l74/5-584b7ad1f5.mp3"
   },
+  "g8-l75": {
+    "0": "assets/audio/g8-l75/0-e5bd3b6c00.mp3",
+    "1": "assets/audio/g8-l75/1-e3c743438d.mp3",
+    "2": "assets/audio/g8-l75/2-eea59b34ef.mp3",
+    "3": "assets/audio/g8-l75/3-a4d42a5be3.mp3",
+    "4": "assets/audio/g8-l75/4-92484891ce.mp3",
+    "5": "assets/audio/g8-l75/5-82c3ef1f9b.mp3",
+    "6": "assets/audio/g8-l75/6-b38a5d319f.mp3"
+  },
   "g8-l8": {
     "0": "assets/audio/g8-l8/0-bf47af2694.mp3",
     "1": "assets/audio/g8-l8/1-f5096109b1.mp3"
