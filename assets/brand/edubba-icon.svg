@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="t">
+  <title id="t">Edubba</title>
+  <!-- Edubba, variant b-clay. Clay tablet with the cuneiform sign DINGIR (deity, heaven) pressed into it. Baked clay and dark ink.
+       Colors: var. logo-ink (#3B2A20), var. logo-accent (#B5653A), var. logo-ink-dark (#F5E6D8, dark mode). -->
+  <style>
+    .ink  { fill: var(--logo-ink, #3B2A20); }
+    .inks { fill: none; stroke: var(--logo-ink, #3B2A20); stroke-linecap: round; stroke-linejoin: round; }
+    .acc  { fill: var(--logo-accent, #B5653A); }
+    .accs { fill: none; stroke: var(--logo-accent, #B5653A); stroke-linecap: round; stroke-linejoin: round; }
+    .word { fill: var(--logo-ink, #3B2A20); }
+    @media (prefers-color-scheme: dark) {
+      .ink, .word { fill: var(--logo-ink-dark, #F5E6D8); }
+      .inks { stroke: var(--logo-ink-dark, #F5E6D8); }
+    }
+  </style>
+  <g>
+    <!-- clay tablet -->
+    <rect class="acc" x="9" y="5" width="46" height="54" rx="9"/>
+    <!-- cuneiform sign DINGIR (deity / heaven) pressed into the tablet -->
+    <g transform="translate(32 32) scale(0.7917)"><path class="inks" stroke-width="2.9" d="M0 -12 V24 M-12 0 H24 M-8.5 -8.5 L19 19 M-8.5 8.5 L19 -19"/><path class="ink" fill-rule="evenodd" transform="rotate(0)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/><path class="ink" fill-rule="evenodd" transform="rotate(-45)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/><path class="ink" fill-rule="evenodd" transform="rotate(-90)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/><path class="ink" fill-rule="evenodd" transform="rotate(-135)" d="M-6.8 -24 Q0 -22.6 6.8 -24 Q2.2 -19 1 -11 H-1 Q-2.2 -19 -6.8 -24 Z M-3.3 -21.6 L3.3 -21.6 L0 -15.4 Z"/></g>
+  </g>
+</svg>
