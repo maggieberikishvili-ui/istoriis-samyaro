@@ -1203,6 +1203,21 @@
           el("path", { d: "M24 62 H62 M74 50 H98", class: "s-thin o" }),
         ],
       },
+      {
+        id: "bazaleti",
+        after: "g8-l70",
+        title: "ბაზალეთის ტბა",
+        fact: "1626 წელს ბაზალეთის ტბასთან ერთმანეთს თეიმურაზ I და გიორგი სააკაძე დაუპირისპირდნენ; დამარცხებული სააკაძე ოსმალეთში წავიდა.",
+        shapes: [
+          el("path", { d: "M0 70 L30 34 L52 56 L78 24 L120 70 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M78 24 L70 34 L78 32 L86 36 Z", class: "f-paper" }),
+          el("path", { d: "M10 86 Q60 64 110 86 Q60 100 10 86 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M30 84 q6 -3 12 0 M56 80 q6 -3 12 0 M78 86 q6 -3 12 0", class: "s-thin o" }),
+          el("path", { d: "M18 70 V50 M100 70 V46", class: "s-ink o" }),
+          el("path", { d: "M18 50 L30 54 L18 58 Z", class: "f-terra" }),
+          el("path", { d: "M100 46 L88 50 L100 54 Z", class: "f-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
