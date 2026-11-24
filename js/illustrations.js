@@ -1250,6 +1250,22 @@
           el("path", { d: "M90 32 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 M98 36 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 M94 42 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0", class: "f-ink s-thin" }),
         ],
       },
+      {
+        id: "granada",
+        after: "g8-l76",
+        title: "გრანადის ციხე",
+        fact: "1492 წელს ფერდინანდმა და ისაბელმა გრანადა შემოიერთეს — რეკონკისტა დასრულდა და ესპანეთი საბოლოოდ გაერთიანდა.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M20 92 V50 H34 V92 Z M86 92 V50 H100 V92 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M34 92 V62 H86 V92 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M18 50 V42 H22 V46 H26 V42 H30 V46 H34 V42 H36 V50 Z M84 50 V42 H88 V46 H92 V42 H96 V46 H100 V42 H102 V50 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M34 62 V56 H40 V60 H46 V56 H52 V60 H58 V56 H64 V60 H70 V56 H76 V60 H82 V56 H86 V62 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M52 92 V78 Q60 66 68 78 V92 Z", class: "f-ink s-ink" }),
+          el("path", { d: "M27 66 V58 M93 66 V58", class: "s-ink w4" }),
+          el("path", { d: "M60 56 V30 M60 30 L76 36 L60 42", class: "f-paper s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
