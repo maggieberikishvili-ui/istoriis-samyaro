@@ -1218,6 +1218,22 @@
           el("path", { d: "M100 46 L88 50 L100 54 Z", class: "f-ink" }),
         ],
       },
+      {
+        id: "mamluk",
+        after: "g8-l72",
+        title: "მამლუქი მეომარი",
+        fact: "ეგვიპტეში XVI საუკუნიდან განსაკუთრებით ქართველი მამლუქები დაწინაურდნენ — მათ ხშირად ოლქების მმართველებადაც ნიშნავდნენ.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M46 92 L50 64 H70 L74 92 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M48 64 L52 40 H68 L72 64 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M52 40 L44 58 M68 40 L80 30", class: "s-ink w4" }),
+          el("path", { d: "M60 26 m-8 0 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0", class: "f-sand s-ink" }),
+          el("path", { d: "M50 24 Q60 8 70 24 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M78 34 L96 6", class: "s-ink w5" }),
+          el("path", { d: "M50 52 H70 M56 64 V92 M64 64 V92", class: "s-thin o" }),
+        ],
+      },
     ],
 
     /* ===== მე-9 კლასი — დიდი გეოგრაფიული აღმოჩენები ===== */
