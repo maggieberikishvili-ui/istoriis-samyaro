@@ -1404,6 +1404,22 @@
           el("path", { d: "M28 4 H44 L40 8 L44 12 H28 Z", class: "f-terra" }),
         ],
       },
+      {
+        id: "republic-calendar",
+        after: "g9-l16",
+        title: "რესპუბლიკის კალენდარი",
+        fact: "რესპუბლიკის კალენდარში ყოველი თვე 30 დღისგან შედგებოდა და შვიდდღიანი კვირის ნაცვლად ათ-ათ დღედ — დეკადებად — იყოფოდა.",
+        shapes: [
+          el("rect", { x: 25, y: 14, width: 70, height: 80, rx: 3, class: "f-paper s-ink" }),
+          el("rect", { x: 25, y: 14, width: 70, height: 18, rx: 3, class: "f-terra s-ink" }),
+          el("path", { d: "M40 8 V20 M80 8 V20", class: "s-ink w6 o" }),
+          el("path", { d: "M32 40 H88 M32 58 H88 M32 76 H88", class: "s-thin o" }),
+          el("path", { d: "M32 49 H88 M32 67 H88 M32 85 H88", class: "s-thin o" }),
+          el("path", { d: "M60 88 C52 80 50 70 56 62 C60 70 64 72 60 88 Z", class: "f-emerald s-ink" }),
+          el("path", { d: "M60 88 C66 80 70 72 66 64", class: "s-ink o" }),
+          el("circle", { cx: 74, cy: 46, r: 5, class: "f-ochre s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
