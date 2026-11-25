@@ -1301,6 +1301,24 @@
           el("path", { d: "M90 80 Q96 76 102 80 M90 84 Q96 88 102 84", class: "s-thin o" }),
         ],
       },
+      {
+        id: "kunstkamera",
+        after: "g9-l4",
+        title: "კუნსტკამერა",
+        fact: "პეტრე I-ის თაოსნობით დაარსებული კუნსტკამერა (გერმანულად — „იშვიათი ნივთების ოთახი“) რუსეთის პირველი მუზეუმი იყო.",
+        shapes: [
+          ground(90),
+          el("path", { d: "M14 52 H106 V90 H14 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M44 40 H76 V90 H44 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M50 28 H70 V40 H50 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M54 18 H66 V28 H54 Z", class: "f-terra s-ink" }),
+          el("circle", { cx: 60, cy: 12, r: 5, class: "f-paper s-ink" }),
+          el("path", { d: "M55 12 H65 M60 7 V17", class: "s-thin o" }),
+          el("path", { d: "M52 90 V72 Q60 62 68 72 V90", class: "f-ink s-ink" }),
+          el("path", { d: "M22 62 H30 V74 H22 Z M34 62 H40 V74 H34 Z M80 62 H86 V74 H80 Z M90 62 H98 V74 H90 Z", class: "f-paper s-thin" }),
+          el("path", { d: "M10 52 H110", class: "s-ink w5 o" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */

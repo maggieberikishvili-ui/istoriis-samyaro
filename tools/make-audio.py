@@ -71,6 +71,9 @@ def ordinal(n, suffix=""):
         word = word[:-1]
     if suffix[0] in "აეიოუ" and word.endswith("ი"):
         word = word[:-1]
+    # მიცემითი: „პეტრე I-ს“ → „პირველს“ (არა „პირველის“), „IV-ს“ → „მეოთხეს“
+    if suffix == "ს" and word.endswith("ი"):
+        word = word[:-1]
     # მოთხრობითი: „ბაიაზიდ I-მა“ → „პირველმა“, „II-მა“ → „მეორემ“
     if suffix == "მა":
         if word.endswith("ი"):
