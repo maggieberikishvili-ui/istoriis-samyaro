@@ -13,6 +13,7 @@
 გეოგრაფია სქემატურია (გამარტივებული სანაპიროები) — მხოლოდ ორიენტაციისთვის.
 ახალი რუკა = ახალი ჩანაწერი MAPS-ში: ჩარჩო (lon/lat), ქალაქები, ისრები, წარწერები.
 """
+import json
 import math
 import os
 import sys
@@ -34,6 +35,9 @@ PALETTE = {
     "green": "#2e6f5e",       # --color-primary
     "terra": "#b85d3b",       # --color-secondary
     "halo": "#f7f3ea",        # --color-bg
+    "modern": "#e6ead9",      # თანამედროვე საქართველო — მკრთალი შეფერილობა
+    "modern_line": "#a9b39a", # მხარეების საზღვრები
+    "modern_text": "#8f9a82", # მხარეების სახელები
 }
 FONT = "'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif"
 
@@ -64,6 +68,16 @@ RIVERS = {
 }
 CAUCASUS = [(44.9, 37.4), (44.2, 39.0), (43.7, 40.6), (43.35, 42.4), (42.9, 43.9),
             (42.65, 44.6), (42.3, 46.0), (41.9, 47.2), (41.3, 48.6)]
+
+
+# თანამედროვე საქართველოს მხარეები (tools/geo/georgia-adm1.json — geoBoundaries, CC BY 3.0,
+# გამარტივებული). რუკაზე ჩნდება, თუ ჩანაწერს აქვს "modern": {...}.
+GEO_FILE = os.path.join(ROOT, "tools", "geo", "georgia-adm1.json")
+
+
+def load_modern():
+    with open(GEO_FILE, encoding="utf-8") as f:
+        return json.load(f)["regions"]
 
 
 # ---------- რუკები ----------
@@ -112,9 +126,25 @@ MAPS = {
     "g9-l9": {
         "file": "map-g9-l9.svg",
         "title": "ქართლ-კახეთი და იმერეთი XVIII საუკუნის II ნახევარში",
-        "frame": {"lon": (40.8, 47.2), "lat": (40.0, 43.05), "width": 560},
+        "frame": {"lon": (39.9, 47.0), "lat": (40.0, 43.7), "width": 560},
+        "modern": {
+            # სახელის პოზიცია (lat, lon); None — სახელი არ ეწერება (ადგილი არ ჰყოფნის)
+            "labels": {
+                "სამეგრელო-ზემო სვანეთი": (42.97, 42.3),
+                "რაჭა-ლეჩხუმი და ქვემო სვანეთი": (42.8, 43.75),
+                "იმერეთი": (42.42, 43.1),
+                "გურია": None,          # ისტორიული „გურია“ იმავე ადგილასაა
+                "აჭარა": (41.7, 41.9),
+                "სამცხე-ჯავახეთი": (41.3, 43.6),
+                "შიდა ქართლი": (42.33, 43.8),
+                "მცხეთა-მთიანეთი": (42.45, 44.75),
+                "თბილისი": None,        # ქალაქი უკვე აწერია
+                "ქვემო ქართლი": (41.5, 44.15),
+                "კახეთი": (41.9, 45.95),
+            },
+        },
         "regions": [
-            {"text": "ქართლ-კახეთის სამეფო", "at": (42.32, 45.45)},
+            {"text": "ქართლ-კახეთის სამეფო", "at": (42.22, 45.55)},
             {"text": "იმერეთის სამეფო", "at": (42.62, 43.35)},
             {"text": "ოდიში", "at": (42.62, 41.95), "small": True},
             {"text": "გურია", "at": (42.0, 42.0), "small": True},
@@ -145,9 +175,10 @@ MAPS = {
         ],
         "battles": [{"at": (42.12, 43.05)}],
         "legend": [
-            ("red", False, "ოსმალები, 1757"),
-            ("battle", None, "ხრესილის ბრძოლა"),
-            ("terra", False, "ხარკი ერეკლეს"),
+            ("red", False, "ოსმალები"),
+            ("battle", None, "ბრძოლა"),
+            ("terra", False, "ხარკი"),
+            ("modern", None, "დღევანდელი საქართველო"),
         ],
     },
 }
@@ -228,6 +259,24 @@ def build(spec):
         f'<path d="{path_d(proj, BLACK_SEA, True)}" fill="{P["sea"]}" stroke="{P["sea_edge"]}" stroke-width="1"/>',
         f'<path d="{path_d(proj, CASPIAN, True)}" fill="{P["sea"]}" stroke="{P["sea_edge"]}" stroke-width="1"/>',
     ]
+    if spec.get("modern"):
+        regions = load_modern()
+        layer = []
+        # 1) სქელი ხაზი ყველა მხარის ირგვლივ → 2) შეფერილობა ზემოდან (შიდა ხაზს ფარავს,
+        # გარეთ რჩება ქვეყნის საზღვრის ნახევარი) → 3) მხარეებს შორის წვრილი წყვეტილი ხაზი
+        for r in regions:
+            for ring in r["rings"]:
+                layer.append(f'<path d="{path_d(proj, ring, True)}" fill="none" stroke="{P["modern_line"]}" '
+                             f'stroke-width="2.6" stroke-linejoin="round"/>')
+        for r in regions:
+            for ring in r["rings"]:
+                layer.append(f'<path d="{path_d(proj, ring, True)}" fill="{P["modern"]}"/>')
+        for r in regions:
+            for ring in r["rings"]:
+                layer.append(f'<path d="{path_d(proj, ring, True)}" fill="none" stroke="{P["modern_line"]}" '
+                             f'stroke-width="0.8" stroke-dasharray="3 2"/>')
+        out.extend(layer)
+
     for pts in RIVERS.values():
         out.append(f'<path d="{smooth_d(proj, pts)}" fill="none" stroke="{P["river"]}" stroke-width="1.3"/>')
 
@@ -251,6 +300,18 @@ def build(spec):
                        + "</g>")
         else:
             out.append(text(x, y, s["text"], 13, P["sea_edge"], anchor="middle", italic=True, spacing=1))
+
+    if spec.get("modern"):
+        overrides = spec["modern"].get("labels", {})
+        for r in load_modern():
+            at = overrides.get(r["name"], "auto")
+            if at is None:
+                continue
+            if at == "auto":
+                ring = max(r["rings"], key=len)
+                at = (sum(p[0] for p in ring) / len(ring), sum(p[1] for p in ring) / len(ring))
+            x, y = proj(*at)
+            out.append(text(x, y, r["name"], 10, P["modern_text"], anchor="middle", italic=True))
 
     for r in spec.get("regions", []):
         x, y = proj(*r["at"])
@@ -300,7 +361,10 @@ def build(spec):
     out.append(f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" fill="none" stroke="{P["frame"]}"/>')
     lx, ly = 10, H + 19
     for color, dashed, label in spec.get("legend", []):
-        if color == "battle":
+        if color == "modern":
+            out.append(f'<rect x="{lx + 2}" y="{ly - 11}" width="20" height="12" fill="{P["modern"]}" '
+                       f'stroke="{P["modern_line"]}" stroke-width="1"/>')
+        elif color == "battle":
             out.append(f'<path d="M{lx + 5} {ly - 10} L{lx + 17} {ly + 2} M{lx + 17} {ly - 10} L{lx + 5} {ly + 2}" '
                        f'stroke="{P["red"]}" stroke-width="2.6" stroke-linecap="round"/>')
         elif color == "camp":
