@@ -1354,6 +1354,22 @@
           el("rect", { x: 66, y: 50, width: 8, height: 12, class: "f-ochre s-thin" }),
         ],
       },
+      {
+        id: "aspindza",
+        after: "g9-l10",
+        title: "ასპინძის ბრძოლა",
+        fact: "1770 წელს ტოტლებენის მიერ მიტოვებულმა ერეკლე II-მ ასპინძასთან თურქებისა და ლეკების გაერთიანებული ლაშქარი სასტიკად დაამარცხა.",
+        shapes: [
+          ground(90),
+          el("path", { d: "M60 28 L86 38 V58 Q86 76 60 86 Q34 76 34 58 V38 Z", class: "f-emerald s-ink" }),
+          el("path", { d: "M60 36 L78 43 V58 Q78 71 60 78 Q42 71 42 58 V43 Z", class: "f-sand s-thin" }),
+          el("path", { d: "M50 48 L70 68 M70 48 L50 68", class: "s-terra w6 o" }),
+          el("path", { d: "M22 18 Q40 40 50 62", class: "s-ink w4 o" }),
+          el("path", { d: "M98 18 Q80 40 70 62", class: "s-ink w4 o" }),
+          el("path", { d: "M16 22 L28 14 M104 22 L92 14", class: "s-ink w6 o" }),
+          el("circle", { cx: 60, cy: 58, r: 4, class: "f-ochre s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
