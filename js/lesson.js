@@ -420,7 +420,9 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     const data = normalizeImage(image);
     if (!data) return null;
 
-    const figure = createEl("figure", "lesson-figure");
+    // რუკა (assets/images/map-….svg) — უფრო მაღალი; შეხებით სრული ზომით იხსნება
+    const isMap = /^assets\/images\/map-/.test(data.src);
+    const figure = createEl("figure", isMap ? "lesson-figure lesson-figure--map" : "lesson-figure");
     const img = document.createElement("img");
     img.className = "lesson-figure__img";
     img.src = data.src;
@@ -429,7 +431,17 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     img.addEventListener("error", () => {
       figure.hidden = true;
     });
-    figure.append(img);
+    if (isMap) {
+      const zoom = createEl("a", "lesson-figure__zoom");
+      zoom.href = data.src;
+      zoom.target = "_blank";
+      zoom.rel = "noopener";
+      zoom.setAttribute("aria-label", "რუკის გადიდება");
+      zoom.append(img);
+      figure.append(zoom);
+    } else {
+      figure.append(img);
+    }
 
     if (data.caption || data.credit || data.licenseName) {
       const caption = createEl("figcaption", "lesson-figure__caption");

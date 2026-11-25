@@ -633,6 +633,17 @@
   color: var(--color-text-muted);
 }
 
+/* რუკა: უფრო მაღალი, შეხებით იხსნება სრული ზომით */
+.lesson-figure--map .lesson-figure__img {
+  max-height: var(--map-max-height);
+  border-radius: 6px;
+}
+
+.lesson-figure__zoom {
+  display: block;
+  cursor: zoom-in;
+}
+
 /* თეორიის ბარათში სათაურის ქვემოთ, ტექსტამდე */
 .theory .lesson-figure {
   margin-top: calc(-1 * var(--space-1));
