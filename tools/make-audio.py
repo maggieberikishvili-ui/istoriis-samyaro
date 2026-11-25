@@ -205,6 +205,11 @@ def number_forms(t):
                lambda m: ablative(number_words(int(m.group(1)))) + " " + short_form(number_words(int(m.group(2)))) + " წლამდე", t)
     # „800 წ.“ → „რვაასი წელი“
     t = re.sub(r"(\d{1,4}) წ\.", lambda m: number_words(int(m.group(1))) + " წელი", t)
+    # „მე-8 ხარისხი“ → „მერვე ხარისხი“
+    t = re.sub(r"მე-(\d{1,2})(?![\d-])", lambda m: ordinal(int(m.group(1))), t)
+    # „35 000-იანი“ → „ოცდათხუთმეტი ათასიანი“ (ათასეულები ჰარით)
+    t = re.sub(r"(\d{1,3})[ \u00a0](\d{3})-(იან[ა-ჰ]*)",
+               lambda m: stem(number_words(int(m.group(1) + m.group(2)))) + m.group(3), t)
     # „60-იანი წლები“ → „სამოციანი“, „1170-იან“ → „ათას ას სამოცდაათიან“
     t = re.sub(r"(\d{1,4})-(იან[ა-ჰ]*)", lambda m: stem(number_words(int(m.group(1)))) + m.group(2), t)
     # „30-წლიანი“ → „ოცდაათწლიანი“
