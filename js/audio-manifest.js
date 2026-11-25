@@ -852,5 +852,14 @@ window.IMS_AUDIO = Object.freeze(/* DATA */{
     "5": "assets/audio/g9-l5/5-6473ee6dfa.mp3",
     "6": "assets/audio/g9-l5/6-77ec785291.mp3",
     "7": "assets/audio/g9-l5/7-8d8a8fb8ed.mp3"
+  },
+  "g9-l6": {
+    "0": "assets/audio/g9-l6/0-81e95747fa.mp3",
+    "1": "assets/audio/g9-l6/1-cb06a4792b.mp3",
+    "2": "assets/audio/g9-l6/2-437157cdcd.mp3",
+    "3": "assets/audio/g9-l6/3-62e98f050e.mp3",
+    "4": "assets/audio/g9-l6/4-39e169f987.mp3",
+    "5": "assets/audio/g9-l6/5-7b8bad6542.mp3",
+    "6": "assets/audio/g9-l6/6-5aba168207.mp3"
   }
 }/* END */);
