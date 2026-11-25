@@ -1334,6 +1334,26 @@
           el("path", { d: "M71 74 L68 84 M77 74 L80 84", class: "s-terra w4 o" }),
         ],
       },
+      {
+        id: "encyclopedia",
+        after: "g9-l8",
+        title: "დიდროს ენციკლოპედია",
+        fact: "დიდროს ინიციატივით შედგენილ პირველ სამეცნიერო ენციკლოპედიაში ფიზიკა-მათემატიკის, ბუნებისმეტყველების, ეკონომიკის, პოლიტიკის, საინჟინრო საქმისა და ხელოვნების ძირითადი ცნებები გაერთიანდა.",
+        shapes: [
+          ground(90),
+          el("path", { d: "M14 90 H106", class: "s-ink w6 o" }),
+          el("rect", { x: 18, y: 30, width: 14, height: 58, class: "f-terra s-ink" }),
+          el("rect", { x: 33, y: 26, width: 14, height: 62, class: "f-emerald s-ink" }),
+          el("rect", { x: 48, y: 30, width: 14, height: 58, class: "f-terra s-ink" }),
+          el("rect", { x: 63, y: 26, width: 14, height: 62, class: "f-emerald s-ink" }),
+          el("path", { d: "M80 88 L92 34 L104 37 L92 90 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M20 40 H30 M35 36 H45 M50 40 H60 M65 36 H75 M20 76 H30 M35 76 H45 M50 76 H60 M65 76 H75", class: "s-ink w4 o" }),
+          el("rect", { x: 21, y: 50, width: 8, height: 12, class: "f-ochre s-thin" }),
+          el("rect", { x: 36, y: 50, width: 8, height: 12, class: "f-ochre s-thin" }),
+          el("rect", { x: 51, y: 50, width: 8, height: 12, class: "f-ochre s-thin" }),
+          el("rect", { x: 66, y: 50, width: 8, height: 12, class: "f-ochre s-thin" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
