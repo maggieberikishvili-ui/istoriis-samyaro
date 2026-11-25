@@ -1386,6 +1386,24 @@
           el("circle", { cx: 77, cy: 66, r: 4, class: "s-thin o" }),
         ],
       },
+      {
+        id: "bastille-g9",
+        after: "g9-l14",
+        title: "ბასტილიის ციხესიმაგრე",
+        fact: "ბასტილია აბსოლუტიზმის სიმბოლო იყო — 1789 წლის 14 ივლისს მისი აღებით საფრანგეთის რევოლუცია დაიწყო.",
+        shapes: [
+          ground(90),
+          el("rect", { x: 30, y: 40, width: 60, height: 50, class: "f-sand s-ink" }),
+          el("rect", { x: 18, y: 28, width: 20, height: 62, class: "f-sand s-ink" }),
+          el("rect", { x: 82, y: 28, width: 20, height: 62, class: "f-sand s-ink" }),
+          el("path", { d: "M18 28 V22 H23 V28 M33 28 V22 H38 V28 M82 28 V22 H87 V28 M97 28 V22 H102 V28", class: "s-ink o" }),
+          el("path", { d: "M44 40 V35 H49 V40 M58 40 V35 H63 V40 M72 40 V35 H77 V40", class: "s-ink o" }),
+          el("path", { d: "M28 44 V52 M92 44 V52 M28 64 V72 M92 64 V72", class: "s-ink o" }),
+          el("path", { d: "M52 90 V72 A8 8 0 0 1 68 72 V90 Z", class: "f-ink" }),
+          el("path", { d: "M28 22 V4", class: "s-ink o" }),
+          el("path", { d: "M28 4 H44 L40 8 L44 12 H28 Z", class: "f-terra" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
