@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v114";
+const VERSION = "v115";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -101,6 +101,7 @@ const CORE_FILES = [
   // სასწავლო სურათები, რომლებიც ოფლაინშიც თავიდანვე უნდა იყოს ხელმისაწვდომი
   "./assets/images/clay-pot.jpg",
   "./assets/images/map-g9-l5.svg",
+  "./assets/images/map-g9-l9.svg",
   // დაფის შუმერული ფონი (ფრიზი + ლურსმნული ჩანაწერი)
   "./assets/images/frieze-top.svg",
   "./assets/images/frieze-bottom.svg",

@@ -109,6 +109,47 @@ MAPS = {
             ("camp", None, "ბანაკი განჯასთან"),
         ],
     },
+    "g9-l9": {
+        "file": "map-g9-l9.svg",
+        "title": "ქართლ-კახეთი და იმერეთი XVIII საუკუნის II ნახევარში",
+        "frame": {"lon": (40.8, 47.2), "lat": (40.0, 43.05), "width": 560},
+        "regions": [
+            {"text": "ქართლ-კახეთის სამეფო", "at": (42.32, 45.45)},
+            {"text": "იმერეთის სამეფო", "at": (42.62, 43.35)},
+            {"text": "ოდიში", "at": (42.62, 41.95), "small": True},
+            {"text": "გურია", "at": (42.0, 42.0), "small": True},
+            {"text": "ოსმალეთი", "at": (40.75, 42.3)},
+            {"text": "ერევნის სახანო", "at": (40.42, 43.75), "small": True},
+            {"text": "განჯის სახანო", "at": (40.42, 46.35), "small": True},
+        ],
+        "seas": [
+            {"text": "შავი ზღვა", "at": (41.95, 41.18), "vertical": True},
+        ],
+        "cities": [
+            {"name": "თბილისი", "at": (41.72, 44.79), "capital": True, "dx": 9, "dy": 5},
+            {"name": "ქუთაისი", "at": (42.27, 42.70), "capital": True, "dx": -9, "dy": -6, "anchor": "end"},
+            {"name": "გორი (1758)", "at": (41.98, 44.11), "dx": 6, "dy": -8},
+            {"name": "ხრესილი", "at": (42.12, 43.05), "dx": 11, "dy": 5},
+            {"name": "ახალციხე", "at": (41.64, 42.98), "dx": -8, "dy": 15, "anchor": "end"},
+            {"name": "ახტალა", "at": (41.15, 44.76), "dx": 8, "dy": 4},
+            {"name": "ერევანი", "at": (40.18, 44.51), "dx": 8, "dy": 4},
+            {"name": "განჯა", "at": (40.68, 46.36), "dx": 8, "dy": 14},
+        ],
+        "routes": [
+            {"color": "red", "points": [(41.68, 43.0), (41.9, 43.0), (42.06, 43.05)],
+             "label": "ოსმალები", "label_at": (41.76, 42.98), "anchor": "end"},
+            {"color": "terra", "points": [(40.3, 44.55), (40.85, 44.72), (41.6, 44.8)],
+             "label": "ხარკი", "label_at": (40.75, 44.72), "anchor": "start"},
+            {"color": "terra", "points": [(40.75, 46.25), (41.2, 45.6), (41.65, 44.95)],
+             "label": "ხარკი", "label_at": (41.15, 45.6), "anchor": "start"},
+        ],
+        "battles": [{"at": (42.12, 43.05)}],
+        "legend": [
+            ("red", False, "ოსმალები, 1757"),
+            ("battle", None, "ხრესილის ბრძოლა"),
+            ("terra", False, "ხარკი ერეკლეს"),
+        ],
+    },
 }
 
 
@@ -232,7 +273,19 @@ def build(spec):
         out.append(f'<path d="M{x - 7} {y + 5} L{x} {y - 7} L{x + 7} {y + 5} Z" fill="{P["green"]}" '
                    f'stroke="{P["halo"]}" stroke-width="1.2"/>')
 
+    for c in spec.get("battles", []):
+        x, y = proj(*c["at"])
+        out.append(f'<path d="M{x - 7} {y - 7} L{x + 7} {y + 7} M{x + 7} {y - 7} L{x - 7} {y + 7}" '
+                   f'stroke="{P["halo"]}" stroke-width="5" stroke-linecap="round"/>')
+        out.append(f'<path d="M{x - 7} {y - 7} L{x + 7} {y + 7} M{x + 7} {y - 7} L{x - 7} {y + 7}" '
+                   f'stroke="{P["red"]}" stroke-width="2.6" stroke-linecap="round"/>')
+
     for c in spec.get("cities", []):
+        if any(b["at"] == c["at"] for b in spec.get("battles", [])):
+            x, y = proj(*c["at"])
+            out.append(text(x + c.get("dx", 7), y + c.get("dy", 4), c["name"], 13, P["ink"], weight=600,
+                            anchor=c.get("anchor", "start")))
+            continue
         x, y = proj(*c["at"])
         if c.get("capital"):
             out.append(f'<rect x="{x - 4.5}" y="{y - 4.5}" width="9" height="9" fill="{P["ink"]}" '
@@ -247,7 +300,10 @@ def build(spec):
     out.append(f'<rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" fill="none" stroke="{P["frame"]}"/>')
     lx, ly = 10, H + 19
     for color, dashed, label in spec.get("legend", []):
-        if color == "camp":
+        if color == "battle":
+            out.append(f'<path d="M{lx + 5} {ly - 10} L{lx + 17} {ly + 2} M{lx + 17} {ly - 10} L{lx + 5} {ly + 2}" '
+                       f'stroke="{P["red"]}" stroke-width="2.6" stroke-linecap="round"/>')
+        elif color == "camp":
             out.append(f'<path d="M{lx + 4} {ly + 1} L{lx + 11} {ly - 11} L{lx + 18} {ly + 1} Z" fill="{P["green"]}"/>')
         else:
             dash = ' stroke-dasharray="6 4"' if dashed else ""

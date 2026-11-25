@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 386" width="560" height="386" role="img" aria-label="ქართლ-კახეთი და იმერეთი XVIII საუკუნის II ნახევარში">
+<title>ქართლ-კახეთი და იმერეთი XVIII საუკუნის II ნახევარში</title>
+<defs>
+<clipPath id="c"><rect width="560" height="356"/></clipPath>
+<marker id="a-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#a8382f"/></marker>
+<marker id="a-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#2e6f5e"/></marker>
+<marker id="a-terra" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#b85d3b"/></marker>
+</defs>
+<style>.t{font-family:'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif;paint-order:stroke;stroke:#f7f3ea;stroke-width:3px;stroke-linejoin:round}</style>
+<rect width="560" height="386" fill="#f3ebdc"/>
+<g clip-path="url(#c)">
+<path d="M-507.5 -298.0 L-367.5 -263.0 L-306.2 -216.2 L-262.5 -192.8 L-151.4 -122.7 L-96.2 -64.3 L17.5 5.8 L61.3 52.6 L76.1 105.2 L73.5 164.8 L43.7 204.5 L-26.2 239.6 L-96.2 239.6 L-210.0 245.4 L-341.2 216.2 L-393.7 204.5 L-507.5 192.8 Z" fill="#cfdde3" stroke="#3f6b87" stroke-width="1"/>
+<path d="M945.0 -496.7 L796.2 -426.6 L717.5 -356.5 L665.0 -321.4 L595.0 -274.7 L542.5 -204.5 L568.7 -134.4 L586.2 -64.3 L586.2 5.8 L621.2 64.3 L660.6 115.7 L708.7 181.2 L743.7 239.6 L796.2 292.2 L835.6 303.9 L800.6 321.4 L756.9 368.2 L743.7 450.0 L708.7 508.4 L726.2 648.7 L848.7 718.8 L1146.2 730.5 L1146.2 531.8 L1102.5 414.9 L1058.7 298.0 L1032.5 204.5 L1041.2 122.7 L1023.7 29.2 L918.7 -64.3 L831.2 -146.1 L840.0 -181.2 L918.7 -227.9 L1050.0 -274.7 L1067.5 -403.2 L1085.0 -496.7 Z" fill="#cfdde3" stroke="#3f6b87" stroke-width="1"/>
+<path d="M157.5 233.7 C170.6 226.9 204.4 205.9 236.3 192.8 C268.2 179.8 320.0 153.5 349.1 155.4 C378.2 157.3 381.9 184.6 411.2 204.5 C440.5 224.4 491.4 249.4 525.0 274.7 C558.5 300.0 586.2 335.1 612.5 356.5 C638.8 377.9 660.6 389.6 682.5 403.2 C704.4 416.8 733.5 432.4 743.7 438.3" fill="none" stroke="#5f8aa3" stroke-width="1.3"/>
+<path d="M52.5 368.2 C84.6 364.3 194.0 339.0 245.0 344.8 C296.0 350.6 329.5 380.8 358.7 403.2 C387.9 425.6 392.3 465.6 420.0 479.2 C447.7 492.8 491.5 497.7 525.0 485.0 C558.5 472.3 596.4 422.7 621.2 403.2 C646.0 383.7 665.0 374.0 673.7 368.2" fill="none" stroke="#5f8aa3" stroke-width="1.3"/>
+<path d="M332.5 40.9 C333.2 33.1 325.2 13.7 336.9 -5.8 C348.6 -25.3 374.1 -66.2 402.5 -76.0 C430.9 -85.8 481.2 -60.4 507.5 -64.3 C533.8 -68.2 548.3 -89.6 560.0 -99.3 C571.7 -109.0 574.6 -118.8 577.5 -122.7" fill="none" stroke="#5f8aa3" stroke-width="1.3"/>
+<path d="M367.5 -648.7 C396.7 -625.3 498.3 -552.2 542.5 -508.4 C586.7 -464.6 610.7 -415.9 632.6 -385.7 C654.5 -355.5 666.9 -336.9 673.7 -327.2" fill="none" stroke="#5f8aa3" stroke-width="1.3"/>
+<path d="M236.3 52.6 C224.6 59.4 193.0 84.7 166.3 93.5 C139.6 102.3 91.1 103.2 76.1 105.2" fill="none" stroke="#5f8aa3" stroke-width="1.3"/>
+<path d="M-296.5 -210.3 L-292.5 -217.3 L-288.5 -210.3 M-286.5 -204.4 L-282.5 -211.4 L-278.5 -204.4 M-276.5 -198.6 L-272.5 -205.6 L-268.5 -198.6 M-266.5 -192.8 L-262.5 -199.8 L-258.5 -192.8 M-256.5 -186.9 L-252.5 -193.9 L-248.5 -186.9 M-246.5 -181.1 L-242.5 -188.1 L-238.5 -181.1 M-236.5 -175.2 L-232.5 -182.2 L-228.5 -175.2 M-226.5 -169.4 L-222.5 -176.4 L-218.5 -169.4 M-216.5 -163.5 L-212.5 -170.5 L-208.5 -163.5 M-206.5 -157.7 L-202.5 -164.7 L-198.5 -157.7 M-196.5 -151.8 L-192.5 -158.8 L-188.5 -151.8 M-186.5 -146.0 L-182.5 -153.0 L-178.5 -146.0 M-176.5 -140.2 L-172.5 -147.2 L-168.5 -140.2 M-166.5 -134.3 L-162.5 -141.3 L-158.5 -134.3 M-156.1 -129.2 L-152.1 -136.2 L-148.1 -129.2 M-145.3 -124.7 L-141.3 -131.7 L-137.3 -124.7 M-134.6 -120.2 L-130.6 -127.2 L-126.6 -120.2 M-123.8 -115.7 L-119.8 -122.7 L-115.8 -115.7 M-113.0 -111.2 L-109.0 -118.2 L-105.0 -111.2 M-102.3 -106.7 L-98.3 -113.7 L-94.3 -106.7 M-91.5 -102.2 L-87.5 -109.2 L-83.5 -102.2 M-80.7 -97.7 L-76.7 -104.7 L-72.7 -97.7 M-70.0 -93.2 L-66.0 -100.2 L-62.0 -93.2 M-59.2 -88.7 L-55.2 -95.7 L-51.2 -88.7 M-48.4 -84.2 L-44.4 -91.2 L-40.4 -84.2 M-37.7 -79.7 L-33.7 -86.7 L-29.7 -79.7 M-26.9 -75.2 L-22.9 -82.2 L-18.9 -75.2 M-15.9 -71.5 L-11.9 -78.5 L-7.9 -71.5 M-4.6 -68.6 L-0.6 -75.6 L3.4 -68.6 M6.6 -65.7 L10.6 -72.7 L14.6 -65.7 M17.9 -62.8 L21.9 -69.8 L25.9 -62.8 M29.1 -59.9 L33.1 -66.9 L37.1 -59.9 M40.4 -56.9 L44.4 -63.9 L48.4 -56.9 M51.6 -54.0 L55.6 -61.0 L59.6 -54.0 M62.9 -51.1 L66.9 -58.1 L70.9 -51.1 M74.1 -48.2 L78.1 -55.2 L82.1 -48.2 M85.4 -45.2 L89.4 -52.2 L93.4 -45.2 M96.6 -42.3 L100.6 -49.3 L104.6 -42.3 M107.9 -39.4 L111.9 -46.4 L115.9 -39.4 M119.1 -36.5 L123.1 -43.5 L127.1 -36.5 M130.4 -33.6 L134.4 -40.6 L138.4 -33.6 M141.5 -29.9 L145.5 -36.9 L149.5 -29.9 M152.4 -25.5 L156.4 -32.5 L160.4 -25.5 M163.3 -21.1 L167.3 -28.1 L171.3 -21.1 M174.3 -16.8 L178.3 -23.8 L182.3 -16.8 M185.2 -12.4 L189.2 -19.4 L193.2 -12.4 M196.1 -8.0 L200.1 -15.0 L204.1 -8.0 M207.1 -3.6 L211.1 -10.6 L215.1 -3.6 M218.0 0.8 L222.0 -6.2 L226.0 0.8 M228.9 5.2 L232.9 -1.8 L236.9 5.2 M239.9 9.5 L243.9 2.5 L247.9 9.5 M250.8 13.9 L254.8 6.9 L258.8 13.9 M261.7 18.3 L265.7 11.3 L269.7 18.3 M272.3 22.9 L276.3 15.9 L280.3 22.9 M282.5 27.8 L286.5 20.8 L290.5 27.8 M292.7 32.7 L296.7 25.7 L300.7 32.7 M303.0 37.5 L307.0 30.5 L311.0 37.5 M313.2 42.4 L317.2 35.4 L321.2 42.4 M323.4 47.3 L327.4 40.3 L331.4 47.3 M334.1 51.6 L338.1 44.6 L342.1 51.6 M345.2 55.3 L349.2 48.3 L353.2 55.3 M356.3 59.0 L360.3 52.0 L364.3 59.0 M367.5 62.7 L371.5 55.7 L375.5 62.7 M378.6 66.5 L382.6 59.5 L386.6 66.5 M389.8 70.2 L393.8 63.2 L397.8 70.2 M400.9 73.9 L404.9 66.9 L408.9 73.9 M412.0 77.7 L416.0 70.7 L420.0 77.7 M423.2 81.4 L427.2 74.4 L431.2 81.4 M434.3 85.1 L438.3 78.1 L442.3 85.1 M445.4 88.8 L449.4 81.8 L453.4 88.8 M456.2 93.0 L460.2 86.0 L464.2 93.0 M466.8 97.7 L470.8 90.7 L474.8 97.7 M477.2 102.4 L481.2 95.4 L485.2 102.4 M487.8 107.0 L491.8 100.0 L495.8 107.0 M498.2 111.7 L502.2 104.7 L506.2 111.7 M508.8 116.4 L512.8 109.4 L516.8 116.4 M519.2 121.1 L523.2 114.1 L527.2 121.1 M529.8 125.7 L533.8 118.7 L537.8 125.7 M540.2 130.4 L544.2 123.4 L548.2 130.4 M550.8 135.1 L554.8 128.1 L558.8 135.1 M561.1 140.3 L565.1 133.3 L569.1 140.3 M571.3 146.2 L575.3 139.2 L579.3 146.2 M581.5 152.0 L585.5 145.0 L589.5 152.0 M591.7 157.8 L595.7 150.8 L599.7 157.8 M601.9 163.7 L605.9 156.7 L609.9 163.7 M612.1 169.5 L616.1 162.5 L620.1 169.5 M622.4 175.4 L626.4 168.4 L630.4 175.4 M632.6 181.2 L636.6 174.2 L640.6 181.2 M642.8 187.1 L646.8 180.1 L650.8 187.1 M653.0 192.9 L657.0 185.9 L661.0 192.9 M663.2 198.7 L667.2 191.7 L671.2 198.7 M673.4 204.6 L677.4 197.6 L681.4 204.6" fill="none" stroke="#8c8273" stroke-width="1.2" stroke-linejoin="round"/>
+<g transform="translate(33.3 128.6) rotate(-90)"><text x="0" y="0" font-size="13" font-weight="400" fill="#3f6b87" text-anchor="middle" font-style="italic" letter-spacing="1" class="t">შავი ზღვა</text></g>
+<text x="406.9" y="85.3" font-size="15" font-weight="700" fill="#8a5a3c" text-anchor="middle" letter-spacing="1.5" class="t">ქართლ-კახეთის სამეფო</text>
+<text x="223.1" y="50.3" font-size="15" font-weight="700" fill="#8a5a3c" text-anchor="middle" letter-spacing="1.5" class="t">იმერეთის სამეფო</text>
+<text x="100.6" y="50.3" font-size="12" font-weight="700" fill="#8a5a3c" text-anchor="middle" letter-spacing="0.5" class="t">ოდიში</text>
+<text x="105.0" y="122.7" font-size="12" font-weight="700" fill="#8a5a3c" text-anchor="middle" letter-spacing="0.5" class="t">გურია</text>
+<text x="131.2" y="268.8" font-size="15" font-weight="700" fill="#8a5a3c" text-anchor="middle" letter-spacing="1.5" class="t">ოსმალეთი</text>
+<text x="258.1" y="307.4" font-size="12" font-weight="700" fill="#8a5a3c" text-anchor="middle" letter-spacing="0.5" class="t">ერევნის სახანო</text>
+<text x="485.6" y="307.4" font-size="12" font-weight="700" fill="#8a5a3c" text-anchor="middle" letter-spacing="0.5" class="t">განჯის სახანო</text>
+<path d="M192.5 160.1 C192.5 155.8 191.8 141.8 192.5 134.4 C193.2 127.0 196.2 118.8 196.9 115.7" fill="none" stroke="#a8382f" stroke-width="3" stroke-linecap="round" marker-end="url(#a-red)"/>
+<text x="184.7" y="150.8" font-size="12" font-weight="700" fill="#a8382f" text-anchor="end" class="t">ოსმალები</text>
+<path d="M328.1 321.4 C330.6 310.7 339.4 282.4 343.0 257.1 C346.6 231.8 348.8 184.1 350.0 169.5" fill="none" stroke="#b85d3b" stroke-width="3" stroke-linecap="round" marker-end="url(#a-terra)"/>
+<text x="349.0" y="268.8" font-size="12" font-weight="700" fill="#b85d3b" text-anchor="start" class="t">ხარკი</text>
+<path d="M476.9 268.8 C467.4 260.0 439.0 233.7 420.0 216.2 C401.0 198.7 372.6 172.4 363.1 163.6" fill="none" stroke="#b85d3b" stroke-width="3" stroke-linecap="round" marker-end="url(#a-terra)"/>
+<text x="426.0" y="222.1" font-size="12" font-weight="700" fill="#b85d3b" text-anchor="start" class="t">ხარკი</text>
+<path d="M189.9 101.7 L203.9 115.7 M203.9 101.7 L189.9 115.7" stroke="#f7f3ea" stroke-width="5" stroke-linecap="round"/>
+<path d="M189.9 101.7 L203.9 115.7 M203.9 101.7 L189.9 115.7" stroke="#a8382f" stroke-width="2.6" stroke-linecap="round"/>
+<rect x="344.6" y="150.9" width="9" height="9" fill="#2b2623" stroke="#f7f3ea" stroke-width="1.5"/>
+<text x="358.1" y="160.4" font-size="13" font-weight="600" fill="#2b2623" text-anchor="start" class="t">თბილისი</text>
+<rect x="161.8" y="86.7" width="9" height="9" fill="#2b2623" stroke="#f7f3ea" stroke-width="1.5"/>
+<text x="157.3" y="85.2" font-size="13" font-weight="600" fill="#2b2623" text-anchor="end" class="t">ქუთაისი</text>
+<circle cx="289.6" cy="125.1" r="3.6" fill="#2b2623" stroke="#f7f3ea" stroke-width="1.5"/>
+<text x="295.6" y="117.1" font-size="13" font-weight="600" fill="#2b2623" text-anchor="start" class="t">გორი (1758)</text>
+<text x="207.9" y="113.7" font-size="13" font-weight="600" fill="#2b2623" text-anchor="start" class="t">ხრესილი</text>
+<circle cx="190.7" cy="164.8" r="3.6" fill="#2b2623" stroke="#f7f3ea" stroke-width="1.5"/>
+<text x="182.7" y="179.8" font-size="13" font-weight="600" fill="#2b2623" text-anchor="end" class="t">ახალციხე</text>
+<circle cx="346.5" cy="222.1" r="3.6" fill="#2b2623" stroke="#f7f3ea" stroke-width="1.5"/>
+<text x="354.5" y="226.1" font-size="13" font-weight="600" fill="#2b2623" text-anchor="start" class="t">ახტალა</text>
+<circle cx="324.6" cy="335.4" r="3.6" fill="#2b2623" stroke="#f7f3ea" stroke-width="1.5"/>
+<text x="332.6" y="339.4" font-size="13" font-weight="600" fill="#2b2623" text-anchor="start" class="t">ერევანი</text>
+<circle cx="486.5" cy="277.0" r="3.6" fill="#2b2623" stroke="#f7f3ea" stroke-width="1.5"/>
+<text x="494.5" y="291.0" font-size="13" font-weight="600" fill="#2b2623" text-anchor="start" class="t">განჯა</text>
+</g>
+<rect x="0.5" y="0.5" width="559" height="355" fill="none" stroke="#c4b8a4"/>
+<path d="M10 371 H32" stroke="#a8382f" stroke-width="3" marker-end="url(#a-red)"/>
+<text x="40" y="375" font-size="12" fill="#6e655b" font-family="'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif">ოსმალები, 1757</text>
+<path d="M173.39999999999998 365 L185.39999999999998 377 M185.39999999999998 365 L173.39999999999998 377" stroke="#a8382f" stroke-width="2.6" stroke-linecap="round"/>
+<text x="198.39999999999998" y="375" font-size="12" fill="#6e655b" font-family="'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif">ხრესილის ბრძოლა</text>
+<path d="M334.4 371 H356.4" stroke="#b85d3b" stroke-width="3" marker-end="url(#a-terra)"/>
+<text x="364.4" y="375" font-size="12" fill="#6e655b" font-family="'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif">ხარკი ერეკლეს</text>
+</svg>
