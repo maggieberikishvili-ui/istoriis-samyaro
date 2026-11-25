@@ -408,6 +408,11 @@
   .lesson-footer__btn {
     width: 100%;
   }
+
+  /* ავტორის ნიშანი — ქვედა პანელის ზემოთ, ღილაკს რომ არ ფარავდეს */
+  body {
+    --author-badge-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 .lesson-footer[data-state="correct"] {

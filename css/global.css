@@ -350,3 +350,43 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .confirm-dialog[open] { animation: none; }
 }
+
+/* ----------------------------------------------------------
+   ავტორის რეჟიმი (storage.js → renderAuthorBadge)
+   ---------------------------------------------------------- */
+.author-badge {
+  position: fixed;
+  left: 50%;
+  bottom: var(--author-badge-bottom);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: calc(100vw - 2 * var(--space-3));
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-inverse);
+  background-color: var(--color-purple);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 2px 8px var(--scrim);
+}
+
+/* ვიწრო ეკრანზე — მხოლოდ „ავტორის რეჟიმი“ */
+@media (max-width: 560px) {
+  .author-badge__note {
+    display: none;
+  }
+}
+
+.author-badge__off {
+  padding: var(--space-1) var(--space-3);
+  font: inherit;
+  color: var(--color-purple-dark);
+  background-color: var(--color-surface);
+  border: 0;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}

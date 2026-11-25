@@ -631,6 +631,11 @@
   .mini-stat--xp     { color: var(--color-accent-dark); }
   .mini-stat--hearts { color: var(--color-hearts); }
 
+  /* ავტორის ნიშანი — ქვედა ჩანართების ზემოთ */
+  body {
+    --author-badge-bottom: calc(var(--tabbar-height) + var(--space-3) + env(safe-area-inset-bottom, 0px));
+  }
+
   .layout {
     display: flex;
     flex-direction: column;

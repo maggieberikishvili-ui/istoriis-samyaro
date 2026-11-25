@@ -32,6 +32,7 @@
     games: "ims_games",             // თამაშების რეკორდები და დღიური XP (თითო მომხმარებელზე)
     sectionFold: "ims_sectionFold", // თავებისა და ქვეთავების დაკეცვა დაფაზე: { chapterId/sectionId: true(გაშლილი)/false }
     guestProfile: "ims_guestProfile", // სტუმრის პროფილი გასვლის შემდეგ (ხელახლა შესვლისას აღდგება)
+    author: "ims_author",           // „ავტორის რეჟიმი“: "1" — ყველა გაკვეთილი ღიაა, პროგრესი არ ინახება
   });
 
   const URLS = Object.freeze({
@@ -633,6 +634,56 @@
   });
 
   /* ==========================================================
+     ავტორის რეჟიმი (დროებითი — სერვერამდე)
+     ჩართვა: ნებისმიერი გვერდი ?author=1, გამორთვა: ?author=0 ან ნიშნის ღილაკი.
+     ამ რეჟიმში ყველა გაკვეთილი იხსნება და გაკვეთილის გავლა პროფილს არ ცვლის
+     (სიცოცხლე, XP, ქვები, სტატისტიკა, შეცდომები). სერვერის ეტაპზე — ანგარიშის როლი.
+     ========================================================== */
+
+  function isAuthor() {
+    return readString(KEYS.author) === "1";
+  }
+
+  function setAuthor(on) {
+    try {
+      if (on) localStorage.setItem(KEYS.author, "1");
+      else localStorage.removeItem(KEYS.author);
+    } catch (e) {
+      /* localStorage მიუწვდომელია — რეჟიმი არ ჩაირთვება */
+    }
+  }
+
+  (function readAuthorParam() {
+    const value = new URLSearchParams(window.location.search).get("author");
+    if (value === "1") setAuthor(true);
+    else if (value === "0") setAuthor(false);
+  })();
+
+  /** პატარა ნიშანი ეკრანის ქვედა კუთხეში + გამორთვის ღილაკი (dashboard / lesson). */
+  function renderAuthorBadge() {
+    if (!isAuthor() || document.querySelector(".author-badge")) return;
+    const badge = document.createElement("div");
+    badge.className = "author-badge";
+    badge.setAttribute("role", "status");
+    const label = document.createElement("span");
+    label.textContent = "✎ ავტორის რეჟიმი";
+    const note = document.createElement("span");
+    note.className = "author-badge__note";
+    note.textContent = " — პროგრესი არ ინახება";
+    label.append(note);
+    const off = document.createElement("button");
+    off.type = "button";
+    off.className = "author-badge__off";
+    off.textContent = "გამორთვა";
+    off.addEventListener("click", () => {
+      setAuthor(false);
+      window.location.replace(URLS.dashboard);
+    });
+    badge.append(label, off);
+    document.body.append(badge);
+  }
+
+  /* ==========================================================
      გვერდის ჩატვირთვისას: თემა + ავტორიზაციის დაცვა + SW
      ========================================================== */
 
@@ -695,6 +746,11 @@
     logout: logout,
     loadGuestProfile: loadGuestProfile,
     redirect: redirect,
+
+    // ავტორის რეჟიმი
+    isAuthor: isAuthor,
+    setAuthor: setAuthor,
+    renderAuthorBadge: renderAuthorBadge,
 
     // თემა
     bindThemeToggle: bindThemeToggle,

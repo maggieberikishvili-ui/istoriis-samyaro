@@ -63,6 +63,8 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   const isClean = params.get("mode") === "clean"; // მტვრიანი ქვის გაწმენდა
   // გამეორების რეჟიმი: სიცოცხლე არ აკლდება, არასწორი კითხვა ბოლოს მეორდება
   const isReview = isPractice || isMistakes || isClean;
+  // ავტორის რეჟიმი: ჩვეულებრივი გაკვეთილი ნებისმიერ დროს, პროფილში არაფერი ინახება
+  const isPreview = store.isAuthor() && !isReview;
 
   let lesson = null;
   let lessonCourse = null; // ჩვეულებრივი გაკვეთილის კურსი (ქვის სახეობისთვის)
@@ -141,7 +143,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     const doneSet = new Set(initialProfile.completedLessons);
     const lessonIndex = course.lessons.indexOf(lesson);
     const firstOpenIndex = course.lessons.findIndex((l) => !doneSet.has(l.id));
-    if (!doneSet.has(lesson.id) && firstOpenIndex !== -1 && lessonIndex > firstOpenIndex) {
+    if (!isPreview && !doneSet.has(lesson.id) && firstOpenIndex !== -1 && lessonIndex > firstOpenIndex) {
       store.redirect(DASHBOARD_URL);
       return;
     }
@@ -217,7 +219,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   /** სიცოცხლეები ამოიწურა? (Pro-სა და სავარჯიშოში — არასდროს) */
   function isOutOfHearts() {
-    return !unlimited && !isReview && state.hearts <= 0;
+    return !unlimited && !isReview && !isPreview && state.hearts <= 0;
   }
 
   const el = {
@@ -267,7 +269,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
   }
 
   function loseHeart() {
-    if (unlimited || isReview) return; // Pro და გამეორება — სიცოცხლე არ აკლდება
+    if (unlimited || isReview || isPreview) return; // Pro, გამეორება და ავტორი — სიცოცხლე არ აკლდება
     const profile = store.updateProfile((p) => {
       p.hearts = Math.max(0, p.hearts - 1);
     });
@@ -307,7 +309,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     state.attempts += 1;
     let text = explanation || "";
     // სტატისტიკა + „ჩემი შეცდომები“ (სწორი პასუხი კითხვას სიიდან შლის)
-    store.recordAnswer(stepInfo.get(steps[state.index]) || null, isCorrect);
+    if (!isPreview) store.recordAnswer(stepInfo.get(steps[state.index]) || null, isCorrect);
 
     if (isCorrect) {
       state.correct += 1;
@@ -807,6 +809,10 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
       finishClean();
       return;
     }
+    if (isPreview) {
+      finishPreview();
+      return;
+    }
 
     let xpGain = 0;
     let heartGain = 0;
@@ -875,6 +881,20 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     art.replaceChildren(gems.icon(kind, gem.after));
     box.querySelector(".result__gem-text").textContent = text;
     box.hidden = false;
+  }
+
+  /** ავტორის რეჟიმი: გაკვეთილი ბოლომდე გაიარე, მაგრამ პროფილში არაფერი ჩაიწერა. */
+  function finishPreview() {
+    const accuracy = questionTotal ? Math.round((state.correct / questionTotal) * 100) : 100;
+    hideLesson();
+    el.victoryEmblem.textContent = "✎";
+    el.victoryTitle.textContent = "გადახედვა დასრულდა";
+    el.victorySubtitle.textContent = "„" + lesson.title + "“ — ავტორის რეჟიმი: XP, ქვა და სიცოცხლე არ შეიცვალა.";
+    el.victoryXp.textContent = "0";
+    el.victoryAccuracy.textContent = accuracy + "%";
+    el.victoryHeartsStat.hidden = true;
+    el.victory.hidden = false;
+    el.victory.querySelector(".result__btn").focus();
   }
 
   /** მტვრის გაწმენდის დასრულება: ქვა ისევ ბრწყინავს (ხარისხი არ იცვლება), +CLEAN_XP. */
@@ -1029,6 +1049,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
      ========================================================== */
 
   renderHearts(false);
+  store.renderAuthorBadge();
   preloadImages();
   renderProgress();
 

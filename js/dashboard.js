@@ -616,15 +616,17 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
     const statusText = { completed: "დასრულებული", current: "მიმდინარე", locked: "დაბლოკილი" }[status] +
       (dusty ? ", ქვა მტვრიანია" : quality === "rough" ? ", ქვა ნატეხია — გაიარე უშეცდომოდ და გაპრიალდება" : "");
     node.setAttribute("aria-label", (indexInChapter + 1) + ". " + lesson.title + " — " + statusText);
-    if (status === "locked") node.setAttribute("aria-disabled", "true");
+    if (status === "locked" && !store.isAuthor()) node.setAttribute("aria-disabled", "true");
     if (status === "current") node.setAttribute("aria-current", "step");
 
     node.addEventListener("click", () => {
-      if (status === "locked") {
+      // ავტორის რეჟიმში ნებისმიერი გაკვეთილი იხსნება (სიცოცხლის გარეშეც)
+      const author = store.isAuthor();
+      if (status === "locked" && !author) {
         showToast("🔒 ჯერ დაასრულე წინა გაკვეთილი");
         return;
       }
-      if (isOutOfHearts()) {
+      if (isOutOfHearts() && !author) {
         showToast("💔 სიცოცხლეები ამოიწურა! გაიარე სავარჯიშო სიცოცხლის აღსადგენად.");
         nudgeRefill();
         return;
@@ -1008,6 +1010,7 @@ window.IMS_DATA.load([window.IMS_DATA.currentCourseId()]).then(function () {
 
   runDailyCheck();
   renderStats();
+  store.renderAuthorBadge();
   store.bindThemeToggle(document.getElementById("themeToggle"));
   store.bindThemeToggle(document.getElementById("themeToggleMenu"));
   selectCourse(data.currentCourseId());
