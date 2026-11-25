@@ -1370,6 +1370,22 @@
           el("circle", { cx: 60, cy: 58, r: 4, class: "f-ochre s-ink" }),
         ],
       },
+      {
+        id: "manifesto-1801",
+        after: "g9-l12",
+        title: "1801 წლის მანიფესტი",
+        fact: "1801 წლის 12 სექტემბერს ალექსანდრე I-მა ხელი მოაწერა მანიფესტს, რომლითაც ქართლ-კახეთის სამეფო გაუქმდა.",
+        shapes: [
+          ground(90),
+          el("rect", { x: 30, y: 24, width: 60, height: 58, class: "f-paper s-ink" }),
+          el("rect", { x: 26, y: 18, width: 68, height: 8, rx: 4, class: "f-sand s-ink" }),
+          el("rect", { x: 26, y: 80, width: 68, height: 8, rx: 4, class: "f-sand s-ink" }),
+          el("path", { d: "M40 36 H80 M40 44 H80 M40 52 H74 M40 60 H64", class: "s-thin o" }),
+          el("path", { d: "M74 66 L70 84 M80 66 L84 84", class: "s-terra w4 o" }),
+          el("circle", { cx: 77, cy: 66, r: 8, class: "f-terra s-ink" }),
+          el("circle", { cx: 77, cy: 66, r: 4, class: "s-thin o" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */

@@ -12,7 +12,7 @@
    • CORE_FILES-ის შეცვლისას გაზარდე VERSION.
    ========================================================== */
 
-const VERSION = "v118";
+const VERSION = "v119";
 const STATIC_CACHE = "ims-static-" + VERSION;
 const FONT_CACHE = "ims-fonts-" + VERSION;
 const IMAGE_CACHE = "ims-images-" + VERSION;
@@ -104,6 +104,7 @@ const CORE_FILES = [
   "./assets/images/map-g9-l9.svg",
   "./assets/images/map-g9-l10.svg",
   "./assets/images/map-g9-l11.svg",
+  "./assets/images/map-g9-l12.svg",
   // დაფის შუმერული ფონი (ფრიზი + ლურსმნული ჩანაწერი)
   "./assets/images/frieze-top.svg",
   "./assets/images/frieze-bottom.svg",
