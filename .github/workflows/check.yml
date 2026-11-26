@@ -1,6 +1,6 @@
-# შემოწმება + გამოქვეყნება GitHub Pages-ზე.
-# ყოველ push-ზე main-ში ჯერ ეშვება tools/check.js; საიტი ქვეყნდება მხოლოდ მაშინ,
-# თუ შემოწმება გავიდა. (Settings → Pages → Source: "GitHub Actions".)
+# შემოწმება + ტესტები + გამოქვეყნება GitHub Pages-ზე.
+# ყოველ push-ზე main-ში ეშვება tools/check.js და ბრაუზერის ტესტები (tests/);
+# საიტი ქვეყნდება მხოლოდ მაშინ, თუ ორივე გავიდა. (Settings → Pages → Source: "GitHub Actions".)
 name: check-and-deploy
 
 on:
@@ -27,8 +27,23 @@ jobs:
       - name: პროექტის შემოწმება
         run: node tools/check.js
 
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: ბრაუზერის ტესტები (Playwright)
+        working-directory: tests
+        run: |
+          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          npx playwright test
+
   deploy:
-    needs: check
+    needs: [check, test]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
@@ -44,7 +59,7 @@ jobs:
         run: |
           mkdir -p _site
           rsync -a --exclude '/.git' --exclude '/.github' --exclude '/.claude' \
-            --exclude '/tools' --exclude '/brand' --exclude '/_site' ./ _site/
+            --exclude '/tools' --exclude '/tests' --exclude '/brand' --exclude '/_site' ./ _site/
       - name: ვერსიის ჰეში sw.js-ში (ნებისმიერი ცვლილება მომხმარებელთან მივა)
         run: |
           H=$(cd _site && find . -type f ! -name sw.js ! -path './assets/audio/*' -print0 | sort -z | xargs -0 sha1sum | sha1sum | cut -c1-10)
