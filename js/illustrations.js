@@ -1454,6 +1454,24 @@
           el("circle", { cx: 112, cy: 90, r: 5, class: "f-ink s-ink" }),
         ],
       },
+      {
+        id: "barricade-flag",
+        after: "g9-l22",
+        title: "ბარიკადა და სამფეროვანი დროშა",
+        fact: "1830 წლის ივლისში პარიზელებმა ბარიკადები აღმართეს და რევოლუციის სამფეროვანი დროშები ააფრიალეს.",
+        shapes: [
+          el("path", { d: "M8 96 H112", class: "s-thin o" }),
+          el("path", { d: "M14 96 L22 78 L40 72 L58 76 L78 70 L98 78 L108 96 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M26 96 L32 84 L50 82 L54 96 Z", class: "f-ochre s-ink" }),
+          el("circle", { cx: 74, cy: 86, r: 9, class: "f-paper s-ink" }),
+          el("path", { d: "M74 77 V95 M65 86 H83", class: "s-thin o" }),
+          el("path", { d: "M88 96 L92 84 L104 86 L104 96 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M56 76 V12", class: "s-ink w5 o" }),
+          el("path", { d: "M56 14 H74 V42 H56 Z", class: "f-ink s-ink" }),
+          el("path", { d: "M74 14 H92 V42 H74 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M92 14 H110 V42 H92 Z", class: "f-terra s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
