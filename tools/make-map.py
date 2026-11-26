@@ -80,6 +80,47 @@ def load_modern():
         return json.load(f)["regions"]
 
 
+# ევროპის სანაპირო და მდინარეები (tools/geo/europe.json — Natural Earth 1:50m, საჯარო სიკეთე,
+# გამარტივებული). რუკაზე ჩნდება, თუ ჩანაწერს აქვს "base": "europe".
+EUROPE_FILE = os.path.join(ROOT, "tools", "geo", "europe.json")
+
+
+def load_europe():
+    with open(EUROPE_FILE, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def clip_ring(ring, lat0, lat1, lon0, lon1):
+    """მრავალკუთხედის ჩამოჭრა მართკუთხედზე (Sutherland–Hodgman) — SVG რომ პატარა იყოს."""
+    def cut(pts, inside, inter):
+        res = []
+        for i, cur in enumerate(pts):
+            prev = pts[i - 1]
+            if inside(cur):
+                if not inside(prev):
+                    res.append(inter(prev, cur))
+                res.append(cur)
+            elif inside(prev):
+                res.append(inter(prev, cur))
+        return res
+
+    def at_lat(v):
+        return lambda a, b: (v, a[1] + (b[1] - a[1]) * (v - a[0]) / (b[0] - a[0]))
+
+    def at_lon(v):
+        return lambda a, b: (a[0] + (b[0] - a[0]) * (v - a[1]) / (b[1] - a[1]), v)
+
+    pts = [tuple(p) for p in ring]
+    for inside, inter in (
+        (lambda p: p[0] >= lat0, at_lat(lat0)), (lambda p: p[0] <= lat1, at_lat(lat1)),
+        (lambda p: p[1] >= lon0, at_lon(lon0)), (lambda p: p[1] <= lon1, at_lon(lon1)),
+    ):
+        if not pts:
+            break
+        pts = cut(pts, inside, inter)
+    return pts
+
+
 # ---------- რუკები ----------
 
 MAPS = {
@@ -329,6 +370,44 @@ MAPS = {
             ("battle", None, "ვარციხის აღება"),
         ],
     },
+    "g9-l18": {
+        "file": "map-g9-l18.svg",
+        "title": "ნაპოლეონის ლაშქრობა 1805 წელს: ტრაფალგარი, ულმი, აუსტერლიცი",
+        "base": "europe",
+        "frame": {"lon": (-10.5, 19.0), "lat": (35.3, 53.2), "width": 560},
+        "seas": [
+            {"text": "ატლანტის ოკეანე", "at": (44.7, -5.6)},
+            {"text": "ხმელთაშუა ზღვა", "at": (38.6, 5.5)},
+        ],
+        "regions": [
+            {"text": "საფრანგეთის იმპერია", "at": (46.5, 2.0)},
+            {"text": "ავსტრიის იმპერია", "at": (46.1, 14.2)},
+            {"text": "დიდი ბრიტანეთი", "at": (52.4, -2.6), "small": True},
+            {"text": "ესპანეთი", "at": (38.9, -4.0), "small": True},
+            {"text": "პრუსია", "at": (51.5, 15.6), "small": True},
+        ],
+        "cities": [
+            {"name": "პარიზი", "at": (48.86, 2.35), "capital": True, "dx": -9, "dy": -6, "anchor": "end"},
+            {"name": "ლონდონი", "at": (51.51, -0.13), "capital": True, "dx": 8, "dy": 4},
+            {"name": "ვენა", "at": (48.21, 16.37), "capital": True, "dx": 8, "dy": 14},
+            {"name": "ბერლინი", "at": (52.52, 13.40), "capital": True, "dx": -8, "dy": 4, "anchor": "end"},
+            {"name": "მადრიდი", "at": (40.42, -3.70), "capital": True, "dx": 8, "dy": 4},
+            {"name": "ულმი", "at": (48.40, 9.99), "dx": -8, "dy": 16, "anchor": "end"},
+            {"name": "აუსტერლიცი", "at": (49.13, 16.76), "dx": -8, "dy": -8, "anchor": "end"},
+            {"name": "ტრაფალგარი", "at": (36.18, -6.03), "dx": 10, "dy": 4},
+        ],
+        "battles": [{"at": (48.40, 9.99)}, {"at": (49.13, 16.76)}, {"at": (36.18, -6.03)}],
+        "routes": [
+            {"color": "red", "points": [(48.95, 2.6), (48.75, 6.0), (48.5, 9.6)],
+             "label": "ნაპოლეონი, 1805", "label_at": (49.35, 4.3), "anchor": "start"},
+            {"color": "red", "points": [(48.3, 10.5), (48.35, 13.5), (48.25, 16.0)]},
+            {"color": "red", "points": [(48.3, 16.5), (48.9, 16.7)]},
+        ],
+        "legend": [
+            ("red", False, "ნაპოლეონის არმია"),
+            ("battle", None, "ბრძოლა"),
+        ],
+    },
 }
 
 
@@ -404,9 +483,24 @@ def build(spec):
         f"stroke-linejoin:round}}</style>",
         f'<rect width="{W}" height="{H + LEG_H}" fill="{P["land"]}"/>',
         '<g clip-path="url(#c)">',
-        f'<path d="{path_d(proj, BLACK_SEA, True)}" fill="{P["sea"]}" stroke="{P["sea_edge"]}" stroke-width="1"/>',
-        f'<path d="{path_d(proj, CASPIAN, True)}" fill="{P["sea"]}" stroke="{P["sea_edge"]}" stroke-width="1"/>',
     ]
+    europe = spec.get("base") == "europe"
+    if europe:
+        geo = load_europe()
+        m = 0.5  # ჩარჩოს გარეთ პატარა მარაგი, რომ კიდეზე ხაზი არ გაწყდეს
+        box = (proj.lat0 - m, proj.lat1 + m, proj.lon0 - m, proj.lon1 + m)
+        out.append(f'<rect width="{W}" height="{H}" fill="{P["sea"]}"/>')
+        for ring in geo["land"]:
+            pts = clip_ring(ring, *box)
+            if len(pts) >= 3:
+                out.append(f'<path d="{path_d(proj, pts, True)}" fill="{P["land"]}" stroke="{P["sea_edge"]}" '
+                           f'stroke-width="0.9" stroke-linejoin="round"/>')
+        for segs in geo["rivers"].values():
+            for seg in segs:
+                out.append(f'<path d="{path_d(proj, seg)}" fill="none" stroke="{P["river"]}" stroke-width="1.3"/>')
+    else:
+        out.append(f'<path d="{path_d(proj, BLACK_SEA, True)}" fill="{P["sea"]}" stroke="{P["sea_edge"]}" stroke-width="1"/>')
+        out.append(f'<path d="{path_d(proj, CASPIAN, True)}" fill="{P["sea"]}" stroke="{P["sea_edge"]}" stroke-width="1"/>')
     if spec.get("modern"):
         regions = load_modern()
         layer = []
@@ -425,11 +519,11 @@ def build(spec):
                              f'stroke-width="0.8" stroke-dasharray="3 2"/>')
         out.extend(layer)
 
-    for pts in RIVERS.values():
+    for pts in ([] if europe else RIVERS.values()):
         out.append(f'<path d="{smooth_d(proj, pts)}" fill="none" stroke="{P["river"]}" stroke-width="1.3"/>')
 
     # კავკასიონი — პატარა სამკუთხედები ქედის ხაზზე
-    xy = [proj(*p) for p in CAUCASUS]
+    xy = [] if europe else [proj(*p) for p in CAUCASUS]
     marks = []
     for (x1, y1), (x2, y2) in zip(xy, xy[1:]):
         n = max(1, int(math.hypot(x2 - x1, y2 - y1) // 11))

@@ -1420,6 +1420,23 @@
           el("circle", { cx: 74, cy: 46, r: 5, class: "f-ochre s-ink" }),
         ],
       },
+      {
+        id: "trafalgar-ship",
+        after: "g9-l18",
+        title: "ხომალდი ტრაფალგართან",
+        fact: "1805 წელს ტრაფალგართან ინგლისის ფლოტმა ადმირალ ნელსონის მეთაურობით საფრანგეთის ფლოტი გაანადგურა.",
+        shapes: [
+          el("path", { d: "M8 92 C24 86 40 98 60 92 C80 86 96 98 112 92", class: "s-thin o" }),
+          el("path", { d: "M18 74 H102 L94 88 H28 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M24 80 H98", class: "s-ink o" }),
+          el("path", { d: "M36 82 h4 M50 82 h4 M64 82 h4 M78 82 h4", class: "s-ink w6 o" }),
+          el("path", { d: "M40 74 V18 M62 74 V10 M84 74 V22", class: "s-ink o" }),
+          el("path", { d: "M30 26 H50 L52 44 H28 Z M28 48 H52 L54 68 H26 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M52 18 H72 L74 38 H50 Z M50 42 H74 L76 66 H48 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M76 30 H92 L94 46 H74 Z M74 50 H94 L96 68 H72 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M62 10 L74 13 L62 16 Z", class: "f-ochre s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
