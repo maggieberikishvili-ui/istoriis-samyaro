@@ -1437,6 +1437,23 @@
           el("path", { d: "M62 10 L74 13 L62 16 Z", class: "f-ochre s-ink" }),
         ],
       },
+      {
+        id: "borodino-cannon",
+        after: "g9-l20",
+        title: "ზარბაზანი ბოროდინოსთან",
+        fact: "1812 წელს ნაპოლეონის არმია რუსეთში 600 ათასამდე ჯარისკაცითა და 1372 ზარბაზნით შევიდა.",
+        shapes: [
+          el("path", { d: "M8 96 H112", class: "s-thin o" }),
+          el("path", { d: "M30 74 L92 40 L98 50 L38 84 Z", class: "f-ink s-ink" }),
+          el("circle", { cx: 95, cy: 45, r: 6, class: "f-ink s-ink" }),
+          el("path", { d: "M20 88 L60 66 L66 76 L30 94 Z", class: "f-terra s-ink" }),
+          el("circle", { cx: 46, cy: 82, r: 14, class: "f-ochre s-ink" }),
+          el("circle", { cx: 46, cy: 82, r: 3, class: "f-ink" }),
+          el("path", { d: "M46 68 V96 M32 82 H60 M36 72 L56 92 M56 72 L36 92", class: "s-ink o" }),
+          el("circle", { cx: 104, cy: 90, r: 5, class: "f-ink s-ink" }),
+          el("circle", { cx: 112, cy: 90, r: 5, class: "f-ink s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
