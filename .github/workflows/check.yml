@@ -35,12 +35,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - name: ბრაუზერის ტესტები (Playwright)
-        working-directory: tests
-        run: |
-          npm install --no-save --no-package-lock @playwright/test@1.55.0
-          npx playwright install --with-deps chromium
-          npx playwright test
+      - name: ბრაუზერის ტესტები (Playwright — დეტალები tests/run.sh-ში)
+        run: bash tests/run.sh
 
   deploy:
     needs: [check, test]
