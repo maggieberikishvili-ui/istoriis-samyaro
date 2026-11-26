@@ -20,10 +20,10 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
       - name: პროექტის შემოწმება
         run: node tools/check.js
 
@@ -38,14 +38,19 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/configure-pages@v5
       - name: საიტის შეფუთვა (tools/ გამოქვეყნებას არ სჭირდება)
         run: |
           mkdir -p _site
           rsync -a --exclude '/.git' --exclude '/.github' --exclude '/.claude' \
             --exclude '/tools' --exclude '/brand' --exclude '/_site' ./ _site/
-      - uses: actions/upload-pages-artifact@v3
+      - name: ვერსიის ჰეში sw.js-ში (ნებისმიერი ცვლილება მომხმარებელთან მივა)
+        run: |
+          H=$(cd _site && find . -type f ! -name sw.js ! -path './assets/audio/*' -print0 | sort -z | xargs -0 sha1sum | sha1sum | cut -c1-10)
+          sed -i -E "s/const VERSION = \"(v[0-9]+)\";/const VERSION = \"\1-$H\";/" _site/sw.js
+          grep -E "const VERSION = \"v[0-9]+-$H\";" _site/sw.js
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
       - id: deployment
