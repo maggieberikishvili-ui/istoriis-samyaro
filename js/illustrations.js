@@ -1472,6 +1472,21 @@
           el("path", { d: "M92 14 H110 V42 H92 Z", class: "f-terra s-ink" }),
         ],
       },
+      {
+        id: "secret-letter",
+        after: "g9-l24",
+        title: "შეთქმულთა საიდუმლო წერილი",
+        fact: "ფილადელფოს კიკნაძემ შეთქმულთა მიმოწერისთვის საიდუმლო ანბანი შექმნა — ძველი ქართული და ნაწილობრივ ლათინური ასოებით.",
+        shapes: [
+          el("path", { d: "M18 22 L92 16 L100 84 L26 90 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M30 34 L84 30 M31 44 L72 41 M32 54 L86 50 M33 64 L66 62", class: "s-ink w4 o" }),
+          el("path", { d: "M74 41 l3 -4 l3 4 M88 49 l2 3 l3 -3 M68 61 l4 0 l-2 3", class: "s-thin o" }),
+          el("circle", { cx: 80, cy: 74, r: 9, class: "f-terra s-ink" }),
+          el("path", { d: "M76 74 h8 M80 70 v8", class: "s-sand o" }),
+          el("path", { d: "M104 10 L60 76", class: "s-ink w5 o" }),
+          el("path", { d: "M104 10 C96 14 92 22 90 30 C98 26 104 18 104 10 Z", class: "f-ochre s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
