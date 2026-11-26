@@ -1,1 +1,6 @@
 .DS_Store
+
+# Playwright (ტესტები — GitHub Actions)
+tests/node_modules/
+tests/test-results/
+tests/playwright-report/
