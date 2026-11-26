@@ -31,12 +31,15 @@
     return IS_NODE ? fs.readFileSync(p, "utf8") : read(p);
   }
   const existsCache = new Map();
+  const sizeCache = new Map(); // ფაილის ზომა ბაიტებში (exists-ის გვერდით ითვლება)
   function exists(p) {
     if (existsCache.has(p)) return existsCache.get(p);
     let ok;
-    if (IS_NODE) ok = fs.existsSync(p) && fs.statSync(p).isFile();
-    else {
-      try { read(p, "binary"); ok = true; } catch (e) { ok = false; }
+    if (IS_NODE) {
+      ok = fs.existsSync(p) && fs.statSync(p).isFile();
+      if (ok) sizeCache.set(p, fs.statSync(p).size);
+    } else {
+      try { sizeCache.set(p, read(p, "binary").length); ok = true; } catch (e) { ok = false; }
     }
     existsCache.set(p, ok);
     return ok;
@@ -147,6 +150,14 @@
       if (!exists(file)) err("audio-manifest: ფაილი არ არსებობს — " + file);
     });
   });
+  // აუდიოს მოცულობა: GitHub Pages-ის ლიმიტი 1 GB-ია (მთელი საიტი). 700 MB-ზე — დროა აუდიო
+  // ცალკე საცავში გადავიტანოთ (გეგმა: სერვერის ეტაპზე, Supabase/Cloudflare-თან ერთად).
+  let audioBytes = 0;
+  Object.keys(AUDIO).forEach((lid) => Object.keys(AUDIO[lid]).forEach((k) => {
+    audioBytes += sizeCache.get(AUDIO[lid][k]) || 0;
+  }));
+  const audioMb = Math.round(audioBytes / 1048576);
+  if (audioMb > 700) warn("აუდიო უკვე " + audioMb + " MB-ია (GitHub Pages-ის ლიმიტი 1 GB) — დროა აუდიოს ცალკე საცავში გადატანა");
   // აუდიო აქვს ამ კლასების ყველა თეორიულ ბარათს (CLAUDE.md); აკლია → გაფრთხილება (დრაფტი)
   ["grade-7", "grade-8", "grade-9"].forEach((cid) => {
     const c = DATA.getCourse(cid);
