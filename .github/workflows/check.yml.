@@ -1,0 +1,52 @@
+# შემოწმება + გამოქვეყნება GitHub Pages-ზე.
+# ყოველ push-ზე main-ში ჯერ ეშვება tools/check.js; საიტი ქვეყნდება მხოლოდ მაშინ,
+# თუ შემოწმება გავიდა. (Settings → Pages → Source: "GitHub Actions".)
+name: check-and-deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: პროექტის შემოწმება
+        run: node tools/check.js
+
+  deploy:
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: საიტის შეფუთვა (tools/ გამოქვეყნებას არ სჭირდება)
+        run: |
+          mkdir -p _site
+          rsync -a --exclude '/.git' --exclude '/.github' --exclude '/.claude' \
+            --exclude '/tools' --exclude '/brand' --exclude '/_site' ./ _site/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
