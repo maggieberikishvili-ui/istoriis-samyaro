@@ -204,11 +204,19 @@
     if (f && !exists(f)) err("sw.js CORE_FILES: ფაილი არ არსებობს — " + f);
   });
 
+  const linked = new Set(); // ყველა JS/CSS, რომელსაც გვერდები ტვირთავს
+  function isLazy(f) { return /^js\/data\//.test(f) || /-data\.js$/.test(f); }
+  // შრიფტები: css/fonts.css-ის ყველა ფაილი არსებობს
+  (readText("css/fonts.css").match(/url\("\.\.\/([^"]+)"\)/g) || []).forEach((u) => {
+    const f = u.slice(8, -2);
+    if (!exists(f)) err("css/fonts.css: შრიფტის ფაილი არ არსებობს — " + f);
+  });
+
   const PAGES = ["index", "dashboard", "lesson", "games", "teacher", "decide", "whoami", "architect",
     "detective", "treasury", "progress"].map((n) => n + ".html");
   // CSP: ყველა გვერდზე ერთი და იგივე წესი (იხ. CLAUDE.md → უსაფრთხოება)
-  const CSP = "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; " +
-    "font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; " +
+  const CSP = "default-src 'self'; script-src 'self'; style-src 'self'; " +
+    "font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; " +
     "manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'";
   PAGES.forEach((page) => {
     if (!exists(page)) return err(page + ": გვერდი არ არსებობს");
@@ -224,15 +232,16 @@
     (html.match(/<(?:script|link)[^>]+(?:src|href)="([^"]+)"/g) || []).forEach((tag) => {
       const url = tag.match(/(?:src|href)="([^"]+)"/)[1];
       if (/^https?:/.test(url)) {
-        if (!/^https:\/\/fonts\.(googleapis|gstatic)\.com/.test(url) && !/rel="canonical"|og:/.test(tag)) {
-          if (/<script/.test(tag)) err(page + ": გარე სკრიპტი — " + url);
-        }
+        if (!/rel="canonical"|og:/.test(tag)) err(page + ": გარე ფაილი — " + url + " (CSP დაბლოკავს; ფაილი საიტზე უნდა იყოს)");
         return;
       }
       const f = url.replace(/^\.\//, "").split(/[?#]/)[0];
-      if (!/\.(js|css|svg|png|json)$/.test(f)) return;
+      if (!/\.(js|css|svg|png|json|woff2)$/.test(f)) return;
+      if (exists(f)) linked.add(f);
       if (!exists(f)) err(page + ": ფაილი არ არსებობს — " + f);
-      else if (/\.(js|css)$/.test(f) && !core.has(f)) err(page + ": " + f + " sw.js CORE_FILES-ში არ არის");
+      // მონაცემთა ფაილები (js/data/, *-data.js) წინასწარ არ იწერება — პირველი გამოყენებისას ქეშდება
+      else if (/\.(js|css)$/.test(f) && !core.has(f) && !isLazy(f)) err(page + ": " + f + " sw.js CORE_FILES-ში არ არის");
+      else if (isLazy(f) && core.has(f)) warn(f + ": მონაცემთა ფაილია — CORE_FILES-ში არ სჭირდება (წინასწარ ტვირთავს)");
     });
   });
 
@@ -241,7 +250,7 @@
   // innerHTML/insertAdjacentHTML — მხოლოდ ჩვენს, კოდში ჩაწერილ SVG-ზე, მხოლოდ ამ ფაილებში.
   // ახალი ფაილი აქ ემატება მხოლოდ მაშინ, თუ HTML-ში მომხმარებლის/URL-ის ტექსტი არ ხვდება.
   const HTML_OK = { "js/beads.js": 1, "js/treasury.js": 1, "js/treasure.js": 1, "js/icons.js": 1, "js/ur-game.js": 1 };
-  core.forEach((f) => {
+  new Set([...core, ...linked]).forEach((f) => {
     if (!/^js\/.*\.js$/.test(f) || /^js\/data\//.test(f) || !exists(f)) return;
     const src = readText(f);
     if (/\beval\s*\(|new Function\s*\(|document\.write\s*\(/.test(src)) err(f + ": eval / new Function / document.write აკრძალულია");

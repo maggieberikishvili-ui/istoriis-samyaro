@@ -2,7 +2,7 @@
 <html lang="ka">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="შენი სასწავლო დაფა: კურსები, პროგრესი, XP და უწყვეტი დღეები.">
   <title>Edubba — სასწავლო დაფა</title>
@@ -22,11 +22,8 @@
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@500;700;800&family=Noto+Serif+Georgian:wght@700;800&display=swap" rel="stylesheet">
-  <!-- Edubba ლოგოს შრიფტი: მხოლოდ წარწერის ასოები (რამდენიმე KB) -->
-  <link href="https://fonts.googleapis.com/css2?family=Gelasio:wght@600;700&text=EdubaHOUSEFTABL&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/noto-sans-georgian.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css">
 
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/global.css">
