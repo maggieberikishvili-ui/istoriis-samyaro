@@ -1487,6 +1487,23 @@
           el("path", { d: "M104 10 C96 14 92 22 90 30 C98 26 104 18 104 10 Z", class: "f-ochre s-ink" }),
         ],
       },
+      {
+        id: "sulfur-bath",
+        after: "g9-l26",
+        title: "თბილისის გოგირდის აბანო",
+        fact: "პუშკინი წერდა, რომ თბილისის გოგირდის აბანოზე მეტი ნეტარება სიცოცხლეში არც რუსეთში, არც თურქეთში არ შეხვედრია.",
+        shapes: [
+          ground(90),
+          el("path", { d: "M14 90 V72 C14 58 30 52 38 52 C46 52 62 58 62 72 V90", class: "f-sand s-ink" }),
+          el("path", { d: "M58 90 V76 C58 64 72 58 80 58 C88 58 104 64 104 76 V90", class: "f-sand s-ink" }),
+          el("circle", { cx: 38, cy: 50, r: 3, class: "f-paper s-ink" }),
+          el("circle", { cx: 80, cy: 56, r: 3, class: "f-paper s-ink" }),
+          el("path", { d: "M30 66 h16 M72 72 h16", class: "s-thin o" }),
+          el("path", { d: "M36 44 C32 38 40 34 36 26 M42 44 C38 38 46 34 42 28", class: "s-thin o a-flame" }),
+          el("path", { d: "M78 50 C74 44 82 40 78 32 M84 50 C80 44 88 40 84 34", class: "s-thin o a-flame" }),
+          el("rect", { x: 33, y: 80, width: 10, height: 10, class: "f-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
