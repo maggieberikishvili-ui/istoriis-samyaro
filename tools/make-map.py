@@ -52,6 +52,8 @@ PALETTE = {
     # რევოლუციების რუკა (1830–1832)
     "revwin": "#bcd6c4",      # რევოლუციამ / აჯანყებამ გაიმარჯვა (მწვანე)
     "revlost": "#e8c0bb",     # აჯანყება დამარცხდა (მკრთალი წითელი)
+    # კოლონისტების რუკა (g9-l23) — წერტილების ფერები
+    "purple": "#6d4f86",      # დუხობორები
 }
 STATE_FILLS = ("empire", "relatives", "dependent", "france", "russia", "prussia", "austria", "netherl", "revwin", "revlost")
 FONT = "'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif"
@@ -769,6 +771,50 @@ MAPS = {
             ("austria", None, "ნიდერლანდების სამეფო"),
         ],
     },
+    "g9-l23": {
+        "file": "map-g9-l23.svg",
+        "title": "კოლონისტების დასახლებები საქართველოში (XIX ს. I ნახევარი)",
+        "frame": {"lon": (42.85, 45.55), "lat": (41.1, 42.05), "width": 560},
+        "rivers": False,
+        "modern": {
+            "labels": {
+                "სამეგრელო-ზემო სვანეთი": None,
+                "გურია": None,
+                "აჭარა": None,
+                "აფხაზეთი": None,
+                "იმერეთი": None,
+                "რაჭა-ლეჩხუმი და ქვემო სვანეთი": None,
+                "მცხეთა-მთიანეთი": None,
+                "თბილისი": None,
+                "სამცხე-ჯავახეთი": (41.5, 43.2),
+                "შიდა ქართლი": (41.98, 44.0),
+                "ქვემო ქართლი": (41.3, 44.6),
+                "კახეთი": (41.95, 45.3),
+            },
+        },
+        "regions": [
+            {"text": "ჯავახეთი", "at": (41.43, 43.6), "small": True},
+        ],
+        "cities": [
+            {"name": "თბილისი", "at": (41.69, 44.80), "capital": True, "dx": 9, "dy": 4},
+            {"name": "ალექსანდერდორფი", "at": (41.75, 44.77), "mark": "green", "dx": -8, "dy": -6, "anchor": "end"},
+            {"name": "მარიენფელდი", "at": (41.72, 45.14), "mark": "green", "dx": 0, "dy": -12, "anchor": "middle"},
+            {"name": "ელიზაბეტალი", "at": (41.59, 44.65), "mark": "green", "dx": -9, "dy": 6, "anchor": "end"},
+            {"name": "კატერინენფელდი (ბოლნისი)", "at": (41.45, 44.54), "mark": "green", "dx": 9, "dy": 5},
+            {"name": "კოჯორი", "at": (41.66, 44.71), "mark": "red", "dx": 9, "dy": 14},
+            {"name": "მანგლისი", "at": (41.70, 44.38), "mark": "red", "dx": -8, "dy": 4, "anchor": "end"},
+            {"name": "წაღვერი", "at": (41.80, 43.48), "mark": "red", "dx": 9, "dy": 4},
+            {"name": "ახალციხე", "at": (41.64, 42.98), "mark": "red", "dx": 9, "dy": 4},
+            {"name": "გორელოვკა", "at": (41.32, 43.87), "mark": "purple", "dx": 9, "dy": 4},
+            {"name": "ბოგდანოვკა (ნინოწმინდა)", "at": (41.26, 43.59), "mark": "purple", "dx": 9, "dy": 16},
+        ],
+        "legend": [
+            ("dot-green", None, "გერმანელი კოლონისტები (1817-იდან)"),
+            ("dot-purple", None, "დუხობორები (1841–1845)"),
+            ("dot-red", None, "სამხედრო დასახლებები (1837–1860)"),
+            ("modern", None, "დღევანდელი საქართველო"),
+        ],
+    },
 }
 
 
@@ -908,7 +954,8 @@ def build(spec):
                              f'stroke-width="0.8" stroke-dasharray="3 2"/>')
         out.extend(layer)
 
-    for pts in ([] if europe else RIVERS.values()):
+    # "rivers": False — მსხვილ მასშტაბზე სქემატური მდინარე არაზუსტად ჩანს, ამიტომ იმალება
+    for pts in ([] if europe or spec.get("rivers") is False else RIVERS.values()):
         out.append(f'<path d="{smooth_d(proj, pts)}" fill="none" stroke="{P["river"]}" stroke-width="1.3"/>')
 
     # კავკასიონი — პატარა სამკუთხედები ქედის ხაზზე
@@ -982,6 +1029,9 @@ def build(spec):
         if c.get("capital"):
             out.append(f'<rect x="{x - 4.5}" y="{y - 4.5}" width="9" height="9" fill="{P["ink"]}" '
                        f'stroke="{P["halo"]}" stroke-width="1.5"/>')
+        elif c.get("mark"):
+            # ფერადი წერტილი — დასახლების სახეობა (ლეგენდაში "dot-<ფერი>")
+            out.append(f'<circle cx="{x}" cy="{y}" r="5" fill="{P[c["mark"]]}" stroke="{P["halo"]}" stroke-width="1.5"/>')
         else:
             out.append(f'<circle cx="{x}" cy="{y}" r="3.6" fill="{P["ink"]}" stroke="{P["halo"]}" stroke-width="1.5"/>')
         out.append(text(x + c.get("dx", 7), y + c.get("dy", 4), c["name"], 13, P["ink"], weight=600,
@@ -1001,6 +1051,9 @@ def build(spec):
         elif color == "battle":
             out.append(f'<path d="M{lx + 5} {ly - 10} L{lx + 17} {ly + 2} M{lx + 17} {ly - 10} L{lx + 5} {ly + 2}" '
                        f'stroke="{P["red"]}" stroke-width="2.6" stroke-linecap="round"/>')
+        elif color.startswith("dot-"):
+            out.append(f'<circle cx="{lx + 11}" cy="{ly - 4}" r="5" fill="{P[color[4:]]}" '
+                       f'stroke="{P["halo"]}" stroke-width="1.5"/>')
         elif color == "camp":
             out.append(f'<path d="M{lx + 4} {ly + 1} L{lx + 11} {ly - 11} L{lx + 18} {ly + 1} Z" fill="{P["green"]}"/>')
         else:
