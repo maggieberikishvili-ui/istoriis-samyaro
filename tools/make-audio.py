@@ -238,6 +238,8 @@ def number_forms(t):
         nxt = m.group(3)
         return (short_form(words) if nxt.endswith("ს") and not nxt.endswith("ის") else words) + " " + nxt  # მიცემითი: „ჰექტარს“; ნათესაობითი „წლის“ — სრული
     t = re.sub(r"\b(\d{1,3})[  ](\d{3}) ([ა-ჰ]+)", thousands, t)
+    # „დაახლოებით 600 000.“ — ათასეულები ჰარით, შემდეგ სიტყვის გარეშე
+    t = re.sub(r"\b(\d{1,3})[ \u00a0](\d{3})\b(?![\d-])", lambda m: number_words(int(m.group(1) + m.group(2))), t)
     # „12 ჯორზე“ → „თორმეტ ჯორზე“, „100 მეტრზე“ → „ას მეტრზე“ (რიცხვი -ზე სიტყვის წინ — მოკლე ფორმა)
     t = re.sub(r"\b(\d{1,4}) (?!ყველაზე\b)([ა-ჰ]+ზე)\b", lambda m: short_form(number_words(int(m.group(1)))) + " " + m.group(2), t)
     # „400-მდე“ → „ოთხასამდე“, „3-დან“ → „სამიდან“, „700-ზე“ → „შვიდასზე“
