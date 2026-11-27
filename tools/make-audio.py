@@ -189,6 +189,7 @@ REPLACE = [
     (r"\bglobe\b", "გლოუბ"), (r"\bres publica\b", "რეს პუბლიკა"), (r"\bveto\b", "ვეტო"),
     (r"\bpublicum\b", "პუბლიკუმ"), (r"\bprivatum\b", "პრივატუმ"), (r"\bcivile\b", "ცივილე"),
     (r"\bius\b", "იუს"), (r"\bgladius\b", "გლადიუს"), (r"\bimperator\b", "იმპერატორ"),
+    (r"\bentente cordiale\b", "ანტანტ კორდიალ"),
     (r"\bMare Nostrum\b", "მარე ნოსტრუმ"), (r"\bPax Romana\b", "პაქს რომანა"),
     (r"\s*/\s*", " ან "),
     (r"\s*\+\s*", " და "),
