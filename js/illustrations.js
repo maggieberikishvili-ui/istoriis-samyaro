@@ -1544,6 +1544,26 @@
           el("path", { d: "M78 18 C72 12 82 8 76 2 M96 30 C90 24 100 20 94 14", class: "s-thin o a-flame" }),
         ],
       },
+      {
+        id: "cotton-boll",
+        after: "g9-l32",
+        title: "ბამბის ბუჩქი",
+        fact: "ბამბის საწმენდმა მანქანამ (1793) ბამბის დამუშავება გააიაფა — სამხრეთის პლანტაციები გაფართოვდა და მონების რიცხვი სწრაფად გაიზარდა.",
+        shapes: [
+          ground(90),
+          el("path", { d: "M60 90 V40 M60 70 L40 52 M60 62 L82 46 M40 52 L34 36 M82 46 L90 30", class: "s-ink w4 o" }),
+          el("path", { d: "M60 76 C48 74 42 80 38 86 C50 88 56 84 60 76 Z", class: "f-emerald s-ink" }),
+          el("path", { d: "M60 58 C72 54 80 58 84 64 C72 68 64 64 60 58 Z", class: "f-emerald s-ink" }),
+          el("path", { d: "M52 38 L60 44 L68 38 M26 34 L34 40 L42 34 M82 28 L90 34 L98 28", class: "f-ochre s-ink" }),
+          el("circle", { cx: 55, cy: 30, r: 8, class: "f-paper s-ink" }),
+          el("circle", { cx: 65, cy: 30, r: 8, class: "f-paper s-ink" }),
+          el("circle", { cx: 60, cy: 22, r: 8, class: "f-paper s-ink" }),
+          el("circle", { cx: 30, cy: 26, r: 7, class: "f-paper s-ink" }),
+          el("circle", { cx: 38, cy: 26, r: 7, class: "f-paper s-ink" }),
+          el("circle", { cx: 86, cy: 20, r: 7, class: "f-paper s-ink" }),
+          el("circle", { cx: 94, cy: 20, r: 7, class: "f-paper s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */

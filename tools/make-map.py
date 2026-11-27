@@ -54,8 +54,13 @@ PALETTE = {
     "revlost": "#e8c0bb",     # აჯანყება დამარცხდა (მკრთალი წითელი)
     # კოლონისტების რუკა (g9-l23) — წერტილების ფერები
     "purple": "#6d4f86",      # დუხობორები
+    # აშშ-ის სამოქალაქო ომის რუკა (g9-l32)
+    "union": "#c6d3e2",       # კავშირის შტატები (იგივე, რაც „prussia“)
+    "confed": "#e6bfa6",      # კონფედერაცია (იგივე, რაც „empire“)
+    "borderst": "#ecd9a6",    # კავშირის ერთგული მონათმფლობელური შტატები (ოხრა)
 }
-STATE_FILLS = ("empire", "relatives", "dependent", "france", "russia", "prussia", "austria", "netherl", "revwin", "revlost")
+STATE_FILLS = ("empire", "relatives", "dependent", "france", "russia", "prussia", "austria", "netherl", "revwin", "revlost",
+               "union", "confed", "borderst")
 FONT = "'Noto Sans Georgian', 'BPG Arial', 'Sylfaen', sans-serif"
 
 # ---------- საერთო გეოგრაფია (lat, lon) ----------
@@ -104,6 +109,17 @@ EUROPE_FILE = os.path.join(ROOT, "tools", "geo", "europe.json")
 
 def load_europe():
     with open(EUROPE_FILE, encoding="utf-8") as f:
+        return json.load(f)
+
+
+# ჩრდილოეთ ამერიკა (tools/geo/usa.json — Natural Earth 1:50m: ხმელეთი, დიდი ტბები, მდინარეები,
+# აშშ-ის დღევანდელი შტატები; საჯარო სიკეთე, გამარტივებული). რუკაზე ჩნდება, თუ ჩანაწერს აქვს "base": "usa".
+# "us_states": {"<ფერი>": ["შტატის ინგლისური სახელი", ...]} — შტატები ამ ფერით; დანარჩენი — ტერიტორიები.
+USA_FILE = os.path.join(ROOT, "tools", "geo", "usa.json")
+
+
+def load_base(name):
+    with open(USA_FILE if name == "usa" else EUROPE_FILE, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -997,6 +1013,63 @@ MAPS = {
             ("russia", None, "რუსეთი"),
         ],
     },
+    "g9-l32": {
+        "file": "map-g9-l32.svg",
+        "title": "აშშ სამოქალაქო ომის დროს (1861–1865)",
+        "base": "usa",
+        "frame": {"lon": (-106.8, -66.5), "lat": (24.2, 47.8), "width": 560},
+        # შტატების საზღვრები — დღევანდელი (Natural Earth); 1861 წლის დასავლეთის ტერიტორიები ფერის გარეშეა
+        "us_states": {
+            "union": ["Maine", "New Hampshire", "Vermont", "Massachusetts", "Rhode Island", "Connecticut",
+                      "New York", "New Jersey", "Pennsylvania", "Ohio", "Indiana", "Illinois", "Michigan",
+                      "Wisconsin", "Minnesota", "Iowa", "Kansas", "District of Columbia"],
+            "borderst": ["Delaware", "Maryland", "Kentucky", "Missouri", "West Virginia"],
+            "confed": ["South Carolina", "Mississippi", "Florida", "Alabama", "Georgia", "Louisiana", "Texas",
+                       "Virginia", "Arkansas", "North Carolina", "Tennessee"],
+        },
+        "seas": [
+            {"text": "ატლანტის ოკეანე", "at": (29.4, -72.6)},
+            {"text": "მექსიკის ყურე", "at": (25.6, -90.0)},
+        ],
+        "regions": [
+            {"text": "კავშირი", "at": (41.6, -89.6)},
+            {"text": "კონფედერაცია", "at": (30.6, -90.6)},
+            {"text": "ტერიტორიები", "at": (42.6, -101.4), "small": True},
+            {"text": "მექსიკა", "at": (27.6, -103.6), "small": True},
+            {"text": "ბრიტანეთის ჩრდ. ამერიკა", "at": (47.0, -79.5), "small": True},
+        ],
+        "cities": [
+            {"name": "ვაშინგტონი", "at": (38.90, -77.04), "capital": True, "dx": 8, "dy": -2},
+            {"name": "რიჩმონდი", "at": (37.54, -77.44), "capital": True, "dx": 8, "dy": 10},
+            {"name": "გეტისბერგი (1863)", "at": (39.83, -77.23), "dx": -9, "dy": -4, "anchor": "end"},
+            {"name": "აპომატოქსი (1865)", "at": (37.38, -78.80), "dx": -9, "dy": 13, "anchor": "end"},
+            {"name": "ფორტ სამტერი (1861)", "at": (32.75, -79.87), "dx": 9, "dy": 4},
+            {"name": "ვიქსბერგი (1863)", "at": (32.35, -90.88), "dx": -9, "dy": 4, "anchor": "end"},
+            {"name": "ატლანტა (1864)", "at": (33.75, -84.39), "dx": -9, "dy": -5, "anchor": "end"},
+        ],
+        "battles": [{"at": (39.83, -77.23)}, {"at": (37.38, -78.80)}, {"at": (32.75, -79.87)},
+                    {"at": (32.35, -90.88)}, {"at": (33.75, -84.39)}],
+        "routes": [
+            {"color": "red", "points": [(33.6, -84.2), (33.0, -83.2), (32.4, -82.0), (32.15, -81.25)],
+             "label": "შერმანი → სავანა, 1864", "label_at": (31.35, -84.3), "anchor": "start"},
+            {"color": "green", "dashed": True, "points": [
+                (38.4, -74.2), (36.2, -74.9), (34.2, -76.6), (32.3, -79.2), (30.2, -80.6), (27.4, -79.6),
+                (24.6, -80.6), (24.7, -82.6), (27.0, -83.4), (29.3, -85.4), (29.4, -88.6), (28.6, -91.5),
+                (28.0, -94.5), (26.4, -96.6)], "arrow": False,
+             "label": "ბლოკადა", "label_at": (28.0, -77.6), "anchor": "middle"},
+            {"color": "terra", "dashed": True, "arrow": False, "points": [(36.5, -94.6), (36.5, -103.0)],
+             "label": "36°30′", "label_at": (36.9, -98.8), "anchor": "middle"},
+        ],
+        "legend": [
+            ("union", None, "კავშირის შტატები"),
+            ("borderst", None, "კავშირის ერთგული მონათმფლობელური შტატები"),
+            ("confed", None, "კონფედერაცია (11 შტატი)"),
+            ("battle", None, "ბრძოლა / აღებული ქალაქი"),
+            ("red", False, "შერმანის ლაშქრობა (1864)"),
+            ("green", "line", "კავშირის ფლოტის ბლოკადა"),
+            ("terra", "line", "მისურის კომპრომისის ხაზი (1820)"),
+        ],
+    },
 }
 # g9-l31: სახელმწიფოები იგივეა, რაც 1815 წლის რუკაზე (g9-l21)
 MAPS["g9-l31"]["states"] = [s for s in MAPS["g9-l21"]["states"]
@@ -1082,9 +1155,14 @@ def build(spec):
         f'<rect width="{W}" height="{H + LEG_H}" fill="{P["land"]}"/>',
         '<g clip-path="url(#c)">',
     ]
-    europe = spec.get("base") == "europe"
+    europe = spec.get("base") in ("europe", "usa")
     if europe:
-        geo = load_europe()
+        geo = load_base(spec["base"])
+        if spec.get("us_states"):
+            color_of = {n: c for c, names in spec["us_states"].items() for n in names}
+            spec = dict(spec, states=[
+                {"name": n, "fill": color_of.get(n), "polys": [[tuple(pt) for pt in r] for r in rings]}
+                for n, rings in geo["states"].items()])
         m = 0.5  # ჩარჩოს გარეთ პატარა მარაგი, რომ კიდეზე ხაზი არ გაწყდეს
         box = (proj.lat0 - m, proj.lat1 + m, proj.lon0 - m, proj.lon1 + m)
         out.append(f'<rect width="{W}" height="{H}" fill="{P["sea"]}"/>')
@@ -1113,6 +1191,11 @@ def build(spec):
             for d in land_paths:
                 out.append(f'<path d="{d}" fill="none" stroke="{P["sea_edge"]}" stroke-width="0.9" '
                            f'stroke-linejoin="round"/>')
+        for ring in geo.get("lakes", []):
+            pts = clip_ring(ring, *box)
+            if len(pts) >= 3:
+                out.append(f'<path d="{path_d(proj, pts, True)}" fill="{P["sea"]}" stroke="{P["sea_edge"]}" '
+                           f'stroke-width="0.8" stroke-linejoin="round"/>')
         for segs in geo["rivers"].values():
             for seg in segs:
                 out.append(f'<path d="{path_d(proj, seg)}" fill="none" stroke="{P["river"]}" stroke-width="1.3"/>')
@@ -1190,8 +1273,8 @@ def build(spec):
     for rt in spec.get("routes", []):
         dash = ' stroke-dasharray="6 4"' if rt.get("dashed") else ""
         out.append(f'<path d="{smooth_d(proj, rt["points"])}" fill="none" stroke="{P[rt["color"]]}" '
-                   f'stroke-width="{2.2 if rt.get("dashed") else 3}" stroke-linecap="round"{dash} '
-                   f'marker-end="url(#a-{rt["color"]})"/>')
+                   f'stroke-width="{2.2 if rt.get("dashed") else 3}" stroke-linecap="round"{dash}'
+                   + (f' marker-end="url(#a-{rt["color"]})"' if rt.get("arrow", True) else "") + "/>")
         if rt.get("label"):
             x, y = proj(*rt["label_at"])
             out.append(text(x + (6 if rt.get("anchor", "start") == "start" else -6), y, rt["label"], 12,
@@ -1247,9 +1330,10 @@ def build(spec):
         elif color == "camp":
             out.append(f'<path d="M{lx + 4} {ly + 1} L{lx + 11} {ly - 11} L{lx + 18} {ly + 1} Z" fill="{P["green"]}"/>')
         else:
+            # dashed: False — ისარი, True — წყვეტილი ისარი, "line" — წყვეტილი ხაზი ისრის გარეშე
             dash = ' stroke-dasharray="6 4"' if dashed else ""
-            out.append(f'<path d="M{lx} {ly - 4} H{lx + 22}" stroke="{P[color]}" stroke-width="3"{dash} '
-                       f'marker-end="url(#a-{color})"/>')
+            arrow = "" if dashed == "line" else f' marker-end="url(#a-{color})"'
+            out.append(f'<path d="M{lx} {ly - 4} H{lx + 22}" stroke="{P[color]}" stroke-width="3"{dash}{arrow}/>')
         out.append(f'<text x="{lx + 30}" y="{ly}" font-size="12" fill="{P["muted"]}" '
                    f'font-family="{FONT}">{esc(label)}</text>')
     out.append("</svg>")
