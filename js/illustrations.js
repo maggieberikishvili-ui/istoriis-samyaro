@@ -1564,6 +1564,25 @@
           el("circle", { cx: 94, cy: 20, r: 7, class: "f-paper s-ink" }),
         ],
       },
+      {
+        id: "caucasus-tower",
+        after: "g9-l34",
+        title: "მთის კოშკი",
+        fact: "ჩრდილოეთ კავკასიის მთიანეთი ციხე-სიმაგრეებითა და კოშკებით იყო მოფენილი — ისინი მოსახლეობას მტრისგან იცავდა.",
+        shapes: [
+          ground(90),
+          el("path", { d: "M2 90 L30 46 L48 66 L70 30 L96 62 L118 44 V90 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M62 42 L70 30 L78 42", class: "f-paper s-thin" }),
+          el("path", { d: "M50 90 L54 34 H74 L78 90 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M52 34 L64 14 L76 34 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M55 28 H73 M58 22 H70", class: "s-ink o" }),
+          el("rect", { x: 61, y: 42, width: 6, height: 9, class: "f-ink" }),
+          el("rect", { x: 61, y: 60, width: 6, height: 9, class: "f-ink" }),
+          el("path", { d: "M60 90 V80 Q64 74 68 80 V90", class: "f-ink" }),
+          el("path", { d: "M8 90 V70 H24 V90", class: "f-sand s-ink" }),
+          el("path", { d: "M90 90 V72 H108 V90", class: "f-sand s-ink" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
