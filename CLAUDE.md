@@ -230,10 +230,12 @@
 
 ## შემოწმება (push-მდე)
 
-1. პროექტის შემოწმება `tools/check.js` (macOS-ის ჩაშენებული JS ძრავით, Node არ არის დაყენებული):
+1. პროექტის შემოწმება `tools/check.js` (Node.js დაყენებულია — `/usr/local/bin/node`, ოფიციალური ინსტალერით):
    ```bash
-   /System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc tools/check.js
+   node tools/check.js
    ```
+   თუ `node` ვერ მოიძებნა — `/usr/local/bin/node tools/check.js` ან macOS-ის ჩაშენებული ძრავა:
+   `/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc tools/check.js`.
    ამოწმებს: მონაცემთა ფაილების სინტაქსს, გაკვეთილების წესებს (შერეული სწორია/მცდარია, „მცდარია —“,
    სურათის ფაილი), აუდიოს მანიფესტს, თამაშების ბმულებს გაკვეთილებთან, `sw.js`-ს (`CORE_FILES` ფაილები
    არსებობს, გვერდების JS/CSS სიაშია), CSP-ს ყველა გვერდზე და JS-ის უსაფრთხოების წესებს (იხ. ქვემოთ).

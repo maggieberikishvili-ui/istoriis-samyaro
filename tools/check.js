@@ -25,7 +25,9 @@
   const warnings = [];
   const err = (m) => errors.push(m);
   const warn = (m) => warnings.push(m);
-  const out = (s) => (IS_NODE ? console.log(s) : print(s));
+  // ნამდვილი console.log ახლავე ვიმახსოვრებთ: ქვემოთ G.console ჩუმი „მოჩვენებით“ იცვლება
+  const realLog = IS_NODE ? console.log.bind(console) : null;
+  const out = (s) => (IS_NODE ? realLog(s) : print(s));
 
   function readText(p) {
     return IS_NODE ? fs.readFileSync(p, "utf8") : read(p);
