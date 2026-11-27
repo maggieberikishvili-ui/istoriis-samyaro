@@ -1692,6 +1692,22 @@
           el("path", { d: "M14 93 Q24 89 34 93 T54 93 T74 93 T94 93 T114 93", class: "s-thin o" }),
         ],
       },
+      {
+        id: "first-tank",
+        after: "g9-l46",
+        title: "პირველი ტანკი",
+        fact: "ტანკები პირველად 1916 წლის სექტემბერში, სომის ბრძოლაში, გამოიყენეს — ისინი სანგრებისა და მავთულხლართების გასარღვევად შექმნეს.",
+        shapes: [
+          ground(86),
+          el("path", { d: "M10 72 L28 36 H90 L110 72 L98 84 H22 Z", class: "f-emerald s-ink" }),
+          el("path", { d: "M22 70 L34 46 H86 L98 70 L90 78 H30 Z", class: "f-sand s-thin" }),
+          el("path", { d: "M50 52 H70 V64 H50 Z", class: "f-emerald s-ink" }),
+          el("path", { d: "M70 58 H84", class: "s-ink w4 o" }),
+        ].concat([36, 48, 60, 72, 84].map((x) =>
+          el("circle", { cx: x, cy: 74, r: 4, class: "f-ink" }))).concat([
+          el("path", { d: "M6 92 L14 88 L22 92 L30 88 M90 92 L98 88 L106 92 L114 88", class: "s-thin o" }),
+        ]),
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
