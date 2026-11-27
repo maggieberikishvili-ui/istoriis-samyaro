@@ -1188,6 +1188,58 @@ MAPS = {
             ("modern", None, "დღევანდელი საქართველო"),
         ],
     },
+    "g9-l38": {
+        "file": "map-g9-l38.svg",
+        "title": "რკინიგზა და ნავთობსადენი საქართველოში (1872–1906)",
+        "frame": {"lon": (40.5, 46.9), "lat": (40.5, 43.15), "width": 560},
+        "rivers": False,
+        "modern": {
+            "labels": {
+                "აფხაზეთი": None, "სამეგრელო-ზემო სვანეთი": None, "რაჭა-ლეჩხუმი და ქვემო სვანეთი": None,
+                "იმერეთი": None, "გურია": None, "აჭარა": None, "სამცხე-ჯავახეთი": None, "შიდა ქართლი": None,
+                "მცხეთა-მთიანეთი": None, "თბილისი": None, "ქვემო ქართლი": None, "კახეთი": None,
+            },
+        },
+        "regions": [
+            {"text": "რუსეთის იმპერია", "at": (42.95, 45.9)},
+        ],
+        "seas": [
+            {"text": "შავი ზღვა", "at": (42.6, 41.1)},
+        ],
+        "cities": [
+            {"name": "ფოთი", "at": (42.15, 41.67), "dx": -9, "dy": 4, "anchor": "end"},
+            {"name": "ბათუმი", "at": (41.64, 41.64), "dx": -9, "dy": 4, "anchor": "end"},
+            {"name": "სამტრედია", "at": (42.16, 42.34), "dx": 0, "dy": -10, "anchor": "middle"},
+            {"name": "თბილისი", "at": (41.72, 44.79), "capital": True, "dx": 9, "dy": -6},
+            {"name": "განჯა", "at": (40.68, 46.36), "dx": 0, "dy": -10, "anchor": "middle"},
+            {"name": "ტყიბული (ქვანახშირი)", "at": (42.35, 42.99), "mark": "ink", "dx": -9, "dy": -5, "anchor": "end"},
+            {"name": "ჭიათურა (მანგანუმი)", "at": (42.29, 43.28), "mark": "ink", "dx": 9, "dy": -2},
+            {"name": "წიფის გვირაბი (1890)", "at": (42.0, 43.45), "mark": "purple", "dx": 0, "dy": 16, "anchor": "middle"},
+        ],
+        "routes": [
+            {"color": "terra", "dashed": True, "arrow": False,
+             "points": [(40.34, 49.8), (40.28, 48.16), (40.55, 47.15), (40.6, 46.36), (41.04, 45.45),
+                        (41.27, 45.2), (41.64, 44.79), (41.78, 44.68), (41.9, 44.11), (41.91, 43.6),
+                        (41.93, 43.3), (42.0, 42.9), (42.03, 42.35), (41.86, 41.95), (41.74, 41.82), (41.6, 41.7)],
+             "label": "ნავთობსადენი (1906)", "label_at": (40.95, 45.7), "anchor": "end"},
+            {"color": "red", "arrow": False, "points": [(42.15, 41.67), (42.34, 42.16), (42.2, 42.7), (42.11, 43.04), (42.02, 43.2), (42.0, 43.45), (41.99, 43.6), (41.98, 44.11), (41.85, 44.72), (41.72, 44.79)],
+             "label": "1872", "label_at": (42.12, 44.2), "anchor": "start"},
+            {"color": "red", "arrow": False,
+             "points": [(42.16, 42.34), (42.09, 42.03), (41.93, 41.88), (41.82, 41.78), (41.64, 41.64)],
+             "label": "1883", "label_at": (41.88, 41.95), "anchor": "start"},
+            {"color": "red", "arrow": False,
+             "points": [(41.72, 44.79), (41.35, 45.2), (41.12, 45.45), (40.68, 46.36), (40.62, 47.15),
+                        (40.35, 48.16), (40.41, 49.87)],
+             "label": "1883 (ბაქომდე)", "label_at": (41.3, 45.35), "anchor": "start"},
+        ],
+        "legend": [
+            ("red", "solid", "რკინიგზა (გახსნის წელი)"),
+            ("terra", "line", "ბაქო–ბათუმის ნავთობსადენი"),
+            ("dot-purple", None, "წიფის (სურამის) გვირაბი"),
+            ("dot-ink", None, "მადნისა და ქვანახშირის მოპოვება"),
+            ("modern", None, "დღევანდელი საქართველო"),
+        ],
+    },
 }
 # g9-l31: სახელმწიფოები იგივეა, რაც 1815 წლის რუკაზე (g9-l21)
 MAPS["g9-l31"]["states"] = [s for s in MAPS["g9-l21"]["states"]
@@ -1449,8 +1501,9 @@ def build(spec):
             out.append(f'<path d="M{lx + 4} {ly + 1} L{lx + 11} {ly - 11} L{lx + 18} {ly + 1} Z" fill="{P["green"]}"/>')
         else:
             # dashed: False — ისარი, True — წყვეტილი ისარი, "line" — წყვეტილი ხაზი ისრის გარეშე
-            dash = ' stroke-dasharray="6 4"' if dashed else ""
-            arrow = "" if dashed == "line" else f' marker-end="url(#a-{color})"'
+            # "solid" — მთლიანი ხაზი ისრის გარეშე (მაგ. რკინიგზა)
+            dash = ' stroke-dasharray="6 4"' if dashed and dashed != "solid" else ""
+            arrow = "" if dashed in ("line", "solid") else f' marker-end="url(#a-{color})"'
             out.append(f'<path d="M{lx} {ly - 4} H{lx + 22}" stroke="{P[color]}" stroke-width="3"{dash}{arrow}/>')
         out.append(f'<text x="{lx + 30}" y="{ly}" font-size="12" fill="{P["muted"]}" '
                    f'font-family="{FONT}">{esc(label)}</text>')
