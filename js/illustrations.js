@@ -1620,6 +1620,22 @@
           el("path", { d: "M70 50 Q82 46 92 49", class: "s-ink o" }),
         ],
       },
+      {
+        id: "kvali-newspaper",
+        after: "g9-l40",
+        title: "გაზეთი „კვალი“",
+        fact: "1893 წელს გიორგი წერეთელმა დააარსა გაზეთი „კვალი“, რომელიც შემდეგ „მესამე დასის“ — ქართველი სოციალ-დემოკრატების — ორგანო გახდა.",
+        shapes: [
+          ground(92),
+          el("path", { d: "M22 30 H98 V88 H22 Z", class: "f-paper s-ink" }),
+          el("path", { d: "M30 37 H90 V49 H30 Z", class: "f-terra s-ink" }),
+          el("path", { d: "M30 55 H90", class: "s-ink w4" }),
+          el("path", { d: "M30 62 H56 M30 68 H56 M30 74 H56 M30 80 H56", class: "s-thin o" }),
+          el("path", { d: "M64 62 H90 V80 H64 Z", class: "f-sand s-ink" }),
+          el("path", { d: "M68 76 L74 68 L79 73 L83 66 L87 76 Z", class: "f-ochre" }),
+          el("path", { d: "M98 30 L104 36 V94 H28 L22 88", class: "s-ink o" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
