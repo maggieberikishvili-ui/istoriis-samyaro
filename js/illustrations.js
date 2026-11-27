@@ -1528,6 +1528,22 @@
           el("path", { d: "M32 79 H88", class: "s-sand w4 o" }),
         ],
       },
+      {
+        id: "factory-town",
+        after: "g9-l30",
+        title: "ინდუსტრიული ქალაქი",
+        fact: "1851 წლის აღწერით, დიდ ბრიტანეთში ქალაქის მოსახლეობა პირველად გაუტოლდა სოფლის მოსახლეობას.",
+        shapes: [
+          ground(90),
+          el("path", { d: "M10 90 V58 L28 46 V58 L46 46 V58 L64 46 V90 Z", class: "f-terra s-ink" }),
+          el("rect", { x: 74, y: 22, width: 9, height: 68, class: "f-sand s-ink" }),
+          el("rect", { x: 92, y: 34, width: 9, height: 56, class: "f-sand s-ink" }),
+          el("path", { d: "M70 62 H108 V90 H70 Z", class: "f-ochre s-ink" }),
+          el("path", { d: "M16 66 h8 M32 66 h8 M48 66 h8 M16 76 h8 M32 76 h8 M48 76 h8", class: "s-ink w4 o" }),
+          el("path", { d: "M78 72 h6 M92 72 h6 M78 80 h6 M92 80 h6", class: "s-ink w4 o" }),
+          el("path", { d: "M78 18 C72 12 82 8 76 2 M96 30 C90 24 100 20 94 14", class: "s-thin o a-flame" }),
+        ],
+      },
     ],
 
     /* ===== მე-10 კლასი — რევოლუციების ეპოქა ===== */
